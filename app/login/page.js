@@ -1,23 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LoginForm from "@/components/login-form";
+import LoadingScreen from "@/components/loading-screen";
 import { getRoleHomePath } from "@/lib/auth";
 import { getClientSession } from "@/lib/client-auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {
     const session = getClientSession();
 
     if (session?.role) {
       router.replace(getRoleHomePath(session.role));
+    } else {
+      setPageLoading(false);
     }
   }, [router]);
+
+  if (pageLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <main className="h-screen overflow-hidden bg-slate-100 text-slate-900">

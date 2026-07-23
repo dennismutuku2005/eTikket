@@ -3,31 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { demoUsers, getDemoUser, getRoleHomePath } from "@/lib/auth";
-
-function Spinner() {
-  return (
-    <svg
-      className="animate-spin h-14 w-14 text-rose-500"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-20"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-90"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      />
-    </svg>
-  );
-}
+import LoadingScreen from "@/components/loading-screen";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -65,12 +41,7 @@ export default function LoginForm() {
 
   return (
     <>
-      {isLoading ? (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white">
-          <Spinner />
-          <p className="mt-6 text-lg font-medium text-slate-500">Signing in...</p>
-        </div>
-      ) : null}
+      {isLoading ? <LoadingScreen /> : null}
 
       <div className="rounded-3xl bg-white p-7 sm:p-10">
         <form className="space-y-4" onSubmit={handleSubmit}>

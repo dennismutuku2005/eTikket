@@ -1,8 +1,18 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "@/components/register-form";
+import LoadingScreen from "@/components/loading-screen";
 
 export default function RegisterPage() {
+  const [pageLoading] = useState(false);
+
+  if (pageLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <main className="h-screen overflow-hidden bg-slate-100 text-slate-900">
       <div className="grid h-screen w-full overflow-hidden bg-white lg:grid-cols-[6fr_4fr]">
