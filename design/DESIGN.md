@@ -5,6 +5,66 @@
 
 ---
 
+## 0. Screens & Pages Inventory
+
+Two user roles, one web app. No login required to buy — login is optional (for people who want to track their tickets/history), guest checkout is the default fast path.
+
+### A. Public / Attendee-facing (no login required)
+
+| # | Screen | Purpose |
+|---|---|---|
+| 1 | **Event Landing Page** (`/event/:slug`) | What opens when someone clicks the shared link. Shows event image, title, description, date/time, location, host, ticket types + prices. This is the entry point — must work with zero auth. |
+| 2 | **Ticket Selection** | Stepper to choose ticket type(s) and quantity, running total, "Buy Ticket" CTA. Can be a section on the landing page or its own step. |
+| 3 | **Checkout — Guest Details** | Name, phone number (for M-Pesa STK), optional email. Shown only if not logged in. |
+| 4 | **Checkout — Login (optional)** | "Already have an account? Log in" link/tab beside guest checkout — never a forced gate. |
+| 5 | **Payment / STK Push Waiting** | Full-screen loader: "Enter your M-Pesa PIN on your phone", live status polling, countdown/timeout. |
+| 6 | **Payment Success** | Confirmation + animated check, ticket summary. |
+| 7 | **Payment Failed / Retry** | Error reason (cancelled, insufficient funds, timeout), retry CTA, support contact. |
+| 8 | **Digital Ticket / QR Code** | The actual ticket — QR code, event details, ticket type, order ID. Downloadable/shareable, add-to-wallet optional. |
+| 9 | **My Tickets** (requires login) | List of all tickets a logged-in user has purchased, past + upcoming. |
+| 10 | **Discover / Browse Events** (optional, if eTikket also lists public events) | Search + browse events, filters by category/date/location. |
+
+### B. Auth (shared, optional)
+
+| # | Screen | Purpose |
+|---|---|---|
+| 11 | **Sign Up** | Name, phone/email, password — or OTP-based. |
+| 12 | **Log In** | Phone/email + password, or OTP. |
+| 13 | **Forgot Password / OTP Verification** | Reset flow. |
+
+### C. Admin / Organizer-facing (requires login)
+
+| # | Screen | Purpose |
+|---|---|---|
+| 14 | **Admin Login** | Could reuse #12 with role-based redirect, or be a separate `/admin/login`. |
+| 15 | **Organizer Dashboard** | Overview: upcoming events, total tickets sold, revenue, recent check-ins. |
+| 16 | **Create Event** | Form: title, description, category, date/time, location (map picker), cover image upload, ticket types (name, price, quantity cap) — can be multi-step. |
+| 17 | **Edit Event** | Same as create, pre-filled, plus a "Publish / Unpublish" toggle. |
+| 18 | **Event Management (single event)** | Tabs: Overview, Attendees List, Ticket Sales, Settings, Shareable Link + QR (for the link itself), Payout status. |
+| 19 | **Attendees List** | Table: name, phone, ticket type, payment status, checked-in status. Searchable/filterable, exportable (CSV). |
+| 20 | **Scan / Check-In (Scanner)** | Camera view for scanning attendee QR codes at the venue. Instant valid/invalid/already-used feedback (green/red full-screen flash). Works on mobile browser camera. |
+| 21 | **Manual Check-In / Search** | Fallback for scan failures — search attendee by name/phone/order ID and check them in manually. |
+| 22 | **Sales & Payout Summary** | Revenue breakdown per ticket type, M-Pesa transaction log, payout/withdrawal status. |
+| 23 | **Organizer Profile / Settings** | Business name, M-Pesa till/paybill details, notification preferences. |
+
+### D. Shared / System states
+
+| # | Screen | Purpose |
+|---|---|---|
+| 24 | **Empty States** | No events yet, no attendees yet, no tickets purchased yet — each with an illustration + CTA. |
+| 25 | **404 / Invalid or Expired Link** | When a shared event link is wrong, unpublished, or the event has ended/sold out. |
+| 26 | **Notifications** | In-app bell dropdown/page — ticket sold (organizer side), payment confirmed (attendee side), event reminders. |
+
+### Key logic notes for whoever builds this (human or AI)
+
+- **Guest checkout is first-class, not an afterthought** — the event landing page must lead straight to ticket selection → guest details → payment, with login only ever offered as a side option, never a blocker.
+- **The QR code is the single source of truth for check-in** — it should encode a unique order/ticket ID validated server-side at scan time (not just decoded client-side), to prevent duplicate use or forged tickets.
+- **Roles:** Attendee (no account needed), Registered User (optional account, sees "My Tickets"), Organizer/Admin (manages events + scans). One person could be both a Registered User and an Organizer.
+- **Scanner screen needs to work reliably on mobile web camera** (getUserMedia) since organizers will check people in from their phones at the door, not a desktop.
+- **Payment state has three terminal outcomes** (success / failed / timeout) and the UI for all three must exist before this is considered done — don't design only the happy path.
+
+---
+
 ## 1. Brand & Color Palette
 
 | Token | Hex | Usage |
