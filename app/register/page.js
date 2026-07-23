@@ -5,7 +5,7 @@ import RegisterForm from "@/components/register-form";
 export default function RegisterPage() {
   return (
     <main className="h-screen overflow-hidden bg-slate-100 text-slate-900">
-      <div className="grid h-screen w-full overflow-hidden bg-white lg:grid-cols-[3fr_1fr]">
+      <div className="grid h-screen w-full overflow-hidden bg-white lg:grid-cols-[6fr_4fr]">
         <section className="relative min-h-80 overflow-hidden bg-slate-950 lg:min-h-screen">
           <Image
             src="/sideimage.png"
@@ -27,8 +27,8 @@ export default function RegisterPage() {
           </div>
         </section>
 
-        <section className="flex h-screen items-start overflow-y-auto bg-[linear-gradient(180deg,#fafafa_0%,#ffffff_100%)] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-10">
-          <div className="mx-auto w-full max-w-md space-y-6 lg:mx-0 lg:max-w-md lg:pt-8">
+                <section className="flex h-screen items-center justify-center overflow-y-auto bg-[linear-gradient(180deg,#fafafa_0%,#ffffff_100%)] px-8 sm:px-12 lg:px-16">
+            <div className="w-full max-w-md space-y-6">
             <div className="flex justify-center">
               <Image
                 src="/eTikketwhite.png"
