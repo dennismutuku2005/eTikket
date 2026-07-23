@@ -1,22 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "@/components/register-form";
 import LoadingScreen from "@/components/loading-screen";
 
 export default function RegisterPage() {
-  const [pageLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (pageLoading) {
     return <LoadingScreen />;
   }
 
   return (
-    <main className="h-screen overflow-hidden bg-slate-100 text-slate-900">
-      <div className="grid h-screen w-full overflow-hidden bg-white lg:grid-cols-[6fr_4fr]">
-        <section className="relative min-h-80 overflow-hidden bg-slate-950 lg:min-h-screen">
+    <main className="h-dvh overflow-y-auto bg-slate-100 text-slate-900">
+      <div className="grid min-h-dvh w-full overflow-hidden bg-white lg:grid-cols-[6fr_4fr]">
+        <section className="relative min-h-80 overflow-hidden bg-slate-950 lg:min-h-dvh">
           <Image
             src="/sideimage.png"
             alt="Decorative server aisle illustration"
@@ -37,7 +45,7 @@ export default function RegisterPage() {
           </div>
         </section>
 
-                <section className="flex h-screen items-center justify-center overflow-y-auto bg-[linear-gradient(180deg,#fafafa_0%,#ffffff_100%)] px-8 sm:px-12 lg:px-16">
+                <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-[linear-gradient(180deg,#fafafa_0%,#ffffff_100%)] px-8 py-10 sm:px-12 lg:px-16">
             <div className="w-full max-w-md space-y-6">
             <div className="flex justify-center">
               <Image
