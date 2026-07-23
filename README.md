@@ -1,5 +1,3 @@
-# eTikket
-
 ![eTikket logo](public/eTikket.png)
 
 eTikket is a modern event ticketing platform designed to simplify ticket purchasing for events in Kenya.
