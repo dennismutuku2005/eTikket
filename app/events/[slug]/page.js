@@ -13,7 +13,7 @@ export default async function EventDetailPage({ params }) {
   const { slug } = await params; // ✅ Await params
   const event = getPublicEvent(slug);
   
-  // ✅ Handle case where event doesn't exist
+  // Handle case where event doesn't exist
   if (!event) {
     notFound();
   }
@@ -133,9 +133,9 @@ export default async function EventDetailPage({ params }) {
             </div>
 
             {/* Stub body: the actual ticket selector */}
-            <div className="p-6">
+            <div className="">
               {isSoldOut ? (
-                <div className="rounded-[16px] bg-[#f4f4f5] p-6 text-center">
+                <div className="rounded-[16px] bg-[#f4f4f5] pt-4 text-center">
                   <p className="text-4xl font-bold text-[#a3a3a8]">Sold out</p>
                   <p className="mt-3 text-base leading-7 text-[#6b6b70]">
                     This event has 0 tickets remaining. Browse more events for available ticket classes.

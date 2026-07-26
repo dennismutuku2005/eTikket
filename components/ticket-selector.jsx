@@ -32,8 +32,7 @@ export default function TicketSelector({ event }) {
           <p className="text-sm font-semibold uppercase text-[#f33959]">Tickets</p>
           <h2 className="mt-1 text-2xl font-bold">Choose your ticket</h2>
         </div>
-        <div className="rounded-full bg-[#fde8ec] px-4 py-2 text-sm font-bold text-[#d92847]">M-Pesa ready</div>
-      </div>
+         </div>
 
       <div className="mt-5 grid gap-3">
         {event.tickets.map((ticket) => (
