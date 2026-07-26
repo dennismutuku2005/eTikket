@@ -20,9 +20,18 @@ export default function RegisterForm() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+    const missing = [];
 
-    if (!name || !phone || !email || !password || !confirmPassword) {
-      setError("Fill in all fields.");
+
+
+    if (!name.trim()) missing.push("full name");
+    if (!phone.trim()) missing.push("phone number");
+    if (!email.trim()) missing.push("email");
+    if (!password) missing.push("password");
+    if (!confirmPassword) missing.push("confirm password");
+
+    if (missing.length > 0) {
+      setError(`Please enter your ${missing.join(", ")}.`);
       return;
     }
 
