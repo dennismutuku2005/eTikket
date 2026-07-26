@@ -23,7 +23,7 @@ function TicketDivider() {
 function EventCard({ event }) {
   return (
     <Link href={`/events/${event.slug}`} className="group rounded-[20px] border border-[#ececec] bg-white p-3">
-      <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#111113]">
+      <div className="relative aspect-16/10 overflow-hidden rounded-[20px] bg-[#111113]">
         <Image src={event.image} alt="" fill sizes="(max-width: 768px) 100vw, 420px" className={`object-cover ${event.status === "Sold out" ? "grayscale" : ""}`} />
         <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/10 to-black/45" />
         <span className={`absolute left-3 top-3 rounded-full px-4 py-2 text-sm font-bold ${event.status === "Sold out" ? "bg-[#a3a3a8] text-white" : "bg-white text-[#f33959]"}`}>{event.status}</span>
@@ -51,7 +51,6 @@ export default function HomePage() {
       <PublicHeader />
 
       <section className="mx-auto max-w-3xl px-4 pt-16 pb-4 text-center sm:px-6 sm:pt-24">
-        <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#f33959]">Guest checkout · M-Pesa · QR tickets</p>
         <h1 className="mx-auto mt-5 max-w-2xl text-5xl font-bold leading-[1.05] sm:text-6xl">
           Discover clean, real events around Kenya.
         </h1>
@@ -84,25 +83,44 @@ export default function HomePage() {
       </section>
 
       <footer className="bg-[#111113] text-white">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-[1.2fr_0.8fr_0.8fr] sm:px-6">
-          <div>
-            <Image src="/eTikket.png" alt="eTikket" width={170} height={52} className="h-auto w-36" />
-            <p className="mt-4 max-w-sm text-base leading-7 text-white/70">Event ticketing for Kenya with guest checkout, M-Pesa payments, and QR tickets.</p>
-          </div>
-          <div>
-            <h3 className="text-base font-bold">Explore</h3>
-            <div className="mt-3 grid gap-2 text-white/70">
-              <Link href="/events">Events</Link>
-              <Link href="/holiday">Holidays</Link>
-              <Link href="/organizer">Sell your events</Link>
+        {/* Dashed divider */}
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="h-px w-full bg-linear-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+
+        <div className="mx-auto max-w-6xl px-4 pb-6 pt-14 sm:px-6">
+          <div className="grid gap-10 sm:grid-cols-[1.5fr_1fr_1fr]">
+            <div>
+              <Image src="/eTikket.png" alt="eTikket" width={170} height={52} className="h-auto w-40" />
+              <p className="mt-5 max-w-sm text-[15px] leading-7 text-white/60">
+                Event ticketing for Kenya with guest checkout, M-Pesa payments, and QR tickets.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Explore</h3>
+              <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
+                <Link href="/events" className="transition-colors hover:text-white">Events</Link>
+                <Link href="/holiday" className="transition-colors hover:text-white">Holidays</Link>
+                <Link href="/organizer" className="transition-colors hover:text-white">Sell your events</Link>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Support</h3>
+              <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
+                <Link href="/help" className="transition-colors hover:text-white">Help center</Link>
+                <Link href="/help/buying-tickets" className="transition-colors hover:text-white">Buying tickets</Link>
+                <Link href="/help/selling-events" className="transition-colors hover:text-white">Selling events</Link>
+              </div>
             </div>
           </div>
-          <div>
-            <h3 className="text-base font-bold">Support</h3>
-            <div className="mt-3 grid gap-2 text-white/70">
-              <Link href="/help">Help center</Link>
-              <Link href="/help/buying-tickets">Buying tickets</Link>
-              <Link href="/help/selling-events">Selling events</Link>
+
+          {/* Bottom bar */}
+          <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
+            <p className="text-sm text-white/40">&copy; {new Date().getFullYear()} eTikket. All rights reserved.</p>
+            <div className="flex gap-6 text-sm text-white/40">
+              <Link href="/privacy" className="transition-colors hover:text-white/70">Privacy</Link>
+              <Link href="/terms" className="transition-colors hover:text-white/70">Terms</Link>
+              <Link href="/contact" className="transition-colors hover:text-white/70">Contact</Link>
             </div>
           </div>
         </div>

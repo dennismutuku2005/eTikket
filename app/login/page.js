@@ -44,34 +44,40 @@ export default function LoginPage() {
         </section>
 
         <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-[linear-gradient(180deg,#fafafa_0%,#ffffff_100%)] px-5 py-6 sm:px-8 lg:px-10">
-          <div className="w-full max-w-sm space-y-4">
+          <div className="w-full max-w-sm space-y-3">
+            {/* Logo - Smaller */}
             <div className="flex justify-center">
               <Image
                 src="/eTikketwhite.png"
                 alt="eTikket logo"
-                width={220}
-                height={64}
+                width={160}
+                height={48}
                 priority
-                className="h-auto w-44 sm:w-52"
+                className="h-auto w-36 sm:w-40"
               />
             </div>
 
+            {/* Welcome Text - Compact */}
             <div className="text-center">
-              <h1 className="text-3xl font-bold leading-tight text-slate-900 sm:text-4xl">
+              <h1 className="text-2xl font-bold leading-tight text-slate-900 sm:text-3xl">
                 Welcome Back
               </h1>
+              <p className="mt-1 text-sm text-slate-600">Sign in to your account</p>
             </div>
 
+            {/* Login Form - Compact */}
             <LoginForm />
 
-            <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
-              <p>Need an account?</p>
+            {/* Links - Compact */}
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+              <p className="text-sm">Need an account?</p>
               <Link href="/register" className="font-semibold text-rose-500 hover:text-rose-600">
                 Create one
               </Link>
             </div>
 
-            <p className="text-center text-sm font-medium leading-6 text-slate-900">
+            {/* Terms - Smaller */}
+            <p className="text-xs text-center font-medium leading-5 text-slate-500">
               By signing in, you accept the{" "}
               <Link href="/terms" className="text-rose-500 hover:text-rose-600">
                 Terms
