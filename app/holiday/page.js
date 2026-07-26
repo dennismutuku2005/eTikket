@@ -1,25 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { publicEvents } from "@/lib/public-events";
+import { PublicHeader } from "@/components/PublicHeader";
 
 export default function HolidayPage() {
   const holidayEvents = publicEvents.filter((event) => ["Holiday", "Family", "Music"].includes(event.category));
 
   return (
-    <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
-      <header className="border-b border-[#ececec] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <Link href="/" aria-label="eTikket home">
-            <Image src="/eTikket.png" alt="eTikket" width={118} height={36} priority className="h-9 w-auto object-contain" />
-          </Link>
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <Link href="/events" className="rounded-full px-4 py-2 text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]">Events</Link>
-            <Link href="/help" className="hidden rounded-full px-4 py-2 text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10] sm:inline-flex">Help</Link>
-            <Link href="/organizer" className="rounded-full bg-[#f33959] px-4 py-2 text-white transition hover:bg-[#d92847]">Sell your events</Link>
-          </div>
-        </div>
-      </header>
-
+    <>
+      <PublicHeader />
       <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="rounded-[20px] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
           <p className="text-base font-bold text-[#f33959]">Holiday events</p>
@@ -44,6 +33,6 @@ export default function HolidayPage() {
           ))}
         </div>
       </section>
-    </main>
+    </>
   );
 }
