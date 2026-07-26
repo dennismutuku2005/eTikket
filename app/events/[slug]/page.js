@@ -20,10 +20,10 @@ export default async function EventDetailPage({ params }) {
             <Image src="/eTikket.png" alt="eTikket" width={118} height={36} priority className="h-9 w-auto object-contain" />
           </Link>
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <Link href="/events" className="rounded-full px-4 py-2 text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]">Events</Link>
-            <Link href="/holiday" className="rounded-full px-4 py-2 text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]">Holidays</Link>
-            <Link href="/help" className="hidden rounded-full px-4 py-2 text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10] sm:inline-flex">Help</Link>
-            <Link href="/login" className="rounded-full border border-[#ececec] px-4 py-2 transition hover:bg-[#f4f4f5]">Login</Link>
+            <Link href="/events" className="rounded-full px-4 py-2 text-[#6b6b70] hover:bg-[#f4f4f5] hover:text-[#0f0f10]">Events</Link>
+            <Link href="/holiday" className="rounded-full px-4 py-2 text-[#6b6b70] hover:bg-[#f4f4f5] hover:text-[#0f0f10]">Holidays</Link>
+            <Link href="/help" className="hidden rounded-full px-4 py-2 text-[#6b6b70] hover:bg-[#f4f4f5] hover:text-[#0f0f10] sm:inline-flex">Help</Link>
+            <Link href="/login" className="rounded-full border border-[#ececec] px-4 py-2 hover:bg-[#f4f4f5]">Login</Link>
           </div>
         </div>
       </header>
@@ -53,34 +53,18 @@ export default async function EventDetailPage({ params }) {
                 </div>
               ))}
             </div>
-            <div className="mt-5 flex flex-wrap items-center gap-3 text-base text-[#6b6b70]">
-              <p>Hosted by <span className="font-bold text-[#0f0f10]">{event.host}</span></p>
-              <span className="rounded-full bg-[#fde8ec] px-4 py-2 font-bold text-[#d92847]">{event.remainingTickets} tickets remaining</span>
-            </div>
-          </div>
-
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-5">
-            <h2 className="text-2xl font-bold">About this event</h2>
-            <p className="mt-3 text-base leading-7 text-[#6b6b70]">{event.description}</p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[14px] bg-[#fafafa] p-4">
-                <p className="font-bold">Cover photo</p>
-                <p className="mt-1 text-sm leading-6 text-[#6b6b70]">Clear visual event preview, status badge, and ticket pricing shown before checkout.</p>
-              </div>
-              <div className="rounded-[14px] bg-[#fafafa] p-4">
-                <p className="font-bold">Ticket classes</p>
-                <p className="mt-1 text-sm leading-6 text-[#6b6b70]">Advance, Normal, VIP, or event-specific classes are available when the event supports them.</p>
-              </div>
-            </div>
+            <p className="mt-5 text-base text-[#6b6b70]">
+              Hosted by <span className="font-bold text-[#0f0f10]">{event.host}</span>
+            </p>
           </div>
         </div>
 
         {isSoldOut ? (
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-6">
             <div className="rounded-[20px] bg-[#f4f4f5] p-6 text-center">
               <p className="text-5xl font-bold text-[#a3a3a8]">Sold out</p>
               <p className="mt-3 text-lg leading-8 text-[#6b6b70]">This event has 0 tickets remaining. Browse more events for available ticket classes.</p>
-              <Link href="/events" className="mt-5 inline-flex rounded-full bg-[#f33959] px-5 py-3 text-base font-bold text-white">View more events</Link>
+              <Link href="/events" className="mt-5 inline-flex rounded-full bg-[#f33959] px-5 py-3 text-base font-bold text-white hover:bg-[#d92847]">View more events</Link>
             </div>
           </div>
         ) : (
