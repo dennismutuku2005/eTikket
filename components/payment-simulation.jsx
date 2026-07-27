@@ -89,7 +89,7 @@ export default function PaymentSimulation({ slug, event }) {
             <p className="mt-1 text-sm">Ticket: {ticketName}</p>
           </div>
 
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6">
+          <div className="rounded-[20px] border bg-white">
             <div className="grid gap-4">
               <label className="block">
                 <span className="mb-2 block text-sm font-bold text-[#6b6b70]">Full name *</span>
