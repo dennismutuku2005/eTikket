@@ -97,7 +97,7 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Explore</h3>
+              <h3 className="text-sm font-semibold uppercase text-white/40">Explore</h3>
               <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
                 <Link href="/events" className="transition-colors hover:text-white">Events</Link>
                 <Link href="/holiday" className="transition-colors hover:text-white">Holidays</Link>
@@ -105,7 +105,7 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Support</h3>
+              <h3 className="text-sm font-semibold uppercase text-white/40">Support</h3>
               <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
                 <Link href="/help" className="transition-colors hover:text-white">Help center</Link>
                 <Link href="/help/buying-tickets" className="transition-colors hover:text-white">Buying tickets</Link>
@@ -118,7 +118,7 @@ export default function HomePage() {
           <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
             <p className="text-sm text-white/40">&copy; {new Date().getFullYear()} eTikket. All rights reserved.</p>
             <div className="flex gap-6 text-sm text-white/40">
-              <Link href="/privacy" className="transition-colors hover:text-white/70">Privacy</Link>
+              <Link href="/privacy-policy" className="transition-colors hover:text-white/70">Privacy</Link>
               <Link href="/terms" className="transition-colors hover:text-white/70">Terms</Link>
               <Link href="/contact" className="transition-colors hover:text-white/70">Contact</Link>
             </div>
