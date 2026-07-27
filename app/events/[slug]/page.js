@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import TicketSelector from "@/components/ticket-selector";
+import ShareEvent from "@/components/share-event";
 import { getPublicEvent, publicEvents } from "@/lib/public-events";
 import { PublicHeader } from "@/components/PublicHeader";
 import { notFound } from "next/navigation";
@@ -102,6 +103,8 @@ export default async function EventDetailPage({ params }) {
               </a>
             </div>
           </div>
+
+          <ShareEvent title={event.title} />
         </div>
 
         {/* Ticket stub */}
@@ -111,7 +114,7 @@ export default async function EventDetailPage({ params }) {
             {/* Stub head: event recap, styled like the info printed at the top of a ticket */}
             <div className="flex items-center justify-between gap-4 p-6">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#a3a3a8]">
+                <p className="text-xs font-bold text-[#a3a3a8]">
                   Admit one
                 </p>
                 <h2 className="mt-1 text-xl font-bold leading-snug">{event.title}</h2>
@@ -120,7 +123,7 @@ export default async function EventDetailPage({ params }) {
                 </p>
               </div>
               <div className="shrink-0 text-right">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#a3a3a8]">Venue</p>
+                <p className="text-xs font-bold text-[#a3a3a8]">Venue</p>
                 <p className="mt-1 max-w-[9rem] text-sm font-bold leading-snug">{event.location}</p>
               </div>
             </div>
@@ -155,7 +158,7 @@ export default async function EventDetailPage({ params }) {
             {/* Barcode footer, only reads as a real ticket if there's something to redeem */}
             {!isSoldOut && (
               <div className="flex items-center justify-between gap-4 border-t border-[#ececec] bg-[#fafafa] px-6 py-4">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#a3a3a8]">
+                <p className="text-xs font-bold text-[#a3a3a8]">
                   {event.remainingTickets} left
                 </p>
                 <div
