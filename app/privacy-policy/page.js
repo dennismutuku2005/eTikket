@@ -1,102 +1,131 @@
+import Image from "next/image";
 import Link from "next/link";
+import { publicEvents } from "@/lib/public-events";
+import { PublicHeader } from "@/components/PublicHeader";
 
-// Privacy policy data in JSON format
-const privacyPolicyData = {
-  title: "Privacy Policy",
-  brand: "eTikket",
-  lastUpdated: "July 23, 2026",
-  sections: [
-    {
-      id: "introduction",
-      title: "Introduction",
-      content: "This privacy policy explains how eTikket collects, uses, and protects your personal information when you use our platform. We are committed to safeguarding your privacy and ensuring the security of your data."
-    },
-    {
-      id: "information-we-collect",
-      title: "Information We Collect",
-      content: "We collect information you provide directly, including your name, email address, phone number, and payment details. We also collect usage data, device information, and cookies to improve your experience."
-    },
-    {
-      id: "how-we-use-information",
-      title: "How We Use Your Information",
-      content: "Your information is used to process transactions, send notifications, improve our services, and comply with legal obligations. We do not sell your personal data to third parties."
-    },
-    {
-      id: "data-security",
-      title: "Data Security",
-      content: "We implement industry-standard security measures to protect your data, including encryption, secure servers, and regular security audits. However, no method of transmission over the internet is 100% secure."
-    },
-    {
-      id: "your-rights",
-      title: "Your Rights",
-      content: "You have the right to access, modify, or delete your personal information at any time. You can also opt-out of marketing communications by updating your preferences in your account settings."
-    },
-    {
-      id: "cookies",
-      title: "Cookies",
-      content: "We use cookies to enhance your browsing experience, remember your preferences, and analyze site traffic. You can manage cookie preferences through your browser settings."
-    },
-    {
-      id: "third-party-services",
-      title: "Third-Party Services",
-      content: "Our platform may integrate with third-party services for payment processing and analytics. These services have their own privacy policies, and we encourage you to review them."
-    },
-    {
-      id: "changes-to-policy",
-      title: "Changes to This Policy",
-      content: "We may update this policy periodically to reflect changes in our practices or legal requirements. We will notify you of significant changes via email or through our platform."
-    },
-    {
-      id: "contact-us",
-      title: "Contact Us",
-      content: "If you have questions about this privacy policy or how we handle your data, please contact us at privacy@etikket.com or through our support channels."
-    }
-  ]
-};
-
-export default function PrivacyPolicyPage() {
+// A thin rule that reads as a ticket's tear-perforation — the one
+// signature detail carried from the hero into the rest of the page.
+function TicketDivider() {
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-4xl">
-        <div className="rounded-3xl bg-white p-7 sm:p-10">
-          {/* Brand - normal letter spacing, no tracking */}
-          <p className="text-sm font-semibold text-rose-500">
-            {privacyPolicyData.brand}
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold text-slate-900 sm:text-5xl">
-            {privacyPolicyData.title}
-          </h1>
-          
-          {/* Last Updated */}
-          <p className="mt-2 text-sm text-slate-500">
-            Last updated: {privacyPolicyData.lastUpdated}
-          </p>
+    <div className="relative my-10 h-px w-full bg-[#ececec] sm:my-14" aria-hidden="true">
+      <div
+        className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-between px-1"
+        style={{ maskImage: "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)" }}
+      >
+        {Array.from({ length: 48 }).map((_, i) => (
+          <span key={i} className="h-1 w-1 rounded-full bg-[#d4d4d8]" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
-          {/* Policy Content */}
-          <div className="mt-6 space-y-6">
-            {privacyPolicyData.sections.map((section) => (
-              <div key={section.id} className="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
-                <h2 className="text-xl font-semibold text-slate-900">
-                  {section.title}
-                </h2>
-                <p className="mt-2 text-base leading-7 text-slate-600">
-                  {section.content}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Back to Login Button */}
-          <div className="mt-10 pt-6 border-t border-slate-200">
-            <Link
-              href="/login"
-              className="inline-block w-full rounded-full bg-rose-500 px-5 py-4 text-center text-base font-semibold text-white transition hover:bg-rose-600"
-            >
-              Back to login
-            </Link>
-          </div>
+function EventCard({ event }) {
+  return (
+    <Link href={`/events/${event.slug}`} className="group rounded-[20px] border border-[#ececec] bg-white p-3">
+      <div className="relative aspect-16/10 overflow-hidden rounded-[20px] bg-[#111113]">
+        <Image src={event.image} alt="" fill sizes="(max-width: 768px) 100vw, 420px" className={`object-cover ${event.status === "Sold out" ? "grayscale" : ""}`} />
+        <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/10 to-black/45" />
+        <span className={`absolute left-3 top-3 rounded-full px-4 py-2 text-sm font-bold ${event.status === "Sold out" ? "bg-[#a3a3a8] text-white" : "bg-white text-[#f33959]"}`}>{event.status}</span>
+        <span className="absolute right-3 top-3 rounded-full bg-[#111113] px-4 py-2 text-sm font-bold text-white">{event.price}</span>
+      </div>
+      <div className="p-2">
+        <p className="text-sm font-bold text-[#f33959]">{event.category}</p>
+        <h3 className="mt-1 text-2xl font-bold leading-tight">{event.title}</h3>
+        <p className="mt-3 text-base leading-7 text-[#6b6b70]">{event.description}</p>
+        <div className="mt-4 flex flex-wrap gap-2 text-sm font-semibold text-[#6b6b70]">
+          <span className="rounded-full bg-[#f4f4f5] px-3 py-1.5">{event.shortDate}</span>
+          <span className="rounded-full bg-[#f4f4f5] px-3 py-1.5">{event.location}</span>
+          <span className="rounded-full bg-[#f4f4f5] px-3 py-1.5">{event.going}</span>
         </div>
       </div>
+    </Link>
+  );
+}
+
+export default function HomePage() {
+  const events = publicEvents;
+
+  return (
+    <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
+      <PublicHeader />
+
+      <section className="mx-auto max-w-3xl px-4 pt-16 pb-4 text-center sm:px-6 sm:pt-24">
+        <h1 className="mx-auto mt-5 max-w-2xl text-5xl font-bold leading-[1.05] sm:text-6xl">
+          Discover clean, real events around Kenya.
+        </h1>
+        <p className="mx-auto mt-5 max-w-lg text-lg leading-8 text-[#6b6b70]">
+          Browse without logging in. Open an event, choose your ticket class, pay, and get a QR ticket for entry.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link href="/events" className="rounded-full bg-[#f33959] px-6 py-3 text-base font-bold text-white hover:bg-[#d92847]">Browse events</Link>
+          <Link href="/holiday" className="rounded-full border border-[#ececec] bg-white px-6 py-3 text-base font-bold hover:bg-[#f4f4f5]">Holiday plans</Link>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <TicketDivider />
+      </div>
+
+      <section className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-base font-bold text-[#f33959]">Popular now</p>
+            <h2 className="mt-1 text-3xl font-bold">Events people are booking</h2>
+          </div>
+          <Link href="/events" className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#f33959] hover:bg-[#f4f4f5]">View all</Link>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {events.map((event) => (
+            <EventCard key={event.slug} event={event} />
+          ))}
+        </div>
+      </section>
+
+      <footer className="bg-[#111113] text-white">
+        {/* Dashed divider */}
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="h-px w-full bg-linear-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+
+        <div className="mx-auto max-w-6xl px-4 pb-6 pt-14 sm:px-6">
+          <div className="grid gap-10 sm:grid-cols-[1.5fr_1fr_1fr]">
+            <div>
+              <Image src="/eTikket.png" alt="eTikket" width={170} height={52} className="h-auto w-40" />
+              <p className="mt-5 max-w-sm text-[15px] leading-7 text-white/60">
+                Event ticketing for Kenya with guest checkout, M-Pesa payments, and QR tickets.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold uppercase text-white/40">Explore</h3>
+              <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
+                <Link href="/events" className="transition-colors hover:text-white">Events</Link>
+                <Link href="/holiday" className="transition-colors hover:text-white">Holidays</Link>
+                <Link href="/organizer" className="transition-colors hover:text-white">Sell your events</Link>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold uppercase text-white/40">Support</h3>
+              <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
+                <Link href="/help" className="transition-colors hover:text-white">Help center</Link>
+                <Link href="/help/buying-tickets" className="transition-colors hover:text-white">Buying tickets</Link>
+                <Link href="/help/selling-events" className="transition-colors hover:text-white">Selling events</Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
+            <p className="text-sm text-white/40">&copy; {new Date().getFullYear()} eTikket. All rights reserved.</p>
+            <div className="flex gap-6 text-sm text-white/40">
+
+              <Link href="/privacy-policy" className="transition-colors hover:text-white/70">Privacy</Link>
+              <Link href="/terms" className="transition-colors hover:text-white/70">Terms</Link>
+              <Link href="/contact" className="transition-colors hover:text-white/70">Contact</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
