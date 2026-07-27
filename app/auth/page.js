@@ -9,9 +9,9 @@ const choices = [
     action: "Create user account",
   },
   {
-    title: "Register as seller",
+    title: "Register as organizer",
     description: "Create events, manage ticket classes, track sales, and scan guests at the gate.",
-    href: "/organizer",
+    href: "/organizer/register",
     action: "Start selling events",
   },
 ];
@@ -50,3 +50,4 @@ export default function AuthChoicePage() {
     </main>
   );
 }
+gistger 
