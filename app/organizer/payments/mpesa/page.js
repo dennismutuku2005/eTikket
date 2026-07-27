@@ -14,7 +14,7 @@ export default function OrganizerMpesaPage() {
     const clientSession = getClientSession();
 
     if (!clientSession) {
-      router.replace("/login");
+      router.replace("/organizer/login");
       return;
     }
 
