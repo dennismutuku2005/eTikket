@@ -101,13 +101,13 @@ export default function TermsPage() {
             ))}
           </div>
 
-          {/* Back to Login Button */}
+                    {/* Back to Home Button */}
           <div className="mt-10 pt-6 border-t border-slate-200">
             <Link
-              href="/login"
+              href="/"
               className="inline-block w-full rounded-full bg-rose-500 px-5 py-4 text-center text-base font-semibold text-white transition hover:bg-rose-600"
             >
-              Back to login
+              Back to home
             </Link>
           </div>
         </div>
