@@ -49,5 +49,4 @@ export default function AuthChoicePage() {
       </section>
     </main>
   );
-}
-gistger 
+} 
