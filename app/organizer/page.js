@@ -1,3 +1,4 @@
+import AppShell from "@/components/app-shell";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,30 +10,11 @@ const organizerStats = [
 
 export default function OrganizerPage() {
   return (
-    <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
-      <header className="border-b border-[#ececec] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <Link href="/" aria-label="eTikket home">
-            <Image
-              src="/eTikket.png"
-              alt="eTikket"
-              width={118}
-              height={36}
-              priority
-              className="h-9 w-auto object-contain"
-            />
-          </Link>
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <Link href="/" className="rounded-full px-4 py-2 text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]">
-              Events
-            </Link>
-            <Link href="/login" className="rounded-full border border-[#ececec] px-4 py-2 transition hover:bg-[#f4f4f5]">
-              Login
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <AppShell
+      role="Organizer"
+      title="Organizer dashboard"
+      subtitle="Manage events, payments, and staff from one workspace."
+    >
       <section className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="space-y-5">
           <div className="inline-flex rounded-full bg-[#fde8ec] px-4 py-2 text-sm font-semibold text-[#d92847]">
@@ -57,7 +39,7 @@ export default function OrganizerPage() {
         </div>
 
         <div className="rounded-[20px] border border-[#ececec] bg-white p-4 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
-          <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#111113]">
+          <div className="relative aspect-16/10 overflow-hidden rounded-[20px] bg-[#111113]">
             <Image
               src="/sideimage.png"
               alt=""
@@ -82,6 +64,6 @@ export default function OrganizerPage() {
           </div>
         </div>
       </section>
-    </main>
+    </AppShell>
   );
 }
