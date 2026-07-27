@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import TicketSelector from "@/components/ticket-selector";
-import ShareEvent from "@/components/share-event";
+import TicketSelector from "../../../components/ticket-selector";
+import ShareEvent from "../../../components/share-event";
 import { getPublicEvent, publicEvents } from "@/lib/public-events";
-import { PublicHeader } from "@/components/PublicHeader";
+import { PublicHeader } from "../../../components/PublicHeader";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
