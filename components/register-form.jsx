@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "@/components/loading-screen";
 
-export default function RegisterForm() {
+export default function RegisterForm({ role = "user", redirectPath = "/user/home" }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,8 +22,6 @@ export default function RegisterForm() {
     setError("");
     const missing = [];
 
-
-
     if (!name.trim()) missing.push("full name");
     if (!phone.trim()) missing.push("phone number");
     if (!email.trim()) missing.push("email");
@@ -39,6 +37,7 @@ export default function RegisterForm() {
       setError("Passwords do not match.");
       return;
     }
+
     setShowConfirmModal(true);
   }
 
@@ -47,11 +46,11 @@ export default function RegisterForm() {
 
     try {
       const session = encodeURIComponent(
-        JSON.stringify({ email, phone, role: "user", name }),
+        JSON.stringify({ email, phone, role, name }),
       );
 
       document.cookie = `etikket-session=${session}; path=/; max-age=604800; samesite=lax`;
-      router.replace("/user/home");
+      router.replace(redirectPath);
       router.refresh();
     } catch {
       setError("Something went wrong. Try again.");
