@@ -1,4 +1,5 @@
-﻿import Image from "next/image";
+﻿import { Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import PaymentSimulation from "@/components/payment-simulation";
 import { getPublicEvent, publicEvents } from "@/lib/public-events";
@@ -35,7 +36,9 @@ export default async function PaymentSimulationPage({ params }) {
       </header>
 
       <section className="mx-auto grid max-w-5xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_0.78fr]">
-        <PaymentSimulation slug={slug} event={event} />
+        <Suspense fallback={<div className="rounded-[20px] border border-[#ececec] bg-white p-6 text-center text-sm text-slate-500">Loading payment form…</div>}>
+          <PaymentSimulation slug={slug} event={event} />
+        </Suspense>
 
         <aside className="rounded-[20px] border border-[#ececec] bg-white p-5">
           <div className="relative aspect-16/10 overflow-hidden rounded-[20px] bg-[#111113]">
