@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/app-shell";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { getRoleHomePath } from "@/lib/auth";
 import { getClientSession } from "@/lib/client-auth";
 
@@ -15,7 +15,7 @@ export default function OrganizerHomePage() {
     const clientSession = getClientSession();
 
     if (!clientSession) {
-      router.replace("/login");
+      router.replace("/organizer/login");
       return;
     }
 
@@ -31,156 +31,142 @@ export default function OrganizerHomePage() {
     return null;
   }
 
+  const revenuePoints = [
+    { label: "Mon", value: 48 },
+    { label: "Tue", value: 62 },
+    { label: "Wed", value: 55 },
+    { label: "Thu", value: 70 },
+    { label: "Fri", value: 90 },
+    { label: "Sat", value: 82 },
+    { label: "Sun", value: 96 },
+  ];
+
+  const barData = [
+    { label: "Mon", value: 54 },
+    { label: "Tue", value: 68 },
+    { label: "Wed", value: 76 },
+    { label: "Thu", value: 88 },
+    { label: "Fri", value: 100 },
+  ];
+
+  const maxBarValue = Math.max(...barData.map((item) => item.value));
+  const maxAreaValue = Math.max(...revenuePoints.map((item) => item.value));
+
   return (
     <AppShell
       role="Organizer"
       title={`Welcome back, ${session.name}`}
-      subtitle="Create events, manage gate admins, configure M-Pesa, and monitor sales from one dashboard."
+      subtitle="Monitor active events, sold-out shows, and KES revenue in one place."
     >
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 lg:col-span-2">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-3xl border border-slate-200 bg-white p-5">
           <p className="text-sm text-slate-500">Active events</p>
-          <p className="mt-3 text-3xl font-semibold">14</p>
+          <p className="mt-3 text-3xl font-semibold text-slate-950">14</p>
+          <p className="mt-1 text-sm text-slate-600">Live events now.</p>
         </div>
         <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Tickets remaining</p>
-          <p className="mt-3 text-3xl font-semibold">8,240</p>
+          <p className="text-sm text-slate-500">Sold out events</p>
+          <p className="mt-3 text-3xl font-semibold text-slate-950">7</p>
+          <p className="mt-1 text-sm text-slate-600">Fully booked shows.</p>
         </div>
         <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Gate admins</p>
-          <p className="mt-3 text-3xl font-semibold">24</p>
+          <p className="text-sm text-slate-500">Data admins</p>
+          <p className="mt-3 text-3xl font-semibold text-slate-950">24</p>
+          <p className="mt-1 text-sm text-slate-600">Dashboard users.</p>
         </div>
         <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">QR scans today</p>
-          <p className="mt-3 text-3xl font-semibold">1,408</p>
+          <p className="text-sm text-slate-500">KES revenue</p>
+          <p className="mt-3 text-3xl font-semibold text-slate-950">KES 1.2M</p>
+          <p className="mt-1 text-sm text-slate-600">This month.</p>
         </div>
       </div>
 
-      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 lg:col-span-2">
-        <h2 className="text-xl font-semibold">Quick access</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          <Link href="/organizer/atendeee" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Attendees
-          </Link>
-          <Link href="/organizer/events" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Events
-          </Link>
-          <Link href="/organizer/events/active" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Active events
-          </Link>
-          <Link href="/organizer/events/soldout" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Sold out
-          </Link>
-          <Link href="/organizer/events/createnew" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Create new event
-          </Link>
-          <Link href="/organizer/payments" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Payments
-          </Link>
-          <Link href="/organizer/payments/mpesa" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            M-Pesa config
-          </Link>
-          <Link href="/organizer/staff" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Gate admins / staff
-          </Link>
-          <Link href="/organizer/staff/createnew" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Create staff
-          </Link>
-          <Link href="/organizer/staff/list" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Staff list
-          </Link>
-          <Link href="/organizer/settings" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Settings
-          </Link>
-          <Link href="/organizer/home" className="rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100">
-            Overview
-          </Link>
+      <div className="mt-6 grid gap-4 xl:grid-cols-2">
+        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold">KES revenue trend</h2>
+              <p className="mt-1 text-sm text-slate-500">Income movement over the last 7 days.</p>
+            </div>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">KES</span>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-[1.5rem] bg-slate-950/5 p-4">
+            <ResponsiveContainer width="100%" height={240}>
+              <LineChart data={revenuePoints} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid stroke="rgba(148,163,184,0.15)" vertical={false} />
+                <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
+                <YAxis stroke="#64748b" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}K`} />
+                <Tooltip formatter={(value) => [`${value}K`, "Revenue"]} />
+                <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="mt-5 grid grid-cols-3 gap-3 text-sm text-slate-600">
+            <div>
+              <p className="font-semibold text-slate-900">KES 82K</p>
+              <p>Today</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">KES 248K</p>
+              <p>This week</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">KES 1.2M</p>
+              <p>This month</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold">Bar chart</h2>
+              <p className="mt-1 text-sm text-slate-500">Daily KES bookings this week.</p>
+            </div>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Bar</span>
+          </div>
+
+          <div className="mt-6 h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid stroke="rgba(148,163,184,0.15)" vertical={false} />
+                <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
+                <YAxis stroke="#64748b" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}K`} />
+                <Tooltip formatter={(value) => [`${value}K`, "Bookings"]} />
+                <Bar dataKey="value" fill="#0f172a" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 lg:col-span-2">
+      <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-white p-6">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold">Events and ticket stock</h2>
-            <p className="mt-1 text-sm text-slate-500">Track remaining tickets for each event.</p>
+            <h2 className="text-xl font-semibold">Area graph</h2>
+            <p className="mt-1 text-sm text-slate-500">Bookings and KES flow.</p>
           </div>
-          <div className="rounded-full bg-rose-50 px-4 py-2 text-sm font-medium text-rose-600">
-            Create new event
-          </div>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Area</span>
         </div>
 
-        <div className="mt-5 space-y-4">
-          {[
-            ["Urban Fest Nairobi", "1,240 remaining", "82% sold"],
-            ["Campus Night Live", "540 remaining", "74% sold"],
-            ["Weekend Concert", "1,860 remaining", "61% sold"],
-          ].map(([name, remaining, sold]) => (
-            <div key={name} className="rounded-2xl bg-slate-50 p-4">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-semibold text-slate-900">{name}</p>
-                <p className="text-sm text-slate-500">{remaining}</p>
-              </div>
-              <div className="mt-3 h-2 rounded-full bg-slate-200">
-                <div className="h-2 rounded-full bg-rose-500" style={{ width: sold }} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 lg:col-span-2">
-        <h2 className="text-xl font-semibold">Organizer tools</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl bg-slate-50 p-4">Create event</div>
-          <div className="rounded-2xl bg-slate-50 p-4">Create gate admins</div>
-          <div className="rounded-2xl bg-slate-50 p-4">Open QR scanner</div>
-          <div className="rounded-2xl bg-slate-50 p-4">M-Pesa configuration</div>
-          <div className="rounded-2xl bg-slate-50 p-4">Transactions</div>
-          <div className="rounded-2xl bg-slate-50 p-4">Settings</div>
-        </div>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-2 lg:col-span-2">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-          <h2 className="text-xl font-semibold">Sales and payouts</h2>
-          <div className="mt-4 space-y-3 text-sm text-slate-600">
-            <div className="flex items-center justify-between">
-              <span>Tickets sold today</span>
-              <span className="font-semibold text-slate-900">1,284</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Revenue today</span>
-              <span className="font-semibold text-slate-900">KSh 248K</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Pending payout</span>
-              <span className="font-semibold text-slate-900">KSh 86K</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-          <h2 className="text-xl font-semibold">Audience breakdown</h2>
-          <div className="mt-4 space-y-4">
-            <div>
-              <div className="flex items-center justify-between text-sm text-slate-600">
-                <span>Men</span>
-                <span>58%</span>
-              </div>
-              <div className="mt-2 h-3 rounded-full bg-slate-200">
-                <div className="h-3 rounded-full bg-slate-950" style={{ width: "58%" }} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-sm text-slate-600">
-                <span>Women</span>
-                <span>42%</span>
-              </div>
-              <div className="mt-2 h-3 rounded-full bg-slate-200">
-                <div className="h-3 rounded-full bg-rose-500" style={{ width: "42%" }} />
-              </div>
-            </div>
-          </div>
+        <div className="mt-6 overflow-hidden rounded-[1.5rem] bg-slate-950/5 p-4">
+          <ResponsiveContainer width="100%" height={240}>
+            <AreaChart data={revenuePoints} margin={{ top: 10, right: 5, left: -10, bottom: 0 }}>
+              <defs>
+                <linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid stroke="rgba(148,163,184,0.15)" vertical={false} />
+              <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
+              <YAxis stroke="#64748b" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}K`} />
+              <Tooltip formatter={(value) => [`${value}K`, "Events"]} />
+              <Area type="monotone" dataKey="value" stroke="#3b82f6" fill="url(#areaColor)" strokeWidth={3} />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </AppShell>
