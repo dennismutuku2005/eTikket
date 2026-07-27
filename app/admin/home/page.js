@@ -14,7 +14,7 @@ export default function AdminHomePage() {
     const clientSession = getClientSession();
 
     if (!clientSession) {
-      router.replace("/login");
+      router.replace("/organizer/login");
       return;
     }
 
