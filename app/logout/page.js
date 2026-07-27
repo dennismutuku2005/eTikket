@@ -8,13 +8,13 @@ export default function LogoutPage() {
 
   useEffect(() => {
     document.cookie = "etikket-session=; path=/; max-age=0; samesite=lax";
-    router.replace("/login");
+    router.replace("/organizer/login");
     router.refresh();
   }, [router]);
 
   return (
     <main className="grid min-h-screen place-items-center bg-slate-950 px-6 text-white">
-      <p className="text-sm uppercase tracking-[0.35em] text-slate-400">
+      <p className="text-sm uppercase text-slate-400">
         Logging out...
       </p>
     </main>
