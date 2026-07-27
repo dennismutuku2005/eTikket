@@ -14,7 +14,7 @@ export default function StaffListPage() {
     const clientSession = getClientSession();
 
     if (!clientSession) {
-      router.replace("/login");
+
       return;
     }
 
@@ -51,3 +51,4 @@ export default function StaffListPage() {
     </AppShell>
   );
 }
+      router.replace("/organizer/login");
