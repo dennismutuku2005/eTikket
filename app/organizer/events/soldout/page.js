@@ -14,6 +14,8 @@ export default function SoldOutEventsPage() {
     const clientSession = getClientSession();
 
     if (!clientSession) {
+
+      router.replace("/organizer/login");
       router.replace("/login");
       return;
     }
