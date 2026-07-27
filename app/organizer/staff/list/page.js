@@ -51,4 +51,3 @@ export default function StaffListPage() {
     </AppShell>
   );
 }
-      router.replace("/organizer/login");
