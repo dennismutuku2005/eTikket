@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { demoUsers, getDemoUser, getRoleHomePath } from "@/lib/auth";
+import { getDemoUser, getRoleHomePath } from "@/lib/auth";
 
 export default function LoginForm() {
   const router = useRouter();
