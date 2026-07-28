@@ -5,16 +5,16 @@ import ShareEvent from "../../../components/share-event";
 import { getPublicEvent, publicEvents } from "@/lib/public-events";
 import { PublicHeader } from "../../../components/PublicHeader";
 import { notFound } from "next/navigation";
+import { IoLocationOutline } from "react-icons/io5";
 
 export function generateStaticParams() {
   return publicEvents.map((event) => ({ slug: event.slug }));
 }
 
 export default async function EventDetailPage({ params }) {
-  const { slug } = await params; // ✅ Await params
+  const { slug } = await params;
   const event = getPublicEvent(slug);
   
-  // Handle case where event doesn't exist
   if (!event) {
     notFound();
   }
@@ -27,7 +27,7 @@ export default async function EventDetailPage({ params }) {
 
       <section className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="space-y-5">
-          <div className="relative aspect-[16/9] overflow-hidden rounded-[20px] bg-[#111113]">
+          <div className="relative aspect-video overflow-hidden rounded-[20px] bg-[#111113]">
             <Image
               src={event.image}
               alt=""
@@ -45,7 +45,14 @@ export default async function EventDetailPage({ params }) {
             </div>
             <div className="absolute bottom-5 left-5 right-5 text-white">
               <p className="text-base font-bold text-white/80">{event.category}</p>
-              <h1 className="mt-2 max-w-2xl text-4xl font-bold leading-tight sm:text-5xl">{event.title}</h1>
+              <div className="mt-2 flex items-start justify-between gap-4">
+                <h1 className="max-w-2xl text-4xl font-bold leading-tight sm:text-5xl">{event.title}</h1>
+                <ShareEvent 
+                  title={event.title} 
+                  iconOnly={true}
+                  className="shrink-0 mt-1.5 h-9 w-9 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                />
+              </div>
             </div>
           </div>
 
@@ -79,7 +86,6 @@ export default async function EventDetailPage({ params }) {
                 />
               </div>
               
-              {/* ✅ Fixed: Added the opening <a> tag */}
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${event.mapLat},${event.mapLng}`}
                 target="_blank"
@@ -87,14 +93,7 @@ export default async function EventDetailPage({ params }) {
                 className="flex items-center gap-3 bg-[#f4f4f5] p-4 transition hover:bg-[#ececec]"
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f33959] text-white">
-                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-                    <path
-                      d="M12 21s-7-6.1-7-11.4A7 7 0 0 1 19 9.6C19 14.9 12 21 12 21z"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    />
-                    <circle cx="12" cy="9.6" r="2.4" stroke="currentColor" strokeWidth="1.8" />
-                  </svg>
+                  <IoLocationOutline className="h-4 w-4" />
                 </div>
                 <div>
                   <p className="font-bold">{event.location}</p>
@@ -104,12 +103,11 @@ export default async function EventDetailPage({ params }) {
             </div>
           </div>
 
-          <ShareEvent title={event.title} />
         </div>
 
         {/* Ticket stub */}
         <div className="relative">
-          <div className="relative overflow-hidden rounded-[24px] border border-[#ececec] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+          <div className="relative overflow-hidden rounded-3xl border border-[#ececec] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]">
 
             {/* Stub head: event recap, styled like the info printed at the top of a ticket */}
             <div className="flex items-center justify-between gap-4 p-6">
@@ -124,7 +122,7 @@ export default async function EventDetailPage({ params }) {
               </div>
               <div className="shrink-0 text-right">
                 <p className="text-xs font-bold text-[#a3a3a8]">Venue</p>
-                <p className="mt-1 max-w-[9rem] text-sm font-bold leading-snug">{event.location}</p>
+                <p className="mt-1 max-w-36 text-sm font-bold leading-snug">{event.location}</p>
               </div>
             </div>
 
@@ -138,7 +136,7 @@ export default async function EventDetailPage({ params }) {
             {/* Stub body: the actual ticket selector */}
             <div className="">
               {isSoldOut ? (
-                <div className="rounded-[16px] bg-[#f4f4f5] pt-4 text-center">
+                <div className="rounded-2xl bg-[#f4f4f5] pt-4 text-center">
                   <p className="text-4xl font-bold text-[#a3a3a8]">Sold out</p>
                   <p className="mt-3 text-base leading-7 text-[#6b6b70]">
                     This event has 0 tickets remaining. Browse more events for available ticket classes.
@@ -162,7 +160,7 @@ export default async function EventDetailPage({ params }) {
                   {event.remainingTickets} left
                 </p>
                 <div
-                  className="h-8 flex-1 max-w-[180px] opacity-70"
+                  className="h-8 flex-1 max-w-45 opacity-70"
                   style={{
                     backgroundImage:
                       "repeating-linear-gradient(90deg, #0f0f10 0 2px, transparent 2px 5px, #0f0f10 5px 6px, transparent 6px 10px)",
