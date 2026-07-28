@@ -104,19 +104,18 @@ export default function AppShell({ role, title, subtitle, children }) {
       {menuOpen && <div className="fixed inset-0 z-40 bg-slate-900/30 md:hidden" onClick={() => setMenuOpen(false)} />}
 
       <div className="ml-0 md:ml-72">
-        {/* Simplified header - compact and clean */}
-        <header className="sticky top-0 z-40 border-b border-slate-200 bg-white px-4 py-3 shadow-sm sm:px-6 md:px-8">
+        <header className="sticky top-0 z-40 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 md:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 md:hidden"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 md:hidden"
+                aria-label="Open menu"
               >
-                ☰ Menu
+                ☰
               </button>
-              
-              {/* Title section - only show on larger screens */}
+
               <div className="hidden md:block">
                 <h1 className="text-lg font-semibold text-slate-900">{title}</h1>
                 {subtitle && (
@@ -125,10 +124,9 @@ export default function AppShell({ role, title, subtitle, children }) {
               </div>
             </div>
 
-            {/* User profile - compact */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
+              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-2 py-1.5 pr-4">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
                   {avatarInitials}
                 </span>
                 <div className="hidden sm:block">
@@ -139,7 +137,6 @@ export default function AppShell({ role, title, subtitle, children }) {
             </div>
           </div>
 
-          {/* Mobile title - show only on small screens */}
           <div className="mt-2 block md:hidden">
             <h1 className="text-base font-semibold text-slate-900">{title}</h1>
             {subtitle && (
@@ -148,9 +145,9 @@ export default function AppShell({ role, title, subtitle, children }) {
           </div>
         </header>
 
-        <div className="min-h-screen bg-slate-50 px-3 py-4 text-slate-900 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+        <div className="min-h-screen bg-slate-50 text-slate-900">
           <div className="mx-auto w-full max-w-none">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6">
               <section>{children}</section>
             </div>
           </div>
