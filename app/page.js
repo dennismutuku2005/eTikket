@@ -101,7 +101,7 @@ export default function HomePage() {
               <div className="mt-5 grid gap-3.5 text-[15px] text-white/70">
                 <Link href="/events" className="transition-colors hover:text-white">Events</Link>
                 <Link href="/holiday" className="transition-colors hover:text-white">Holidays</Link>
-                <Link href="/organizer" className="transition-colors hover:text-white">Sell your events</Link>
+                <Link href="/organizer/login" className="transition-colors hover:text-white">Sell your events</Link>
               </div>
             </div>
             <div>
