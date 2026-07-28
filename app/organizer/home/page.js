@@ -49,8 +49,32 @@ export default function OrganizerHomePage() {
     { label: "Fri", value: 100 },
   ];
 
-  const maxBarValue = Math.max(...barData.map((item) => item.value));
-  const maxAreaValue = Math.max(...revenuePoints.map((item) => item.value));
+  const ticketPoints = [
+    { label: "Mon", value: 32 },
+    { label: "Tue", value: 45 },
+    { label: "Wed", value: 38 },
+    { label: "Thu", value: 52 },
+    { label: "Fri", value: 71 },
+    { label: "Sat", value: 64 },
+    { label: "Sun", value: 80 },
+  ];
+
+  const statCards = [
+    { label: "Active events", value: "14", note: "Live events now." },
+    { label: "Sold out events", value: "7", note: "Fully booked shows." },
+    { label: "Data admins", value: "24", note: "Dashboard users." },
+    { label: "KES revenue", value: "KES 1.2M", note: "This month." },
+  ];
+
+  const CustomTooltip = ({ active, payload, label, suffix }) => {
+    if (!active || !payload?.length) return null;
+    return (
+      <div className="rounded-2xl border border-pink-100 bg-white px-3 py-2 text-xs">
+        <p className="font-semibold text-slate-900">{label}</p>
+        <p className="mt-0.5 text-pink-600">{payload[0].value}{suffix}</p>
+      </div>
+    );
+  };
 
   return (
     <AppShell
@@ -59,51 +83,38 @@ export default function OrganizerHomePage() {
       subtitle="Monitor active events, sold-out shows, and KES revenue in one place."
     >
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Active events</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-950">14</p>
-          <p className="mt-1 text-sm text-slate-600">Live events now.</p>
-        </div>
-        <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Sold out events</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-950">7</p>
-          <p className="mt-1 text-sm text-slate-600">Fully booked shows.</p>
-        </div>
-        <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Data admins</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-950">24</p>
-          <p className="mt-1 text-sm text-slate-600">Dashboard users.</p>
-        </div>
-        <div className="rounded-3xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">KES revenue</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-950">KES 1.2M</p>
-          <p className="mt-1 text-sm text-slate-600">This month.</p>
-        </div>
+        {statCards.map((card) => (
+          <div key={card.label} className="rounded-3xl border border-pink-100 bg-white p-5">
+            <p className="text-sm text-slate-500">{card.label}</p>
+            <p className="mt-3 text-3xl font-semibold text-slate-950">{card.value}</p>
+            <p className="mt-1 text-sm text-slate-500">{card.note}</p>
+          </div>
+        ))}
       </div>
 
       <div className="mt-6 grid gap-4 xl:grid-cols-2">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+        <div className="rounded-[1.75rem] border border-pink-100 bg-white p-6">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold">KES revenue trend</h2>
+              <h2 className="text-xl font-semibold text-slate-950">Revenue trend</h2>
               <p className="mt-1 text-sm text-slate-500">Income movement over the last 7 days.</p>
             </div>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">KES</span>
+            <span className="rounded-full bg-pink-50 px-3 py-1 text-sm font-semibold text-pink-600">KES</span>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-[1.5rem] bg-slate-950/5 p-4">
-            <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={revenuePoints} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid stroke="rgba(148,163,184,0.15)" vertical={false} />
-                <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
-                <YAxis stroke="#64748b" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}K`} />
-                <Tooltip formatter={(value) => [`${value}K`, "Revenue"]} />
-                <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} />
+          <div className="mt-6 h-60">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={revenuePoints} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                <CartesianGrid stroke="#fce7f3" vertical={false} />
+                <XAxis dataKey="label" stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
+                <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} tickFormatter={(value) => `${value}K`} />
+                <Tooltip content={<CustomTooltip suffix="K" />} cursor={{ stroke: "#fbcfe8" }} />
+                <Line type="monotone" dataKey="value" stroke="#db2777" strokeWidth={3} dot={{ r: 4, fill: "#db2777", strokeWidth: 0 }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="mt-5 grid grid-cols-3 gap-3 text-sm text-slate-600">
+          <div className="mt-5 grid grid-cols-3 gap-3 border-t border-pink-50 pt-4 text-sm text-slate-600">
             <div>
               <p className="font-semibold text-slate-900">KES 82K</p>
               <p>Today</p>
@@ -119,52 +130,52 @@ export default function OrganizerHomePage() {
           </div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+        <div className="rounded-[1.75rem] border border-pink-100 bg-white p-6">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold">Bar chart</h2>
-              <p className="mt-1 text-sm text-slate-500">Daily KES bookings this week.</p>
+              <h2 className="text-xl font-semibold text-slate-950">Daily bookings</h2>
+              <p className="mt-1 text-sm text-slate-500">Bookings recorded this week.</p>
             </div>
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Bar</span>
+            <span className="rounded-full bg-pink-50 px-3 py-1 text-sm font-semibold text-pink-600">Bar</span>
           </div>
 
-          <div className="mt-6 h-64">
+          <div className="mt-6 h-60">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid stroke="rgba(148,163,184,0.15)" vertical={false} />
-                <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
-                <YAxis stroke="#64748b" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}K`} />
-                <Tooltip formatter={(value) => [`${value}K`, "Bookings"]} />
-                <Bar dataKey="value" fill="#0f172a" radius={[8, 8, 0, 0]} />
+              <BarChart data={barData} margin={{ top: 10, right: 5, left: -20, bottom: 0 }} barCategoryGap="35%">
+                <CartesianGrid stroke="#fce7f3" vertical={false} />
+                <XAxis dataKey="label" stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
+                <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} tickFormatter={(value) => `${value}K`} />
+                <Tooltip content={<CustomTooltip suffix="K" />} cursor={{ fill: "#fdf2f8" }} />
+                <Bar dataKey="value" fill="#ec4899" radius={[10, 10, 10, 10]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-white p-6">
+      <div className="mt-6 rounded-[1.75rem] border border-pink-100 bg-white p-6">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold">Area graph</h2>
-            <p className="mt-1 text-sm text-slate-500">Bookings and KES flow.</p>
+            <h2 className="text-xl font-semibold text-slate-950">Bookings flow</h2>
+            <p className="mt-1 text-sm text-slate-500">Tickets booked over the last 7 days.</p>
           </div>
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Area</span>
+          <span className="rounded-full bg-pink-50 px-3 py-1 text-sm font-semibold text-pink-600">Area</span>
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-[1.5rem] bg-slate-950/5 p-4">
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={revenuePoints} margin={{ top: 10, right: 5, left: -10, bottom: 0 }}>
+        <div className="mt-6 h-60">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={ticketPoints} margin={{ top: 10, right: 5, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#ec4899" stopOpacity={0.28} />
+                  <stop offset="95%" stopColor="#ec4899" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid stroke="rgba(148,163,184,0.15)" vertical={false} />
-              <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
-              <YAxis stroke="#64748b" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}K`} />
-              <Tooltip formatter={(value) => [`${value}K`, "Events"]} />
-              <Area type="monotone" dataKey="value" stroke="#3b82f6" fill="url(#areaColor)" strokeWidth={3} />
+              <CartesianGrid stroke="#fce7f3" vertical={false} />
+              <XAxis dataKey="label" stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
+              <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
+              <Tooltip content={<CustomTooltip suffix=" tickets" />} cursor={{ stroke: "#fbcfe8" }} />
+              <Area type="monotone" dataKey="value" stroke="#db2777" fill="url(#areaColor)" strokeWidth={3} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
