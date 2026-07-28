@@ -64,7 +64,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
     <>
       {isLoading ? <LoadingScreen /> : null}
 
-      <div className="rounded-3xl bg-white p-7 sm:p-10">
+      <div className="bg-white">
         <form className="space-y-4" onSubmit={handleSubmit}>
           <label className="block">
             <span className="mb-2 block text-base font-medium text-slate-700">
@@ -75,7 +75,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
               onChange={(event) => setName(event.target.value)}
               type="text"
               autoComplete="name"
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-rose-400 focus:bg-white"
+              className="w-full rounded-2xl bg-slate-100 px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-400"
               placeholder="Your name"
             />
           </label>
@@ -89,7 +89,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
               onChange={(event) => setEmail(event.target.value)}
               type="email"
               autoComplete="email"
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-rose-400 focus:bg-white"
+              className="w-full rounded-2xl bg-slate-100 px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-400"
               placeholder="you@example.com"
             />
           </label>
@@ -103,7 +103,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
               onChange={(event) => setPhone(event.target.value)}
               type="tel"
               autoComplete="tel"
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-rose-400 focus:bg-white"
+              className="w-full rounded-2xl bg-slate-100 px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-400"
               placeholder="0711000000"
             />
           </label>
@@ -112,7 +112,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
             <span className="mb-2 block text-base font-medium text-slate-700">
               Password
             </span>
-            <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-rose-400 focus-within:bg-white">
+            <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-3 focus-within:bg-white focus-within:ring-2 focus-within:ring-rose-400">
               <input
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
@@ -148,7 +148,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
             <span className="mb-2 block text-base font-medium text-slate-700">
               Confirm password
             </span>
-            <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-rose-400 focus-within:bg-white">
+            <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-3 focus-within:bg-white focus-within:ring-2 focus-within:ring-rose-400">
               <input
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
