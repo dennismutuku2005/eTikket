@@ -9,6 +9,9 @@ import { getClientSession } from "@/lib/client-auth";
 export default function OrganizerSettingsPage() {
   const router = useRouter();
   const [session, setSession] = useState(null);
+  const [mpesaMethod, setMpesaMethod] = useState("Paybill");
+  const [mpesaNumber, setMpesaNumber] = useState("");
+  const [accountName, setAccountName] = useState("");
 
   useEffect(() => {
     const clientSession = getClientSession();
@@ -24,61 +27,115 @@ export default function OrganizerSettingsPage() {
     }
 
     setSession(clientSession);
+
+    const storedConfig = window.localStorage.getItem("organizerMpesaConfig");
+    if (storedConfig) {
+      const parsed = JSON.parse(storedConfig);
+      setMpesaMethod(parsed.type || "Paybill");
+      setMpesaNumber(parsed.number || "");
+      setAccountName(parsed.account || "");
+    }
   }, [router]);
 
   if (!session) {
     return null;
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    const config = {
+      type: mpesaMethod,
+      number: mpesaNumber,
+      account: accountName,
+    };
+    window.localStorage.setItem("organizerMpesaConfig", JSON.stringify(config));
+    alert("MPESA settings saved.");
+  }
+
+  const currentConfig = {
+    type: mpesaMethod,
+    number: mpesaNumber || "Not set",
+    account: accountName || "Not set",
+  };
+
   return (
     <AppShell
       role="Organizer"
       title="Settings"
-      subtitle="Manage event defaults, get alerts sooner, and update organizer settings."
+      subtitle="Update your MPESA paybill or till details and see the current saved configuration."
     >
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-          <div className="flex items-center justify-between gap-4">
+      <div className="space-y-6">
+        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Organizer settings</h2>
-              <p className="mt-2 text-sm text-slate-500">Update defaults, receive alerts sooner, and edit account details for your organizer profile.</p>
+              <h2 className="text-xl font-semibold text-slate-950">MPESA payment info</h2>
+              <p className="mt-2 text-sm text-slate-500">Edit your paybill or till number and account name for event ticket payments.</p>
             </div>
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Profile</span>
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {[
-              { label: "Event defaults", description: "Pre-fill categories, venues, and ticket settings." },
-              { label: "Notification rules", description: "Choose how you receive sales and attendee alerts." },
-              { label: "Payout preferences", description: "Set payout frequency and destination accounts." },
-              { label: "Account profile", description: "Update your name, email, and organizer details." },
-            ].map((item) => (
-              <div key={item.label} className="rounded-3xl bg-slate-50 p-5">
-                <p className="text-sm font-semibold text-slate-900">{item.label}</p>
-                <p className="mt-2 text-sm text-slate-600">{item.description}</p>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_0.95fr]">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+              <p className="text-sm font-semibold text-slate-900">Current MPESA configuration</p>
+              <dl className="mt-4 grid gap-4 text-sm text-slate-600">
+                <div>
+                  <dt className="font-semibold text-slate-900">Type</dt>
+                  <dd className="mt-1">{currentConfig.type}</dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-slate-900">Paybill / Till number</dt>
+                  <dd className="mt-1">{currentConfig.number}</dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-slate-900">Account name</dt>
+                  <dd className="mt-1">{currentConfig.account}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <form onSubmit={handleSubmit} className="rounded-3xl border border-slate-200 bg-white p-5">
+              <div className="grid gap-5">
+                <label className="block">
+                  <span className="text-sm font-semibold text-slate-900">MPESA type</span>
+                  <select
+                    value={mpesaMethod}
+                    onChange={(event) => setMpesaMethod(event.target.value)}
+                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                  >
+                    <option>Paybill</option>
+                    <option>Till</option>
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="text-sm font-semibold text-slate-900">Paybill / Till number</span>
+                  <input
+                    value={mpesaNumber}
+                    onChange={(event) => setMpesaNumber(event.target.value)}
+                    placeholder="Enter paybill or till number"
+                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="text-sm font-semibold text-slate-900">Account name</span>
+                  <input
+                    value={accountName}
+                    onChange={(event) => setAccountName(event.target.value)}
+                    placeholder="Enter account name"
+                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                  />
+                </label>
+
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Save MPESA settings
+                </button>
               </div>
-            ))}
+            </form>
           </div>
-        </div>
-
-        <aside className="space-y-5">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Quick actions</p>
-            <div className="mt-4 space-y-3 text-sm text-slate-600">
-              <button className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-left font-semibold text-slate-900 transition hover:bg-slate-100">
-                Edit payout settings
-              </button>
-              <button className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-left font-semibold text-slate-900 transition hover:bg-slate-100">
-                Set ticket reminder emails
-              </button>
-            </div>
-          </div>
-
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Support</p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Need help with settings or account setup? Open the support page for step-by-step guidance.</p>
-          </div>
-        </aside>
+        </section>
       </div>
     </AppShell>
   );
