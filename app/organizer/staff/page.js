@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FiEye, FiEyeOff, FiLock, FiUsers, FiCamera, FiPlus } from "react-icons/fi";
 import AppShell from "@/components/app-shell";
 import { getRoleHomePath } from "@/lib/auth";
 import { getClientSession } from "@/lib/client-auth";
@@ -40,6 +41,8 @@ export default function OrganizerStaffPage() {
     events: "",
     qrAccess: true,
   });
+  const [visiblePasswords, setVisiblePasswords] = useState({});
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   useEffect(() => {
     const clientSession = getClientSession();
@@ -68,6 +71,10 @@ export default function OrganizerStaffPage() {
     setIsCreateOpen(false);
   }
 
+  function togglePassword(name) {
+    setVisiblePasswords((s) => ({ ...s, [name]: !s[name] }));
+  }
+
   return (
     <AppShell
       role="Organizer"
@@ -77,16 +84,31 @@ export default function OrganizerStaffPage() {
       <div className="space-y-8">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <div className="rounded-3xl border border-slate-200 bg-white p-5">
-            <p className="text-sm text-slate-500">Door staff</p>
-            <p className="mt-3 text-3xl font-semibold">{staffMembers.length}</p>
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700"><FiUsers size={18} /></div>
+              <div>
+                <p className="text-sm text-slate-500">Door staff</p>
+                <p className="mt-1 text-3xl font-semibold">{staffMembers.length}</p>
+              </div>
+            </div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-5">
-            <p className="text-sm text-slate-500">Scanner sessions</p>
-            <p className="mt-3 text-3xl font-semibold">92</p>
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700"><FiCamera size={18} /></div>
+              <div>
+                <p className="text-sm text-slate-500">Scanner sessions</p>
+                <p className="mt-1 text-3xl font-semibold">92</p>
+              </div>
+            </div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-5">
-            <p className="text-sm text-slate-500">Active venues</p>
-            <p className="mt-3 text-3xl font-semibold">11</p>
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700"><FiLock size={18} /></div>
+              <div>
+                <p className="text-sm text-slate-500">Active venues</p>
+                <p className="mt-1 text-3xl font-semibold">11</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -99,8 +121,9 @@ export default function OrganizerStaffPage() {
             <button
               type="button"
               onClick={() => setIsCreateOpen(true)}
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
             >
+              <FiPlus size={16} />
               Create door staff
             </button>
           </div>
@@ -121,7 +144,19 @@ export default function OrganizerStaffPage() {
                   <tr key={member.name} className="border-b border-slate-100 hover:bg-slate-50">
                     <td className="px-5 py-4 font-semibold text-slate-900">{member.name}</td>
                     <td className="px-5 py-4">{member.phone}</td>
-                    <td className="px-5 py-4">{member.password ? "••••••••" : "Not set"}</td>
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <span>{visiblePasswords[member.name] ? member.password : (member.password ? "••••••••" : "Not set")}</span>
+                        <button
+                          type="button"
+                          onClick={() => togglePassword(member.name)}
+                          className="text-slate-500 hover:text-slate-700"
+                          aria-label="Toggle password visibility"
+                        >
+                          {visiblePasswords[member.name] ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                        </button>
+                      </div>
+                    </td>
                     <td className="px-5 py-4">{member.events}</td>
                     <td className="px-5 py-4">
                       <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${member.qrAccess ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
@@ -175,13 +210,23 @@ export default function OrganizerStaffPage() {
 
                   <label className="block">
                     <span className="text-sm font-semibold text-slate-900">Password</span>
-                    <input
-                      type="password"
-                      value={newStaff.password}
-                      onChange={(event) => setNewStaff((current) => ({ ...current, password: event.target.value }))}
-                      placeholder="Enter password"
-                      className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
-                    />
+                    <div className="relative mt-3">
+                      <input
+                        type={showNewPassword ? "text" : "password"}
+                        value={newStaff.password}
+                        onChange={(event) => setNewStaff((current) => ({ ...current, password: event.target.value }))}
+                        placeholder="Enter password"
+                        className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword((s) => !s)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                        aria-label="Toggle new password visibility"
+                      >
+                        {showNewPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                      </button>
+                    </div>
                   </label>
 
                   <label className="block">
