@@ -38,11 +38,7 @@ const navItems = {
     {
       label: "Staff",
       href: "/organizer/staff",
-      children: [
-        { label: "Staff overview", href: "/organizer/staff" },
-        { label: "Create staff", href: "/organizer/staff/createnew" },
-        { label: "Staff list", href: "/organizer/staff/list" },
-      ],
+      children: [{ label: "Staff overview", href: "/organizer/staff" }],
     },
     { label: "Attendees", href: "/organizer/atendeee" },
     { label: "Settings", href: "/organizer/settings" },
