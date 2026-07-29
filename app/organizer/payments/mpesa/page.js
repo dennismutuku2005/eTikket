@@ -132,7 +132,7 @@ export default function OrganizerMpesaPage() {
 
             <aside className="space-y-5">
               <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6">
-                <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Current MPESA details</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Current MPESA details</p>
                 <dl className="mt-6 grid gap-4 text-sm text-slate-600">
                   <div>
                     <dt className="font-semibold text-slate-900">Type</dt>
@@ -150,7 +150,7 @@ export default function OrganizerMpesaPage() {
               </div>
 
               <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6">
-                <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Setup guide</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Setup guide</p>
                 <ul className="mt-4 space-y-3 text-sm text-slate-600">
                   <li className="rounded-3xl bg-white p-4">Use the correct paybill for ticket payments and not the event vendor paybill.</li>
                   <li className="rounded-3xl bg-white p-4">Verify callback URLs in the M-Pesa portal and keep secrets private.</li>
