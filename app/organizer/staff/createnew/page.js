@@ -99,7 +99,7 @@ export default function CreateStaffPage() {
 
         <aside className="space-y-5">
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Tips</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Tips</p>
             <h3 className="mt-3 text-lg font-semibold text-slate-950">Invite staff with event permissions</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               Staff can be assigned to one or more events. Use the event access field to list their assigned event names, and keep each scanner login limited to a single venue.
@@ -107,7 +107,7 @@ export default function CreateStaffPage() {
           </div>
 
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Audit</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Audit</p>
             <div className="mt-4 space-y-3 text-sm text-slate-600">
               <div className="rounded-3xl bg-slate-50 p-4">
                 <p className="font-semibold text-slate-900">Audit-ready logs</p>
