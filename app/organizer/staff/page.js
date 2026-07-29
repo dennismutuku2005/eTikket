@@ -14,18 +14,21 @@ export default function OrganizerStaffPage() {
     {
       name: "Jane Mwangi",
       phone: "0722 123 456",
+      password: "••••••••",
       events: "Nairobi Glow Festival, Campus Night Live",
       qrAccess: true,
     },
     {
       name: "Michael Otieno",
       phone: "0712 987 654",
+      password: "••••••••",
       events: "Coast Holiday Market",
       qrAccess: true,
     },
     {
       name: "Aisha Kamau",
       phone: "0733 555 888",
+      password: "••••••••",
       events: "Family Food Fair, Founders Mixer",
       qrAccess: false,
     },
@@ -61,7 +64,7 @@ export default function OrganizerStaffPage() {
   function handleCreateSubmit(event) {
     event.preventDefault();
     setStaffMembers((current) => [...current, newStaff]);
-    setNewStaff({ name: "", role: "Ticket scanner", events: "", qrAccess: true });
+    setNewStaff({ name: "", phone: "", password: "", events: "", qrAccess: true });
     setIsCreateOpen(false);
   }
 
@@ -98,7 +101,7 @@ export default function OrganizerStaffPage() {
               onClick={() => setIsCreateOpen(true)}
               className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
             >
-              Create gate admin
+              Create door staff
             </button>
           </div>
 
@@ -108,6 +111,7 @@ export default function OrganizerStaffPage() {
                 <tr>
                   <th className="px-5 py-4 font-semibold">Name</th>
                   <th className="px-5 py-4 font-semibold">Phone</th>
+                  <th className="px-5 py-4 font-semibold">Password</th>
                   <th className="px-5 py-4 font-semibold">Assigned events</th>
                   <th className="px-5 py-4 font-semibold">QR scan access</th>
                 </tr>
@@ -116,7 +120,8 @@ export default function OrganizerStaffPage() {
                 {staffMembers.map((member) => (
                   <tr key={member.name} className="border-b border-slate-100 hover:bg-slate-50">
                     <td className="px-5 py-4 font-semibold text-slate-900">{member.name}</td>
-                    <td className="px-5 py-4">{member.role}</td>
+                    <td className="px-5 py-4">{member.phone}</td>
+                    <td className="px-5 py-4">{member.password ? "••••••••" : "Not set"}</td>
                     <td className="px-5 py-4">{member.events}</td>
                     <td className="px-5 py-4">
                       <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${member.qrAccess ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
@@ -158,18 +163,26 @@ export default function OrganizerStaffPage() {
                       />
                     </label>
                     <label className="block">
-                      <span className="text-sm font-semibold text-slate-900">Role</span>
-                      <select
-                        value={newStaff.role}
-                        onChange={(event) => setNewStaff((current) => ({ ...current, role: event.target.value }))}
+                      <span className="text-sm font-semibold text-slate-900">Phone number</span>
+                      <input
+                        value={newStaff.phone}
+                        onChange={(event) => setNewStaff((current) => ({ ...current, phone: event.target.value }))}
+                        placeholder="0722 123 456"
                         className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
-                      >
-                        <option>Ticket scanner</option>
-                        <option>Gate admin</option>
-                        <option>Support staff</option>
-                      </select>
+                      />
                     </label>
                   </div>
+
+                  <label className="block">
+                    <span className="text-sm font-semibold text-slate-900">Password</span>
+                    <input
+                      type="password"
+                      value={newStaff.password}
+                      onChange={(event) => setNewStaff((current) => ({ ...current, password: event.target.value }))}
+                      placeholder="Enter password"
+                      className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                    />
+                  </label>
 
                   <label className="block">
                     <span className="text-sm font-semibold text-slate-900">Assigned event access</span>
