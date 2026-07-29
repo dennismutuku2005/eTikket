@@ -52,6 +52,8 @@ export default function OrganizerAttendeesPage() {
     { label: "Sat", value: 96 },
   ];
 
+  const areaPoints = [18, 28, 24, 36, 42, 48];
+
   return (
     <AppShell
       role="Organizer"
@@ -90,7 +92,7 @@ export default function OrganizerAttendeesPage() {
                     <div className="flex h-32 w-full items-end rounded-2xl bg-white p-1">
                       <div className="w-full rounded-xl bg-slate-900" style={{ height: `${bar.value}%` }} />
                     </div>
-                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{bar.label}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{bar.label}</span>
                   </div>
                 ))}
               </div>
@@ -136,24 +138,46 @@ export default function OrganizerAttendeesPage() {
 
         <aside className="space-y-5">
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Check-in support</p>
-            <h3 className="mt-3 text-lg font-semibold text-slate-950">Manage walk-up and prebooked guests</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Scan tickets at the gate, reassign check-in status, and refresh attendee counts live as the event runs.
-            </p>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Attendance</p>
+                <h3 className="mt-2 text-lg font-semibold text-slate-950">Daily entry flow</h3>
+              </div>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Live</span>
+            </div>
+
+            <div className="mt-5 rounded-[1.25rem] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-4 shadow-sm">
+              <div className="flex h-44 items-end gap-2">
+                {areaPoints.map((point, index) => (
+                  <div key={`${point}-${index}`} className="flex flex-1 flex-col items-center gap-2">
+                    <div className="flex h-32 w-full items-end rounded-2xl bg-white/15 p-1 backdrop-blur-sm">
+                      <div className="w-full rounded-xl bg-gradient-to-t from-emerald-400 via-emerald-300 to-cyan-300" style={{ height: `${point}%` }} />
+                    </div>
+                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">{index + 1}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Gate tools</p>
-            <div className="mt-4 space-y-3 text-sm text-slate-600">
-              <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="font-semibold text-slate-900">Bulk check-in</p>
-                <p className="mt-1">Process groups faster with batch scanning.</p>
-              </div>
-              <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="font-semibold text-slate-900">Scan activity</p>
-                <p className="mt-1">Track the number of scans per event and staff member.</p>
-              </div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Ticket mix</p>
+            <div className="mt-4 space-y-4">
+              {[
+                { label: "VIP", value: 42 },
+                { label: "General", value: 31 },
+                { label: "Advance", value: 27 },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="font-semibold text-slate-900">{item.label}</span>
+                    <span className="text-slate-500">{item.value}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-100">
+                    <div className="h-2 rounded-full bg-slate-900" style={{ width: `${item.value}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </aside>
