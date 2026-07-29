@@ -19,7 +19,7 @@ export default async function OrganizerEventDetailPage({ params }) {
       subtitle="Review event details, ticket activity, and publishing status."
     >
       <div className="grid gap-6 xl:grid-cols-[1.6fr_0.9fr]">
-        <div className="space-y-6 rounded-3xl border border-slate-200 bg-white p-6">
+        <section className="space-y-6">
           <div className="overflow-hidden rounded-[1.75rem] bg-slate-100">
             <div className="relative h-80 w-full">
               <Image src={event.image} alt={event.title} fill className="object-cover" />
@@ -104,7 +104,7 @@ export default async function OrganizerEventDetailPage({ params }) {
               )}
             </div>
           </div>
-        </div>
+        </section>
 
         <aside className="space-y-6">
           <div className="rounded-3xl border border-slate-200 bg-white p-6">
