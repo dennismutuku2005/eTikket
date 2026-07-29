@@ -51,9 +51,13 @@ export default function GateStaffNowPage() {
   const [cameraError, setCameraError] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [sessionState, setSessionState] = useState(() => {
+  const [sessionState, setSessionState] = useState({ status: "loading", isAuthenticated: false, sessionUser: null });
+
+  const { status, isAuthenticated, sessionUser } = sessionState;
+
+  useEffect(() => {
     if (typeof window === "undefined") {
-      return { isAuthenticated: false, sessionUser: null };
+      return;
     }
 
     try {
@@ -61,23 +65,19 @@ export default function GateStaffNowPage() {
       if (storedSession) {
         const parsed = JSON.parse(storedSession);
         if (parsed?.role === "gate_staff") {
-          return { isAuthenticated: true, sessionUser: parsed };
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setSessionState({ status: "ready", isAuthenticated: true, sessionUser: parsed });
+          return;
         }
       }
     } catch {
       window.localStorage.removeItem("etikket-gate-session");
     }
 
-    return { isAuthenticated: false, sessionUser: null };
-  });
-
-  const { isAuthenticated, sessionUser } = sessionState;
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace("/gatestaff/login");
-    }
-  }, [isAuthenticated, router]);
+    router.replace("/gatestaff/login");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSessionState({ status: "ready", isAuthenticated: false, sessionUser: null });
+  }, [router]);
 
   useEffect(() => {
     return () => {
@@ -221,11 +221,19 @@ export default function GateStaffNowPage() {
       window.localStorage.removeItem("etikket-gate-session");
     }
 
-    setSessionState({ isAuthenticated: false, sessionUser: null });
+    setSessionState({ status: "ready", isAuthenticated: false, sessionUser: null });
     setTicketCode("");
     setSelectedTicket(null);
     setStatusMessage("Scan a ticket QR code to view details.");
     router.replace("/gatestaff/login");
+  }
+
+  if (status === "loading") {
+    return (
+      <main className="flex min-h-dvh items-center justify-center bg-slate-50 px-6 text-center text-sm font-medium text-slate-600">
+        Checking gate-staff access...
+      </main>
+    );
   }
 
   if (!isAuthenticated) {
