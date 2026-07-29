@@ -6,9 +6,19 @@ import AppShell from "@/components/app-shell";
 import { getRoleHomePath } from "@/lib/auth";
 import { getClientSession } from "@/lib/client-auth";
 
+const defaultConfig = {
+  type: "Paybill",
+  number: "",
+  account: "",
+};
+
 export default function OrganizerMpesaPage() {
   const router = useRouter();
   const [session, setSession] = useState(null);
+  const [mpesaMethod, setMpesaMethod] = useState(defaultConfig.type);
+  const [mpesaNumber, setMpesaNumber] = useState(defaultConfig.number);
+  const [accountName, setAccountName] = useState(defaultConfig.account);
+  const [savedConfig, setSavedConfig] = useState(defaultConfig);
 
   useEffect(() => {
     const clientSession = getClientSession();
@@ -24,104 +34,131 @@ export default function OrganizerMpesaPage() {
     }
 
     setSession(clientSession);
+
+    const storedConfig = window.localStorage.getItem("organizerMpesaConfig");
+    if (storedConfig) {
+      try {
+        const parsed = JSON.parse(storedConfig);
+        setMpesaMethod(parsed.type || defaultConfig.type);
+        setMpesaNumber(parsed.number || defaultConfig.number);
+        setAccountName(parsed.account || defaultConfig.account);
+        setSavedConfig({
+          type: parsed.type || defaultConfig.type,
+          number: parsed.number || defaultConfig.number,
+          account: parsed.account || defaultConfig.account,
+        });
+      } catch (error) {
+        console.error("Failed to parse saved MPESA config", error);
+      }
+    }
   }, [router]);
 
   if (!session) {
     return null;
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    const config = {
+      type: mpesaMethod,
+      number: mpesaNumber,
+      account: accountName,
+    };
+    window.localStorage.setItem("organizerMpesaConfig", JSON.stringify(config));
+    setSavedConfig(config);
+    window.alert("MPESA settings saved.");
+  }
+
   return (
     <AppShell
       role="Organizer"
       title="M-Pesa configuration"
-      subtitle="Set the paybill, till, callbacks, and ticket payment rules for your events."
+      subtitle="Set the paybill or till number and account name for your ticket payments."
     >
-      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-          <div className="flex items-center justify-between gap-4">
+      <div className="space-y-6">
+        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Paybill integration</h2>
-              <p className="mt-2 text-sm text-slate-500">Configure your M-Pesa paybill settings and webhook endpoints for ticket payments.</p>
-            </div>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Live</span>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm text-slate-500">Paybill</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">123456</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm text-slate-500">Till</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">789012</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm text-slate-500">Callback URL</p>
-              <p className="mt-2 text-sm font-semibold text-slate-950">https://etikket.co.ke/api/mpesa/callback</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm text-slate-500">Webhook secret</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">••••••••</p>
+              <h2 className="text-xl font-semibold text-slate-950">M-Pesa payment routing</h2>
+              <p className="mt-2 text-sm text-slate-500">Update the paybill or till number and account name used for ticket payments.</p>
             </div>
           </div>
 
-          <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm font-semibold text-slate-900">Transaction rules</p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Configure payment success callbacks and refund rules for event ticket purchases. This ensures accounting stays aligned with M-Pesa receipts.
-            </p>
-          </div>
+          <div className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+            <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="text-sm font-semibold text-slate-900">MPESA type</span>
+                    <select
+                      value={mpesaMethod}
+                      onChange={(event) => setMpesaMethod(event.target.value)}
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                    >
+                      <option>Paybill</option>
+                      <option>Till</option>
+                    </select>
+                  </label>
 
-          <div className="mt-6 overflow-x-auto rounded-[1.75rem] border border-slate-200 bg-white p-4">
-            <h3 className="text-lg font-semibold text-slate-950">Recent M-Pesa receipts</h3>
-            <table className="mt-4 w-full text-left text-sm text-slate-700">
-              <thead className="border-b border-slate-200 text-slate-500">
-                <tr>
-                  <th className="px-4 py-3 font-semibold">Reference</th>
-                  <th className="px-4 py-3 font-semibold">Amount</th>
-                  <th className="px-4 py-3 font-semibold">Event</th>
-                  <th className="px-4 py-3 font-semibold">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { ref: "PAY12345", amount: "KSh 2,500", event: "Nairobi Glow Festival", status: "Confirmed" },
-                  { ref: "PAY12346", amount: "KSh 1,200", event: "Campus Night Live", status: "Confirmed" },
-                  { ref: "PAY12347", amount: "KSh 1,500", event: "Coast Holiday Market", status: "Pending" },
-                ].map((row) => (
-                  <tr key={row.ref} className="border-t border-slate-200 hover:bg-slate-50">
-                    <td className="px-4 py-3 font-semibold text-slate-900">{row.ref}</td>
-                    <td className="px-4 py-3">{row.amount}</td>
-                    <td className="px-4 py-3">{row.event}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${row.status === "Confirmed" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
-                        {row.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  <label className="block">
+                    <span className="text-sm font-semibold text-slate-900">Paybill / Till number</span>
+                    <input
+                      value={mpesaNumber}
+                      onChange={(event) => setMpesaNumber(event.target.value)}
+                      placeholder="Enter paybill or till number"
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                    />
+                  </label>
+                </div>
 
-        <aside className="space-y-5">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">M-Pesa status</p>
-            <h3 className="mt-3 text-lg font-semibold text-slate-950">Connected</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Your paybill and webhook are configured. Incoming ticket payments will automatically be marked as paid when the callback is received.
-            </p>
-          </div>
+                <label className="block">
+                  <span className="text-sm font-semibold text-slate-900">Account name</span>
+                  <input
+                    value={accountName}
+                    onChange={(event) => setAccountName(event.target.value)}
+                    placeholder="Enter account name"
+                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                  />
+                </label>
 
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Setup guide</p>
-            <ul className="mt-4 space-y-3 text-sm text-slate-600">
-              <li className="rounded-3xl bg-slate-50 p-4">Use the correct paybill for ticket payments and not the event vendor paybill.</li>
-              <li className="rounded-3xl bg-slate-50 p-4">Verify callback URLs in the M-Pesa portal and keep secrets private.</li>
-            </ul>
+                <button
+                  type="submit"
+                  className="inline-flex w-full items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Save MPESA settings
+                </button>
+              </form>
+            </div>
+
+            <aside className="space-y-5">
+              <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6">
+                <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Current MPESA details</p>
+                <dl className="mt-6 grid gap-4 text-sm text-slate-600">
+                  <div>
+                    <dt className="font-semibold text-slate-900">Type</dt>
+                    <dd className="mt-1 text-slate-950">{savedConfig.type}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold text-slate-900">Paybill / Till number</dt>
+                    <dd className="mt-1 text-slate-950">{savedConfig.number || "Not set"}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold text-slate-900">Account name</dt>
+                    <dd className="mt-1 text-slate-950">{savedConfig.account || "Not set"}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6">
+                <p className="text-sm uppercase tracking-[0.18em] text-slate-500">Setup guide</p>
+                <ul className="mt-4 space-y-3 text-sm text-slate-600">
+                  <li className="rounded-3xl bg-white p-4">Use the correct paybill for ticket payments and not the event vendor paybill.</li>
+                  <li className="rounded-3xl bg-white p-4">Verify callback URLs in the M-Pesa portal and keep secrets private.</li>
+                </ul>
+              </div>
+            </aside>
           </div>
-        </aside>
+        </section>
       </div>
     </AppShell>
   );
