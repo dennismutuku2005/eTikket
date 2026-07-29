@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,33 @@ import { getClientSession } from "@/lib/client-auth";
 export default function OrganizerPaymentsPage() {
   const router = useRouter();
   const [session, setSession] = useState(null);
+
+  const transactions = [
+    {
+      event: "Urban Fest Nairobi",
+      type: "Ticket sale",
+      amount: "KSh 2,500",
+      status: "Paid",
+      payer: "+254 712 345 678",
+      mpesa: "AB12CD34",
+    },
+    {
+      event: "Campus Night Live",
+      type: "Ticket sale",
+      amount: "KSh 1,500",
+      status: "Paid",
+      payer: "+254 723 456 789",
+      mpesa: "XY98ZT76",
+    },
+    {
+      event: "Weekend Concert",
+      type: "Payout",
+      amount: "KSh 48,000",
+      status: "Pending",
+      payer: "MPESA payout",
+      mpesa: "MPESA-8901",
+    },
+  ];
 
   useEffect(() => {
     const clientSession = getClientSession();
@@ -34,51 +61,63 @@ export default function OrganizerPaymentsPage() {
     <AppShell
       role="Organizer"
       title="Payments"
-      subtitle="Review payouts, ticket sales, and transaction history for every event."
+      subtitle="Review payouts, ticket sales, paid amounts, and MPESA codes in a clean organizer layout."
     >
-      <div className="space-y-6">
-        <section className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white">
-          <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-            <h2 className="text-lg font-semibold text-slate-950">Sales summary</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-px text-sm text-slate-700 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              ["Gross sales", "KSh 1.8M"],
-              ["Transactions", "4,216"],
-              ["Pending payout", "KSh 248K"],
-              ["Failed payments", "12"],
-            ].map(([label, value]) => (
-              <div key={label} className="bg-white px-6 py-5">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">{label}</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-950">{value}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+      <div className="space-y-8">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { label: "Gross sales", value: "KSh 1.8M", description: "Total revenue collected" },
+            { label: "Transactions", value: "4,216", description: "Successful payments" },
+            { label: "Pending payout", value: "KSh 248K", description: "Waiting to clear" },
+            { label: "Failed payments", value: "12", description: "Declined or timed out" },
+          ].map((item) => (
+            <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-5">
+              <p className="text-sm text-slate-500">{item.label}</p>
+              <p className="mt-3 text-3xl font-semibold text-slate-950">{item.value}</p>
+              <p className="mt-2 text-sm text-slate-500">{item.description}</p>
+            </div>
+          ))}
+        </div>
 
-        <section className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white">
-          <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-            <h2 className="text-lg font-semibold text-slate-950">Transaction log</h2>
+        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-slate-950">Transaction log</h2>
+              <p className="mt-2 text-sm text-slate-500">Latest paid and pending entries, with MPESA reference codes and paid amounts.</p>
+            </div>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+            >
+              Export report
+            </button>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse text-sm">
+
+          <div className="mt-6 overflow-x-auto">
+            <table className="min-w-full border-collapse text-sm text-slate-700">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="px-6 py-3 text-left font-semibold">Transaction</th>
+                  <th className="px-6 py-3 text-left font-semibold">Event</th>
+                  <th className="px-6 py-3 text-left font-semibold">Type</th>
                   <th className="px-6 py-3 text-left font-semibold">Amount</th>
+                  <th className="px-6 py-3 text-left font-semibold">Paid by</th>
+                  <th className="px-6 py-3 text-left font-semibold">MPESA code</th>
                   <th className="px-6 py-3 text-left font-semibold">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  ["Urban Fest Nairobi", "Ticket sale", "KSh 2,500", "Completed"],
-                  ["Campus Night Live", "Ticket sale", "KSh 1,500", "Completed"],
-                  ["Weekend Concert", "Payout", "Pending", "Pending"],
-                ].map(([eventName, type, amount, status]) => (
-                  <tr key={`${eventName}-${type}`} className="border-t border-slate-200 hover:bg-slate-50">
-                    <td className="whitespace-nowrap px-6 py-3">{eventName} - {type}</td>
-                    <td className="whitespace-nowrap px-6 py-3 font-semibold text-slate-950">{amount}</td>
-                    <td className="whitespace-nowrap px-6 py-3 text-slate-500">{status}</td>
+                {transactions.map((tx) => (
+                  <tr key={tx.mpesa} className="border-t border-slate-200 hover:bg-slate-50">
+                    <td className="px-6 py-3 text-slate-950">{tx.event}</td>
+                    <td className="px-6 py-3 text-slate-700">{tx.type}</td>
+                    <td className="px-6 py-3 font-semibold text-slate-950">{tx.amount}</td>
+                    <td className="px-6 py-3 text-slate-700">{tx.payer}</td>
+                    <td className="px-6 py-3 text-slate-700">{tx.mpesa}</td>
+                    <td className="px-6 py-3">
+                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${tx.status === "Paid" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                        {tx.status}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
