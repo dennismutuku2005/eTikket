@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { getClientSession } from "@/lib/client-auth";
 
 const navItems = {
@@ -12,14 +13,38 @@ const navItems = {
     { label: "Platform settings", href: "/admin/home" },
   ],
   Organizer: [
-    { label: "Overview", href: "/organizer/home" },
-    { label: "Events", href: "/organizer/events" },
-    { label: "Active events", href: "/organizer/events/active" },
-    { label: "Sold out", href: "/organizer/events/soldout" },
-    { label: "Create event", href: "/organizer/events/createnew" },
-    { label: "Payments", href: "/organizer/payments" },
-    { label: "M-Pesa", href: "/organizer/payments/mpesa" },
-    { label: "Gate staff", href: "/organizer/staff" },
+    {
+      label: "Overview",
+      href: "/organizer/home",
+    },
+    {
+      label: "Events",
+      href: "/organizer/events",
+      children: [
+        { label: "All events", href: "/organizer/events" },
+        { label: "Active events", href: "/organizer/events/active" },
+        { label: "Sold out", href: "/organizer/events/soldout" },
+        { label: "Create event", href: "/organizer/events/createnew" },
+      ],
+    },
+    {
+      label: "Payments",
+      href: "/organizer/payments",
+      children: [
+        { label: "Payments overview", href: "/organizer/payments" },
+        { label: "M-Pesa settings", href: "/organizer/payments/mpesa" },
+      ],
+    },
+    {
+      label: "Staff",
+      href: "/organizer/staff",
+      children: [
+        { label: "Staff overview", href: "/organizer/staff" },
+        { label: "Create staff", href: "/organizer/staff/createnew" },
+        { label: "Staff list", href: "/organizer/staff/list" },
+      ],
+    },
+    { label: "Attendees", href: "/organizer/atendeee" },
     { label: "Settings", href: "/organizer/settings" },
   ],
   User: [
@@ -30,6 +55,7 @@ const navItems = {
 };
 
 export default function AppShell({ role, title, subtitle, children }) {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [session, setSession] = useState(null);
   const menu = navItems[role] ?? [];
@@ -73,15 +99,40 @@ export default function AppShell({ role, title, subtitle, children }) {
           </div>
 
           <nav className="mt-8 space-y-1">
-            {menu.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {menu.map((item) => {
+              const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+
+              return (
+                <div key={item.href} className="space-y-1">
+                  <Link
+                    href={item.href}
+                    className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+                      isActive ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                  {item.children ? (
+                    <div className="ml-4 space-y-1">
+                      {item.children.map((child) => {
+                        const childActive = pathname === child.href;
+                        return (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className={`block rounded-2xl px-4 py-2 text-sm transition ${
+                              childActive ? "bg-slate-100 text-slate-950" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                            }`}
+                          >
+                            {child.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </nav>
 
           <div className="mt-auto border-t border-slate-200 pt-6">
