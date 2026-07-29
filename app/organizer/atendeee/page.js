@@ -53,6 +53,11 @@ export default function OrganizerAttendeesPage() {
   ];
 
   const areaPoints = [18, 28, 24, 36, 42, 48];
+  const pieSegments = [
+    { label: "VIP", value: 42, color: "from-emerald-500 to-emerald-400" },
+    { label: "General", value: 31, color: "from-slate-700 to-slate-500" },
+    { label: "Advance", value: 27, color: "from-cyan-500 to-sky-400" },
+  ];
 
   return (
     <AppShell
@@ -147,7 +152,11 @@ export default function OrganizerAttendeesPage() {
             </div>
 
             <div className="mt-5 rounded-[1.25rem] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-4 shadow-sm">
-              <div className="flex h-44 items-end gap-2">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-semibold text-white">Entry curve</p>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">Area graph</span>
+              </div>
+              <div className="mt-4 flex h-44 items-end gap-2">
                 {areaPoints.map((point, index) => (
                   <div key={`${point}-${index}`} className="flex flex-1 flex-col items-center gap-2">
                     <div className="flex h-32 w-full items-end rounded-2xl bg-white/15 p-1 backdrop-blur-sm">
@@ -162,22 +171,27 @@ export default function OrganizerAttendeesPage() {
 
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Ticket mix</p>
-            <div className="mt-4 space-y-4">
-              {[
-                { label: "VIP", value: 42 },
-                { label: "General", value: 31 },
-                { label: "Advance", value: 27 },
-              ].map((item) => (
-                <div key={item.label}>
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="font-semibold text-slate-900">{item.label}</span>
-                    <span className="text-slate-500">{item.value}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-slate-100">
-                    <div className="h-2 rounded-full bg-slate-900" style={{ width: `${item.value}%` }} />
+            <div className="mt-5 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+              <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-[conic-gradient(#10b981_0_42%,#475569_42%_73%,#38bdf8_73%_100%)] p-3">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-white text-center">
+                  <div>
+                    <p className="text-3xl font-semibold text-slate-950">100%</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">tickets</p>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="w-full space-y-3">
+                {pieSegments.map((segment) => (
+                  <div key={segment.label} className="flex items-center justify-between rounded-2xl bg-slate-50 px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`h-3 w-3 rounded-full bg-gradient-to-r ${segment.color}`} />
+                      <span className="text-sm font-semibold text-slate-900">{segment.label}</span>
+                    </div>
+                    <span className="text-sm text-slate-600">{segment.value}%</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </aside>
