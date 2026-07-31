@@ -52,6 +52,7 @@ export default function GateStaffNowPage() {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [sessionState, setSessionState] = useState({ status: "loading", isAuthenticated: false, sessionUser: null });
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
 
   const { status, isAuthenticated, sessionUser } = sessionState;
 
@@ -105,6 +106,7 @@ export default function GateStaffNowPage() {
 
     setSelectedTicket(ticket);
     setStatusMessage(`Ticket found for ${ticket.attendeeName}.`);
+    setShowVerifyModal(true);
     return ticket;
   }
 
@@ -205,6 +207,7 @@ export default function GateStaffNowPage() {
 
     setSelectedTicket(updatedTicket);
     setStatusMessage(`Verified and marked used for ${updatedTicket.attendeeName}.`);
+    setShowVerifyModal(false);
   }
 
   async function handleUseDemoCode() {
@@ -230,7 +233,7 @@ export default function GateStaffNowPage() {
 
   if (status === "loading") {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-slate-50 px-6 text-center text-sm font-medium text-slate-600">
+      <main className="flex min-h-dvh items-center justify-center bg-[#fafafa] px-6 text-center text-sm font-bold text-[#6b6b70]">
         Checking gate-staff access...
       </main>
     );
@@ -241,135 +244,234 @@ export default function GateStaffNowPage() {
   }
 
   return (
-    <main className="min-h-dvh overflow-y-auto bg-white text-slate-900">
-      <div className="grid min-h-dvh w-full overflow-hidden lg:grid-cols-[1fr]">
-        <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-slate-50 px-6 py-10 sm:px-10 lg:px-12">
-          <div className="w-full max-w-xl">
-            <Image src="/eTikketwhite.png" alt="eTikket logo" width={140} height={42} priority className="h-auto w-32" />
+    <main className="min-h-dvh overflow-y-auto bg-[#fafafa] text-[#0f0f10]">
+      {/* Ticket Verify Modal */}
+      {showVerifyModal && selectedTicket && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-[24px] border border-[#ececec] bg-white p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="flex items-start justify-between gap-3 border-b border-[#ececec] pb-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-[#f33959]">Ticket verification</p>
+                <h3 className="mt-1 text-xl font-bold text-[#0f0f10]">Confirm check-in</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowVerifyModal(false)}
+                className="rounded-full border border-[#ececec] bg-white px-3 py-1.5 text-xs font-bold text-[#0f0f10] hover:bg-[#f4f4f5] transition"
+              >
+                Close
+              </button>
+            </div>
 
-            <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mt-5 space-y-3">
+              <div className="flex items-center justify-between rounded-[16px] bg-[#fafafa] border border-[#ececec] px-4 py-3">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Attendee</p>
+                  <p className="mt-0.5 text-base font-bold text-[#0f0f10]">{selectedTicket.attendeeName}</p>
+                </div>
+                <span className={`rounded-full px-3 py-1 text-xs font-bold ${selectedTicket.status === "Verified" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                  {selectedTicket.status}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Event</p>
+                  <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{selectedTicket.eventName}</p>
+                </div>
+                <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Ticket type</p>
+                  <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{selectedTicket.ticketType}</p>
+                </div>
+              </div>
+
+              <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Ticket code</p>
+                <p className="mt-0.5 font-mono text-sm font-bold text-[#0f0f10]">{selectedTicket.code}</p>
+              </div>
+
+              <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Verified by</p>
+                <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{staffDetails.name} · {staffDetails.phone}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowVerifyModal(false)}
+                className="flex-1 rounded-full border border-[#ececec] bg-white py-3 text-sm font-bold text-[#0f0f10] transition hover:bg-[#f4f4f5]"
+              >
+                Cancel
+              </button>
+              {selectedTicket.status !== "Verified" && (
+                <button
+                  type="button"
+                  onClick={handleVerifyTicket}
+                  className="flex-1 rounded-full bg-[#f33959] py-3 text-sm font-bold text-white transition hover:bg-[#d92847]"
+                >
+                  ✓ Mark as used
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid min-h-dvh w-full overflow-hidden lg:grid-cols-[1fr]">
+        <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-[#fafafa] px-6 py-10 sm:px-10 lg:px-12">
+          <div className="w-full max-w-xl">
+            <Image src="/eTikketwhite.png" alt="eTikket logo" width={140} height={42} priority className="h-auto w-32 filter invert" />
+
+            <div className="mt-8 rounded-[24px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-2xl font-semibold text-slate-950">Gate staff check-in</h2>
-                  <p className="mt-2 text-sm text-slate-500">Scan the QR code and verify the attendee instantly.</p>
+                  <h2 className="text-2xl font-bold text-[#0f0f10]">Gate staff check-in</h2>
+                  <p className="mt-1 text-sm text-[#6b6b70]">Scan the QR code and verify the attendee instantly.</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Live</span>
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Live</span>
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#ececec] bg-white px-3 py-1.5 text-xs font-bold text-[#0f0f10] transition hover:bg-[#f4f4f5]"
                   >
-                    <FiLogOut size={14} />
+                    <FiLogOut size={13} />
                     Logout
                   </button>
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between rounded-[1.25rem] border border-slate-200 bg-slate-50 px-4 py-3">
+              <div className="mt-4 flex items-center justify-between rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Signed in as</p>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">{sessionUser?.name || staffDetails.name}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Signed in as</p>
+                  <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{sessionUser?.name || staffDetails.name}</p>
                 </div>
-                <div className="flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-semibold text-slate-700">
-                  <FiUsers size={14} />
+                <div className="flex items-center gap-1.5 rounded-full bg-white border border-[#ececec] px-3 py-1 text-xs font-bold text-[#6b6b70]">
+                  <FiUsers size={12} />
                   {sessionUser?.email || "gate@etikket.co.ke"}
                 </div>
               </div>
 
-              <div className="mt-6 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                  <FiCode size={16} />
+              <div className="mt-5 rounded-[14px] border border-[#ececec] bg-[#fafafa] p-4">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6b6b70]">
+                  <FiCode size={14} className="text-[#f33959]" />
                   <span>QR scanner</span>
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={isCameraActive ? stopCamera : startCamera}
-                    className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-600"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#f33959] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#d92847]"
                   >
-                    <FiCamera size={16} />
+                    <FiCamera size={14} />
                     {isCameraActive ? "Stop camera" : "Open camera"}
                   </button>
                   <button
                     type="button"
                     onClick={handleUseDemoCode}
-                    className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                    className="rounded-full border border-[#ececec] bg-white px-4 py-2 text-xs font-bold text-[#0f0f10] transition hover:bg-[#f4f4f5]"
                   >
                     Use demo ticket
                   </button>
                 </div>
 
-                {cameraError ? <p className="mt-3 text-sm text-rose-600">{cameraError}</p> : null}
-                {isScanning ? <p className="mt-3 text-sm text-slate-600">Scanning for QR codes...</p> : null}
+                {cameraError ? <p className="mt-2 text-xs font-bold text-[#f33959]">{cameraError}</p> : null}
+                {isScanning ? <p className="mt-2 text-xs text-[#6b6b70]">Scanning for QR codes...</p> : null}
 
-                <div className="mt-4 overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white">
+                <div className="mt-3 overflow-hidden rounded-[12px] border border-[#ececec] bg-white">
                   {isCameraActive ? (
-                    <video ref={videoRef} className="h-52 w-full object-cover" playsInline muted />
+                    <video ref={videoRef} className="h-48 w-full object-cover" playsInline muted />
                   ) : (
-                    <div className="flex h-52 items-center justify-center bg-slate-100 p-4 text-center text-sm text-slate-500">
+                    <div className="flex h-48 items-center justify-center bg-[#f4f4f5] p-4 text-center text-xs font-bold text-[#6b6b70]">
                       Camera view will appear here when scanning starts.
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="mt-6 rounded-[1.25rem] border border-slate-200 bg-white p-4">
+              <form onSubmit={handleScanSubmit} className="mt-4 flex gap-2">
+                <input
+                  type="text"
+                  value={ticketCode}
+                  onChange={(e) => setTicketCode(e.target.value)}
+                  placeholder="Enter ticket code e.g. TKT-1042"
+                  className="h-11 flex-1 rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
+                />
+                <button
+                  type="submit"
+                  className="h-11 rounded-full bg-[#111113] px-5 text-xs font-bold text-white transition hover:bg-[#0f0f10]"
+                >
+                  Lookup
+                </button>
+              </form>
+
+              <div className="mt-5 rounded-[14px] border border-[#ececec] bg-[#fafafa] p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Ticket details</p>
-                    <p className="mt-1 text-sm text-slate-500">{statusMessage}</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Ticket details</p>
+                    <p className="mt-0.5 text-xs text-[#6b6b70]">{statusMessage}</p>
                   </div>
-                  <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">
-                    <FiUsers size={14} />
+                  <div className="flex items-center gap-1.5 rounded-full bg-white border border-[#ececec] px-3 py-1 text-xs font-bold text-[#6b6b70]">
+                    <FiUsers size={12} />
                     {staffDetails.name}
                   </div>
                 </div>
 
                 {selectedTicket ? (
-                  <div className="mt-4 space-y-3 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4">
+                  <div className="mt-4 space-y-3 rounded-[12px] border border-[#ececec] bg-white p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="text-lg font-semibold text-slate-950">{selectedTicket.attendeeName}</p>
-                        <p className="text-sm text-slate-500">{selectedTicket.eventName}</p>
+                        <p className="text-base font-bold text-[#0f0f10]">{selectedTicket.attendeeName}</p>
+                        <p className="text-xs text-[#6b6b70]">{selectedTicket.eventName}</p>
                       </div>
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${selectedTicket.status === "Verified" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                      <span className={`rounded-full px-3 py-1 text-xs font-bold ${selectedTicket.status === "Verified" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                         {selectedTicket.status}
                       </span>
                     </div>
 
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-2xl bg-white p-3">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Ticket type</p>
-                        <p className="mt-1 text-sm font-semibold text-slate-900">{selectedTicket.ticketType}</p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="rounded-[10px] bg-[#fafafa] border border-[#ececec] px-3 py-2.5">
+                        <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Ticket type</p>
+                        <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{selectedTicket.ticketType}</p>
                       </div>
-                      <div className="rounded-2xl bg-white p-3">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Code</p>
-                        <p className="mt-1 text-sm font-semibold text-slate-900">{selectedTicket.code}</p>
+                      <div className="rounded-[10px] bg-[#fafafa] border border-[#ececec] px-3 py-2.5">
+                        <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Code</p>
+                        <p className="mt-0.5 font-mono text-sm font-bold text-[#0f0f10]">{selectedTicket.code}</p>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-white p-3">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Scanned by</p>
-                      <p className="mt-1 text-sm font-semibold text-slate-900">
-                        {selectedTicket.scannedBy || `${staffDetails.name} • ${staffDetails.phone}`}
+                    <div className="rounded-[10px] bg-[#fafafa] border border-[#ececec] px-3 py-2.5">
+                      <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Scanned by</p>
+                      <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">
+                        {selectedTicket.scannedBy || `${staffDetails.name} · ${staffDetails.phone}`}
                       </p>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-0.5 text-xs text-[#6b6b70]">
                         {selectedTicket.scannedAt ? `Verified at ${selectedTicket.scannedAt}` : "Not verified yet"}
                       </p>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={handleVerifyTicket}
-                      className="w-full rounded-full bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-                    >
-                      Verify and mark as used
-                    </button>
+                    {selectedTicket.status !== "Verified" && (
+                      <button
+                        type="button"
+                        onClick={() => setShowVerifyModal(true)}
+                        className="w-full rounded-full bg-[#f33959] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#d92847]"
+                      >
+                        <FiCheckCircle className="mr-2 inline-block h-4 w-4" />
+                        Verify and mark as used
+                      </button>
+                    )}
+
+                    {selectedTicket.status === "Verified" && (
+                      <div className="flex items-center justify-center gap-2 rounded-full bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700">
+                        <FiCheckCircle className="h-4 w-4" />
+                        Ticket verified successfully
+                      </div>
+                    )}
                   </div>
                 ) : (
-                  <div className="mt-4 rounded-[1.25rem] border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+                  <div className="mt-4 rounded-[12px] border border-dashed border-[#ececec] bg-white p-4 text-center text-xs font-bold text-[#6b6b70]">
                     No ticket loaded yet. Scan a QR code or use the demo code.
                   </div>
                 )}
