@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -71,50 +71,50 @@ export default function OrganizerPaymentsPage() {
             { label: "Pending payout", value: "KSh 248K", description: "Waiting to clear" },
             { label: "Failed payments", value: "12", description: "Declined or timed out" },
           ].map((item) => (
-            <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-5">
-              <p className="text-sm text-slate-500">{item.label}</p>
-              <p className="mt-3 text-3xl font-semibold text-slate-950">{item.value}</p>
-              <p className="mt-2 text-sm text-slate-500">{item.description}</p>
+            <div key={item.label} className="rounded-[20px] border border-[#ececec] bg-white p-5 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+              <p className="text-sm font-bold text-[#6b6b70]">{item.label}</p>
+              <p className="mt-3 text-3xl font-bold text-[#0f0f10]">{item.value}</p>
+              <p className="mt-1 text-xs text-[#6b6b70]">{item.description}</p>
             </div>
           ))}
         </div>
 
-        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Transaction log</h2>
-              <p className="mt-2 text-sm text-slate-500">Latest paid and pending entries, with MPESA reference codes and paid amounts.</p>
+              <h2 className="text-xl font-bold text-[#0f0f10]">Transaction log</h2>
+              <p className="mt-1 text-sm text-[#6b6b70]">Latest paid and pending entries with M-Pesa reference codes.</p>
             </div>
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+              className="inline-flex items-center justify-center rounded-full border border-[#ececec] bg-white px-4 py-2 text-xs font-bold text-[#0f0f10] transition hover:bg-[#f4f4f5]"
             >
               Export report
             </button>
           </div>
 
           <div className="mt-6 overflow-x-auto">
-            <table className="min-w-full border-collapse text-sm text-slate-700">
-              <thead className="bg-slate-50 text-slate-500">
+            <table className="min-w-full border-collapse text-sm text-[#0f0f10]">
+              <thead className="bg-[#fafafa] text-[#6b6b70]">
                 <tr>
-                  <th className="px-6 py-3 text-left font-semibold">Event</th>
-                  <th className="px-6 py-3 text-left font-semibold">Type</th>
-                  <th className="px-6 py-3 text-left font-semibold">Amount</th>
-                  <th className="px-6 py-3 text-left font-semibold">Paid by</th>
-                  <th className="px-6 py-3 text-left font-semibold">MPESA code</th>
-                  <th className="px-6 py-3 text-left font-semibold">Status</th>
+                  <th className="px-5 py-3.5 text-left font-bold">Event</th>
+                  <th className="px-5 py-3.5 text-left font-bold">Type</th>
+                  <th className="px-5 py-3.5 text-left font-bold">Amount</th>
+                  <th className="px-5 py-3.5 text-left font-bold">Paid by</th>
+                  <th className="px-5 py-3.5 text-left font-bold">M-Pesa code</th>
+                  <th className="px-5 py-3.5 text-left font-bold">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {transactions.map((tx) => (
-                  <tr key={tx.mpesa} className="border-t border-slate-200 hover:bg-slate-50">
-                    <td className="px-6 py-3 text-slate-950">{tx.event}</td>
-                    <td className="px-6 py-3 text-slate-700">{tx.type}</td>
-                    <td className="px-6 py-3 font-semibold text-slate-950">{tx.amount}</td>
-                    <td className="px-6 py-3 text-slate-700">{tx.payer}</td>
-                    <td className="px-6 py-3 text-slate-700">{tx.mpesa}</td>
-                    <td className="px-6 py-3">
-                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${tx.status === "Paid" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                  <tr key={tx.mpesa} className="border-t border-[#ececec] transition hover:bg-[#f4f4f5]">
+                    <td className="px-5 py-4 font-bold text-[#0f0f10]">{tx.event}</td>
+                    <td className="px-5 py-4 text-[#6b6b70]">{tx.type}</td>
+                    <td className="px-5 py-4 font-bold text-[#f33959]">{tx.amount}</td>
+                    <td className="px-5 py-4 text-[#6b6b70]">{tx.payer}</td>
+                    <td className="px-5 py-4 font-mono text-[#0f0f10]">{tx.mpesa}</td>
+                    <td className="px-5 py-4">
+                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${tx.status === "Paid" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                         {tx.status}
                       </span>
                     </td>
