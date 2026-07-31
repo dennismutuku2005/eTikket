@@ -67,7 +67,7 @@ export default function OrganizerAttendeesPage() {
     >
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-6">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
                 { label: "Total attendees", value: "8,420" },
@@ -75,64 +75,64 @@ export default function OrganizerAttendeesPage() {
                 { label: "Pending", value: "2,232" },
                 { label: "Repeat visits", value: "126" },
               ].map((item) => (
-                <div key={item.label} className="rounded-3xl bg-slate-50 p-5">
-                  <p className="text-sm text-slate-500">{item.label}</p>
-                  <p className="mt-3 text-3xl font-semibold text-slate-950">{item.value}</p>
+                <div key={item.label} className="rounded-[16px] bg-[#fafafa] border border-[#ececec] p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">{item.label}</p>
+                  <p className="mt-2 text-2xl font-bold text-[#0f0f10]">{item.value}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+            <div className="mt-6 rounded-[16px] border border-[#ececec] bg-[#fafafa] p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-950">Check-in trend</h2>
-                  <p className="mt-1 text-sm text-slate-500">Attendance growth this week</p>
+                  <h2 className="text-base font-bold text-[#0f0f10]">Check-in trend</h2>
+                  <p className="mt-0.5 text-xs text-[#6b6b70]">Attendance growth this week</p>
                 </div>
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">+18%</span>
+                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">+18%</span>
               </div>
 
-              <div className="mt-5 flex h-44 items-end gap-3">
+              <div className="mt-5 flex h-40 items-end gap-3">
                 {graphBars.map((bar) => (
                   <div key={bar.label} className="flex flex-1 flex-col items-center gap-2">
-                    <div className="flex h-32 w-full items-end rounded-2xl bg-white p-1">
-                      <div className="w-full rounded-xl bg-slate-900" style={{ height: `${bar.value}%` }} />
+                    <div className="flex h-28 w-full items-end rounded-[12px] bg-white p-1 border border-[#ececec]">
+                      <div className="w-full rounded-[8px] bg-[#f33959]" style={{ height: `${bar.value}%` }} />
                     </div>
-                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{bar.label}</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">{bar.label}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white">
-            <div className="border-b border-slate-200 p-6">
-              <h2 className="text-lg font-semibold text-slate-950">Ticket usage log</h2>
-              <p className="mt-1 text-sm text-slate-500">A long list of tickets that were used or left unused.</p>
+          <div className="overflow-hidden rounded-[20px] border border-[#ececec] bg-white shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+            <div className="border-b border-[#ececec] p-6">
+              <h2 className="text-lg font-bold text-[#0f0f10]">Ticket usage log</h2>
+              <p className="mt-0.5 text-xs text-[#6b6b70]">Complete list of tickets scanned at venue entry points.</p>
             </div>
 
             <div className="max-h-[420px] overflow-y-auto">
-              <table className="w-full text-left text-sm text-slate-700">
-                <thead className="sticky top-0 z-10 bg-white text-slate-500">
+              <table className="w-full text-left text-sm text-[#0f0f10]">
+                <thead className="sticky top-0 z-10 bg-[#fafafa] text-[#6b6b70]">
                   <tr>
-                    <th className="px-5 py-3 font-semibold">Name</th>
-                    <th className="px-5 py-3 font-semibold">Ticket</th>
-                    <th className="px-5 py-3 font-semibold">Code</th>
-                    <th className="px-5 py-3 font-semibold">Status</th>
-                    <th className="px-5 py-3 font-semibold">Scanned</th>
+                    <th className="px-5 py-3 font-bold">Name</th>
+                    <th className="px-5 py-3 font-bold">Ticket</th>
+                    <th className="px-5 py-3 font-bold">Code</th>
+                    <th className="px-5 py-3 font-bold">Status</th>
+                    <th className="px-5 py-3 font-bold">Scanned</th>
                   </tr>
                 </thead>
                 <tbody>
                   {attendeeRows.map((row) => (
-                    <tr key={row.code} className="border-t border-slate-200">
-                      <td className="px-5 py-3 text-slate-900">{row.name}</td>
-                      <td className="px-5 py-3">{row.ticket}</td>
-                      <td className="px-5 py-3 font-mono text-xs">{row.code}</td>
-                      <td className="px-5 py-3">
-                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${row.status === "Used" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                    <tr key={row.code} className="border-t border-[#ececec] transition hover:bg-[#f4f4f5]">
+                      <td className="px-5 py-3.5 font-bold text-[#0f0f10]">{row.name}</td>
+                      <td className="px-5 py-3.5 text-[#6b6b70]">{row.ticket}</td>
+                      <td className="px-5 py-3.5 font-mono text-xs text-[#0f0f10]">{row.code}</td>
+                      <td className="px-5 py-3.5">
+                        <span className={`rounded-full px-3 py-1 text-xs font-bold ${row.status === "Used" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                           {row.status}
                         </span>
                       </td>
-                      <td className="px-5 py-3">{row.scannedAt}</td>
+                      <td className="px-5 py-3.5 text-[#6b6b70]">{row.scannedAt}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -142,53 +142,57 @@ export default function OrganizerAttendeesPage() {
         </div>
 
         <aside className="space-y-5">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Attendance</p>
-                <h3 className="mt-2 text-lg font-semibold text-slate-950">Daily entry flow</h3>
+                <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Attendance</p>
+                <h3 className="mt-1 text-lg font-bold text-[#0f0f10]">Daily entry flow</h3>
               </div>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Live</span>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Live</span>
             </div>
 
-            <div className="mt-5 rounded-[1.25rem] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-4 shadow-sm">
+            <div className="mt-4 rounded-[16px] border border-[#ececec] bg-[#111113] p-4 text-white">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold text-white">Entry curve</p>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">Area graph</span>
+                <p className="text-xs font-bold uppercase tracking-wider text-white/70">Entry curve</p>
+                <span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-bold text-white">Live scan</span>
               </div>
-              <div className="mt-4 flex h-44 items-end gap-2">
+              <div className="mt-4 flex h-36 items-end gap-2">
                 {areaPoints.map((point, index) => (
-                  <div key={`${point}-${index}`} className="flex flex-1 flex-col items-center gap-2">
-                    <div className="flex h-32 w-full items-end rounded-2xl bg-white/15 p-1 backdrop-blur-sm">
-                      <div className="w-full rounded-xl bg-gradient-to-t from-emerald-400 via-emerald-300 to-cyan-300" style={{ height: `${point}%` }} />
+                  <div key={`${point}-${index}`} className="flex flex-1 flex-col items-center gap-1.5">
+                    <div className="flex h-24 w-full items-end rounded-lg bg-white/10 p-0.5">
+                      <div className="w-full rounded bg-[#f33959]" style={{ height: `${point}%` }} />
                     </div>
-                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">{index + 1}</span>
+                    <span className="text-[10px] font-bold text-white/70">{index + 1}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Ticket mix</p>
-            <div className="mt-5 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
-              <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-[conic-gradient(#10b981_0_42%,#475569_42%_73%,#38bdf8_73%_100%)] p-3">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Ticket mix</p>
+            <div className="mt-4 flex flex-col items-center gap-4 sm:flex-row">
+              <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-[conic-gradient(#f33959_0_42%,#111113_42%_73%,#6b6b70_73%_100%)] p-3">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white text-center">
                   <div>
-                    <p className="text-3xl font-semibold text-slate-950">100%</p>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">tickets</p>
+                    <p className="text-2xl font-bold text-[#0f0f10]">100%</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#6b6b70]">tickets</p>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full space-y-3">
-                {pieSegments.map((segment) => (
-                  <div key={segment.label} className="flex items-center justify-between rounded-2xl bg-slate-50 px-3 py-2">
+              <div className="w-full space-y-2">
+                {[
+                  { label: "VIP", value: "42%", color: "bg-[#f33959]" },
+                  { label: "General", value: "31%", color: "bg-[#111113]" },
+                  { label: "Advance", value: "27%", color: "bg-[#6b6b70]" },
+                ].map((segment) => (
+                  <div key={segment.label} className="flex items-center justify-between rounded-[12px] bg-[#fafafa] border border-[#ececec] px-3 py-2">
                     <div className="flex items-center gap-2">
-                      <span className={`h-3 w-3 rounded-full bg-gradient-to-r ${segment.color}`} />
-                      <span className="text-sm font-semibold text-slate-900">{segment.label}</span>
+                      <span className={`h-2.5 w-2.5 rounded-full ${segment.color}`} />
+                      <span className="text-xs font-bold text-[#0f0f10]">{segment.label}</span>
                     </div>
-                    <span className="text-sm text-slate-600">{segment.value}%</span>
+                    <span className="text-xs font-bold text-[#6b6b70]">{segment.value}</span>
                   </div>
                 ))}
               </div>
