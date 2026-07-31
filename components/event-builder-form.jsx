@@ -55,20 +55,20 @@ export default function EventBuilderForm({ eventToEdit }) {
       <form className="space-y-6" onSubmit={saveEvent}>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Event title</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Event title</span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="Enter event name"
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Category</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Category</span>
             <select
               value={category}
               onChange={(event) => setCategory(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white transition"
             >
               <option>Music</option>
               <option>Holiday</option>
@@ -82,20 +82,20 @@ export default function EventBuilderForm({ eventToEdit }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Date</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Date</span>
             <input
               value={date}
               onChange={(event) => setDate(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="Friday, 8 August"
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Time</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Time</span>
             <input
               value={time}
               onChange={(event) => setTime(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="8:00 PM"
             />
           </label>
@@ -103,20 +103,20 @@ export default function EventBuilderForm({ eventToEdit }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Location</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Location</span>
             <input
               value={location}
               onChange={(event) => setLocation(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="KICC, Nairobi"
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Host</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Host</span>
             <input
               value={host}
               onChange={(event) => setHost(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="Event organizer"
             />
           </label>
@@ -124,20 +124,20 @@ export default function EventBuilderForm({ eventToEdit }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Price label</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Price label</span>
             <input
               value={price}
               onChange={(event) => setPrice(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="From KSh 1,200"
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Status</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Status</span>
             <select
               value={status}
               onChange={(event) => setStatus(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white transition"
             >
               <option>Draft</option>
               <option>Live</option>
@@ -150,21 +150,21 @@ export default function EventBuilderForm({ eventToEdit }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Remaining tickets</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Remaining tickets</span>
             <input
               value={remainingTickets}
               onChange={(event) => setRemainingTickets(Number(event.target.value))}
               type="number"
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="560"
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Cover image URL</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Cover image URL</span>
             <input
               value={imageUrl}
               onChange={(event) => setImageUrl(event.target.value)}
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="/sideimage.png or image URL"
             />
           </label>
@@ -172,87 +172,87 @@ export default function EventBuilderForm({ eventToEdit }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Latitude</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Latitude</span>
             <input
               value={lat}
               onChange={(event) => setLat(Number(event.target.value))}
               type="number"
               step="0.00001"
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="-1.2921"
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Longitude</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Longitude</span>
             <input
               value={lng}
               onChange={(event) => setLng(Number(event.target.value))}
               type="number"
               step="0.00001"
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+              className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
               placeholder="36.8219"
             />
           </label>
         </div>
 
-        <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-[20px] border border-[#ececec] bg-[#fafafa] p-5">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-slate-900">Ticket classes</p>
+            <p className="text-sm font-bold text-[#0f0f10]">Ticket classes</p>
             <button
               type="button"
               onClick={addTicket}
-              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="rounded-full bg-[#111113] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#0f0f10]"
             >
               Add class
             </button>
           </div>
           <div className="mt-4 space-y-4">
             {tickets.map((ticket, index) => (
-              <div key={`${ticket.name}-${index}`} className="rounded-3xl border border-slate-200 bg-white p-4">
+              <div key={`${ticket.name}-${index}`} className="rounded-[16px] border border-[#ececec] bg-white p-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="block">
-                    <span className="mb-2 block text-sm font-semibold text-slate-700">Name</span>
+                    <span className="mb-1.5 block text-xs font-bold text-[#0f0f10]">Name</span>
                     <input
                       value={ticket.name}
                       onChange={(event) => handleTicketChange(index, "name", event.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                      className="h-10 w-full rounded-[12px] border border-[#ececec] bg-[#fafafa] px-3 text-xs text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white"
                     />
                   </label>
                   <label className="block">
-                    <span className="mb-2 block text-sm font-semibold text-slate-700">Price</span>
+                    <span className="mb-1.5 block text-xs font-bold text-[#0f0f10]">Price (KSh)</span>
                     <input
                       value={ticket.price}
                       onChange={(event) => handleTicketChange(index, "price", event.target.value)}
                       type="number"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                      className="h-10 w-full rounded-[12px] border border-[#ececec] bg-[#fafafa] px-3 text-xs text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white"
                     />
                   </label>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 mt-4">
+                <div className="grid gap-4 sm:grid-cols-2 mt-3">
                   <label className="block">
-                    <span className="mb-2 block text-sm font-semibold text-slate-700">Description</span>
+                    <span className="mb-1.5 block text-xs font-bold text-[#0f0f10]">Description</span>
                     <input
                       value={ticket.description}
                       onChange={(event) => handleTicketChange(index, "description", event.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                      className="h-10 w-full rounded-[12px] border border-[#ececec] bg-[#fafafa] px-3 text-xs text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white"
                     />
                   </label>
                   <label className="block">
-                    <span className="mb-2 block text-sm font-semibold text-slate-700">Available</span>
+                    <span className="mb-1.5 block text-xs font-bold text-[#0f0f10]">Available quantity</span>
                     <input
                       value={ticket.available}
                       onChange={(event) => handleTicketChange(index, "available", event.target.value)}
                       type="number"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                      className="h-10 w-full rounded-[12px] border border-[#ececec] bg-[#fafafa] px-3 text-xs text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white"
                     />
                   </label>
                 </div>
                 <button
                   type="button"
                   onClick={() => removeTicket(index)}
-                  className="mt-4 text-sm font-semibold text-rose-600 transition hover:text-rose-800"
+                  className="mt-3 text-xs font-bold text-[#f33959] transition hover:underline"
                 >
-                  Remove ticket class
+                  Remove class
                 </button>
               </div>
             ))}
@@ -261,51 +261,48 @@ export default function EventBuilderForm({ eventToEdit }) {
 
         <button
           type="submit"
-          className="w-full rounded-full bg-slate-900 px-5 py-4 text-base font-semibold text-white transition hover:bg-slate-800"
+          className="w-full rounded-full bg-[#f33959] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#d92847]"
         >
           {mode}
         </button>
 
-        {message ? <p className="rounded-3xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p> : null}
+        {message ? <p className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700">{message}</p> : null}
       </form>
 
       <aside className="space-y-6">
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <p className="text-sm font-semibold text-slate-900">Event preview</p>
-          <div className="mt-4 overflow-hidden rounded-3xl bg-slate-100">
-            <div className="h-60 w-full overflow-hidden bg-slate-200">
-              <img src={imageUrl} alt="Event cover" className="h-full w-full object-cover" />
-            </div>
+        <div className="rounded-[20px] border border-[#ececec] bg-white p-5">
+          <p className="text-sm font-bold text-[#0f0f10]">Event preview</p>
+          <div className="mt-3 overflow-hidden rounded-[16px] bg-[#111113] relative aspect-16/10">
+            <img src={imageUrl} alt="Event cover" className="h-full w-full object-cover" />
           </div>
-          <div className="mt-4 space-y-3 text-sm text-slate-600">
-            <p className="font-semibold text-slate-900">{title || "Event title"}</p>
+          <div className="mt-4 space-y-2 text-sm text-[#6b6b70]">
+            <p className="font-bold text-[#0f0f10] text-base">{title || "Event title"}</p>
             <p>{category} · {date} · {time}</p>
             <p>{location}</p>
             <p>{host ? `Hosted by ${host}` : "Organizer name"}</p>
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <p className="text-sm font-semibold text-slate-900">Google Maps pin</p>
-          <div className="mt-4 rounded-3xl bg-white p-4 text-sm text-slate-600">
-            <p className="font-semibold text-slate-900">Coordinates</p>
-            <p className="mt-2">Latitude {lat}</p>
-            <p>Longitude {lng}</p>
-            <div className="mt-4 h-40 rounded-3xl bg-slate-950/5 p-4">
-              <p className="font-semibold text-slate-900">Map preview</p>
-              <p className="mt-2 text-sm text-slate-500">This preview shows the event pin location when you publish your event.</p>
+        <div className="rounded-[20px] border border-[#ececec] bg-white p-5">
+          <p className="text-sm font-bold text-[#0f0f10]">Location pin</p>
+          <div className="mt-3 rounded-[16px] border border-[#ececec] bg-[#fafafa] p-4 text-sm text-[#6b6b70]">
+            <p className="font-bold text-[#0f0f10]">Coordinates</p>
+            <p className="mt-1 text-xs">Lat: {lat} | Lng: {lng}</p>
+            <div className="mt-3 rounded-[12px] bg-white p-3 border border-[#ececec]">
+              <p className="font-bold text-[#0f0f10] text-xs">Map preview</p>
+              <p className="mt-1 text-xs text-[#6b6b70]">Pin location will display on the public event page.</p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <p className="text-sm font-semibold text-slate-900">Ticket summary</p>
-          <div className="mt-4 space-y-3">
+        <div className="rounded-[20px] border border-[#ececec] bg-white p-5">
+          <p className="text-sm font-bold text-[#0f0f10]">Ticket summary</p>
+          <div className="mt-3 space-y-3">
             {previewTickets.map((ticket) => (
-              <div key={ticket.name} className="rounded-3xl bg-slate-100 p-4 text-sm">
-                <p className="font-semibold text-slate-900">{ticket.name}</p>
-                <p>{ticket.description}</p>
-                <p className="mt-2 text-slate-500">KSh {ticket.price} · {ticket.available} available</p>
+              <div key={ticket.name} className="rounded-[14px] bg-[#f4f4f5] p-3 text-xs text-[#6b6b70]">
+                <p className="font-bold text-[#0f0f10] text-sm">{ticket.name}</p>
+                <p className="mt-0.5">{ticket.description}</p>
+                <p className="mt-2 font-bold text-[#f33959]">KSh {ticket.price.toLocaleString()} · {ticket.available} available</p>
               </div>
             ))}
           </div>
