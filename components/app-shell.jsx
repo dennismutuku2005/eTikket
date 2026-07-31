@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -41,7 +41,7 @@ const navItems = {
       children: [{ label: "Staff overview", href: "/organizer/staff" }],
     },
     { label: "Attendees", href: "/organizer/atendeee" },
-    { label: "Settings", href: "/organizer/settings" },
+    { label: "Analytics", href: "/organizer/analytics" },
   ],
   User: [
     { label: "Dashboard", href: "/user/home" },
@@ -69,9 +69,9 @@ export default function AppShell({ role, title, subtitle, children }) {
     : "EU";
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-slate-200 bg-white shadow-sm transform transition duration-300 ease-out ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-[#ececec] bg-white shadow-sm transform transition duration-300 ease-out ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
@@ -83,18 +83,18 @@ export default function AppShell({ role, title, subtitle, children }) {
             <button
               type="button"
               onClick={() => setMenuOpen(false)}
-              className="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 md:hidden"
+              className="rounded-full border border-[#ececec] bg-[#f4f4f5] px-3 py-1 text-xs font-bold text-[#0f0f10] transition hover:bg-[#ececec] md:hidden"
             >
               Close
             </button>
           </div>
 
           <div className="mt-6">
-            <p className="text-xs font-semibold uppercase text-slate-500">{role} dashboard</p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Quick access to the most important sections for your role.</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#f33959]">{role} dashboard</p>
+            <p className="mt-2 text-sm leading-6 text-[#6b6b70]">Quick access to the most important sections for your role.</p>
           </div>
 
-          <nav className="mt-8 space-y-1">
+          <nav className="mt-6 space-y-1">
             {menu.map((item) => {
               const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
 
@@ -102,22 +102,26 @@ export default function AppShell({ role, title, subtitle, children }) {
                 <div key={item.href} className="space-y-1">
                   <Link
                     href={item.href}
-                    className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-                      isActive ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+                    className={`block rounded-full px-4 py-2.5 text-sm font-bold transition ${
+                      isActive
+                        ? "bg-[#f33959] text-white shadow-xs"
+                        : "text-[#0f0f10] hover:bg-[#f4f4f5] hover:text-[#f33959]"
                     }`}
                   >
                     {item.label}
                   </Link>
                   {item.children ? (
-                    <div className="ml-4 space-y-1">
+                    <div className="ml-4 space-y-1 border-l-2 border-[#ececec] pl-2">
                       {item.children.map((child) => {
                         const childActive = pathname === child.href;
                         return (
                           <Link
                             key={child.href}
                             href={child.href}
-                            className={`block rounded-2xl px-4 py-2 text-sm transition ${
-                              childActive ? "bg-slate-100 text-slate-950" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                            className={`block rounded-full px-4 py-2 text-xs font-bold transition ${
+                              childActive
+                                ? "bg-[#f4f4f5] text-[#f33959]"
+                                : "text-[#6b6b70] hover:bg-[#f4f4f5] hover:text-[#0f0f10]"
                             }`}
                           >
                             {child.label}
@@ -131,16 +135,16 @@ export default function AppShell({ role, title, subtitle, children }) {
             })}
           </nav>
 
-          <div className="mt-auto border-t border-slate-200 pt-6">
+          <div className="mt-auto border-t border-[#ececec] pt-4 space-y-2">
             <Link
               href="/"
-              className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              className="block rounded-full px-4 py-2.5 text-sm font-bold text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]"
             >
               Public home
             </Link>
             <Link
               href="/logout"
-              className="mt-3 block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              className="block rounded-full px-4 py-2.5 text-sm font-bold text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#f33959]"
             >
               Log out
             </Link>
@@ -148,55 +152,53 @@ export default function AppShell({ role, title, subtitle, children }) {
         </div>
       </aside>
 
-      {menuOpen && <div className="fixed inset-0 z-40 bg-slate-900/30 md:hidden" onClick={() => setMenuOpen(false)} />}
+      {menuOpen && <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs md:hidden" onClick={() => setMenuOpen(false)} />}
 
       <div className="ml-0 md:ml-72">
-        <header className="sticky top-0 z-40 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 md:px-8">
+        <header className="sticky top-0 z-40 border-b border-[#ececec] bg-white/95 backdrop-blur px-4 py-3 sm:px-6 md:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 md:hidden"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ececec] bg-white text-sm font-bold text-[#0f0f10] hover:bg-[#f4f4f5] md:hidden"
                 aria-label="Open menu"
               >
                 ☰
               </button>
 
               <div className="hidden md:block">
-                <h1 className="text-lg font-semibold text-slate-900">{title}</h1>
+                <h1 className="text-xl font-bold text-[#0f0f10]">{title}</h1>
                 {subtitle && (
-                  <p className="text-sm text-slate-500 truncate max-w-md">{subtitle}</p>
+                  <p className="text-sm text-[#6b6b70] truncate max-w-md">{subtitle}</p>
                 )}
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-2 py-1.5 pr-4">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
+              <div className="flex items-center gap-2 rounded-full border border-[#ececec] bg-white px-2 py-1.5 pr-4 shadow-xs">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#111113] text-xs font-bold text-white">
                   {avatarInitials}
                 </span>
                 <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-slate-900">{session?.name || "User"}</p>
-                  <p className="text-xs text-slate-500">{session?.email || "guest@etikket.co.ke"}</p>
+                  <p className="text-sm font-bold text-[#0f0f10]">{session?.name || "User"}</p>
+                  <p className="text-xs text-[#6b6b70]">{session?.email || "guest@etikket.co.ke"}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="mt-2 block md:hidden">
-            <h1 className="text-base font-semibold text-slate-900">{title}</h1>
+            <h1 className="text-lg font-bold text-[#0f0f10]">{title}</h1>
             {subtitle && (
-              <p className="text-xs text-slate-500 truncate">{subtitle}</p>
+              <p className="text-xs text-[#6b6b70] truncate">{subtitle}</p>
             )}
           </div>
         </header>
 
-        <div className="min-h-screen bg-slate-50 text-slate-900">
-          <div className="mx-auto w-full max-w-none">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6">
-              <section>{children}</section>
-            </div>
+        <div className="min-h-[calc(100vh-65px)] bg-[#fafafa] p-4 sm:p-6 md:p-8">
+          <div className="mx-auto w-full max-w-none space-y-6">
+            {children}
           </div>
         </div>
       </div>
