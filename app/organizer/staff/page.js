@@ -83,45 +83,45 @@ export default function OrganizerStaffPage() {
     >
       <div className="space-y-8">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <div className="rounded-3xl border border-slate-200 bg-white p-5">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-5 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700"><FiUsers size={18} /></div>
+              <div className="rounded-full bg-[#f4f4f5] p-3 text-[#f33959]"><FiUsers size={18} /></div>
               <div>
-                <p className="text-sm text-slate-500">Door staff</p>
-                <p className="mt-1 text-3xl font-semibold">{staffMembers.length}</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Door staff</p>
+                <p className="mt-1 text-3xl font-bold text-[#0f0f10]">{staffMembers.length}</p>
               </div>
             </div>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white p-5">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-5 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700"><FiCamera size={18} /></div>
+              <div className="rounded-full bg-[#f4f4f5] p-3 text-[#f33959]"><FiCamera size={18} /></div>
               <div>
-                <p className="text-sm text-slate-500">Scanner sessions</p>
-                <p className="mt-1 text-3xl font-semibold">92</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Scanner sessions</p>
+                <p className="mt-1 text-3xl font-bold text-[#0f0f10]">92</p>
               </div>
             </div>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white p-5">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-5 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700"><FiLock size={18} /></div>
+              <div className="rounded-full bg-[#f4f4f5] p-3 text-[#f33959]"><FiLock size={18} /></div>
               <div>
-                <p className="text-sm text-slate-500">Active venues</p>
-                <p className="mt-1 text-3xl font-semibold">11</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Active venues</p>
+                <p className="mt-1 text-3xl font-bold text-[#0f0f10]">11</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+        <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Staff controls</h2>
-              <p className="mt-2 text-sm text-slate-500">Create door staff, assign event scanner access, and review who can verify tickets at each venue.</p>
+              <h2 className="text-xl font-bold text-[#0f0f10]">Staff controls</h2>
+              <p className="mt-1 text-sm text-[#6b6b70]">Create door staff, assign event scanner access, and review who can verify tickets at each venue.</p>
             </div>
             <button
               type="button"
               onClick={() => setIsCreateOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#f33959] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#d92847]"
             >
               <FiPlus size={16} />
               Create door staff
@@ -129,37 +129,37 @@ export default function OrganizerStaffPage() {
           </div>
 
           <div className="mt-6 overflow-x-auto">
-            <table className="min-w-full text-left text-sm text-slate-700">
-              <thead className="border-b border-slate-200 text-slate-500">
+            <table className="min-w-full text-left text-sm text-[#0f0f10]">
+              <thead className="bg-[#fafafa] text-[#6b6b70]">
                 <tr>
-                  <th className="px-5 py-4 font-semibold">Name</th>
-                  <th className="px-5 py-4 font-semibold">Phone</th>
-                  <th className="px-5 py-4 font-semibold">Password</th>
-                  <th className="px-5 py-4 font-semibold">Assigned events</th>
-                  <th className="px-5 py-4 font-semibold">QR scan access</th>
+                  <th className="px-5 py-3.5 font-bold">Name</th>
+                  <th className="px-5 py-3.5 font-bold">Phone</th>
+                  <th className="px-5 py-3.5 font-bold">Password</th>
+                  <th className="px-5 py-3.5 font-bold">Assigned events</th>
+                  <th className="px-5 py-3.5 font-bold">QR scan access</th>
                 </tr>
               </thead>
               <tbody>
                 {staffMembers.map((member) => (
-                  <tr key={member.name} className="border-b border-slate-100 hover:bg-slate-50">
-                    <td className="px-5 py-4 font-semibold text-slate-900">{member.name}</td>
-                    <td className="px-5 py-4">{member.phone}</td>
+                  <tr key={member.name} className="border-t border-[#ececec] transition hover:bg-[#f4f4f5]">
+                    <td className="px-5 py-4 font-bold text-[#0f0f10]">{member.name}</td>
+                    <td className="px-5 py-4 text-[#6b6b70]">{member.phone}</td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <span>{visiblePasswords[member.name] ? member.password : (member.password ? "••••••••" : "Not set")}</span>
+                        <span className="font-mono text-xs">{visiblePasswords[member.name] ? member.password : (member.password ? "••••••••" : "Not set")}</span>
                         <button
                           type="button"
                           onClick={() => togglePassword(member.name)}
-                          className="text-slate-500 hover:text-slate-700"
+                          className="text-[#6b6b70] hover:text-[#0f0f10]"
                           aria-label="Toggle password visibility"
                         >
                           {visiblePasswords[member.name] ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                         </button>
                       </div>
                     </td>
-                    <td className="px-5 py-4">{member.events}</td>
+                    <td className="px-5 py-4 text-[#6b6b70]">{member.events}</td>
                     <td className="px-5 py-4">
-                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${member.qrAccess ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${member.qrAccess ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                         {member.qrAccess ? "Enabled" : "Disabled"}
                       </span>
                     </td>
@@ -170,58 +170,58 @@ export default function OrganizerStaffPage() {
           </div>
 
           {isCreateOpen ? (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-              <div className="w-full max-w-2xl rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-lg">
-                <div className="flex items-start justify-between gap-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+              <div className="w-full max-w-xl rounded-[24px] border border-[#ececec] bg-white p-6 shadow-2xl animate-in fade-in zoom-in-95">
+                <div className="flex items-start justify-between gap-4 border-b border-[#ececec] pb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-slate-950">Create new gate admin</h3>
-                    <p className="mt-2 text-sm text-slate-500">Add a staff member who can scan QR codes and verify tickets across events.</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#f33959]">Door staff setup</p>
+                    <h3 className="mt-1 text-xl font-bold text-[#0f0f10]">Create new gate staff</h3>
                   </div>
                   <button
                     type="button"
                     onClick={() => setIsCreateOpen(false)}
-                    className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                    className="rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 text-xs font-bold text-[#0f0f10] hover:bg-[#f4f4f5]"
                   >
                     Close
                   </button>
                 </div>
 
-                <form onSubmit={handleCreateSubmit} className="mt-6 space-y-5">
+                <form onSubmit={handleCreateSubmit} className="mt-5 space-y-4">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <label className="block">
-                      <span className="text-sm font-semibold text-slate-900">Full name</span>
+                      <span className="text-sm font-bold text-[#0f0f10]">Full name</span>
                       <input
                         value={newStaff.name}
                         onChange={(event) => setNewStaff((current) => ({ ...current, name: event.target.value }))}
                         placeholder="e.g. Jane Mwangi"
-                        className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                        className="mt-1.5 h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959]"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-sm font-semibold text-slate-900">Phone number</span>
+                      <span className="text-sm font-bold text-[#0f0f10]">Phone number</span>
                       <input
                         value={newStaff.phone}
                         onChange={(event) => setNewStaff((current) => ({ ...current, phone: event.target.value }))}
                         placeholder="0722 123 456"
-                        className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                        className="mt-1.5 h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959]"
                       />
                     </label>
                   </div>
 
                   <label className="block">
-                    <span className="text-sm font-semibold text-slate-900">Password</span>
-                    <div className="relative mt-3">
+                    <span className="text-sm font-bold text-[#0f0f10]">Password</span>
+                    <div className="relative mt-1.5">
                       <input
                         type={showNewPassword ? "text" : "password"}
                         value={newStaff.password}
                         onChange={(event) => setNewStaff((current) => ({ ...current, password: event.target.value }))}
                         placeholder="Enter password"
-                        className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                        className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 pr-12 text-sm text-[#0f0f10] outline-none focus:border-[#f33959]"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword((s) => !s)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6b6b70] hover:text-[#0f0f10]"
                         aria-label="Toggle new password visibility"
                       >
                         {showNewPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
@@ -230,36 +230,36 @@ export default function OrganizerStaffPage() {
                   </label>
 
                   <label className="block">
-                    <span className="text-sm font-semibold text-slate-900">Assigned event access</span>
+                    <span className="text-sm font-bold text-[#0f0f10]">Assigned event access</span>
                     <input
                       value={newStaff.events}
                       onChange={(event) => setNewStaff((current) => ({ ...current, events: event.target.value }))}
                       placeholder="Nairobi Glow Festival, Campus Night Live"
-                      className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
+                      className="mt-1.5 h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959]"
                     />
                   </label>
 
-                  <label className="flex items-center gap-3 text-sm font-semibold text-slate-900">
+                  <label className="flex items-center gap-3 text-sm font-bold text-[#0f0f10]">
                     <input
                       type="checkbox"
                       checked={newStaff.qrAccess}
                       onChange={(event) => setNewStaff((current) => ({ ...current, qrAccess: event.target.checked }))}
-                      className="h-5 w-5 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+                      className="h-4 w-4 rounded border-[#ececec] text-[#f33959] focus:ring-[#f33959]"
                     />
                     Enable QR scan permissions
                   </label>
 
-                  <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:justify-end pt-2">
                     <button
                       type="button"
                       onClick={() => setIsCreateOpen(false)}
-                      className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
+                      className="rounded-full border border-[#ececec] bg-white px-5 py-2.5 text-sm font-bold text-[#0f0f10] transition hover:bg-[#f4f4f5]"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                      className="rounded-full bg-[#f33959] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#d92847]"
                     >
                       Add gate staff
                     </button>
