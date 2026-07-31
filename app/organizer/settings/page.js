@@ -65,41 +65,41 @@ export default function OrganizerSettingsPage() {
       subtitle="Update your MPESA paybill or till details and see the current saved configuration."
     >
       <div className="space-y-6">
-        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">MPESA payment info</h2>
-              <p className="mt-2 text-sm text-slate-500">Edit your paybill or till number and account name for event ticket payments.</p>
+              <h2 className="text-xl font-bold text-[#0f0f10]">M-Pesa payment info</h2>
+              <p className="mt-1 text-sm text-[#6b6b70]">Edit your paybill or till number and account name for event ticket payments.</p>
             </div>
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_0.95fr]">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-              <p className="text-sm font-semibold text-slate-900">Current MPESA configuration</p>
-              <dl className="mt-4 grid gap-4 text-sm text-slate-600">
+            <div className="rounded-[16px] border border-[#ececec] bg-[#fafafa] p-5">
+              <p className="text-sm font-bold text-[#0f0f10]">Current M-Pesa configuration</p>
+              <dl className="mt-4 grid gap-4 text-sm text-[#6b6b70]">
                 <div>
-                  <dt className="font-semibold text-slate-900">Type</dt>
-                  <dd className="mt-1">{currentConfig.type}</dd>
+                  <dt className="font-bold text-[#0f0f10]">Type</dt>
+                  <dd className="mt-0.5 font-bold text-[#0f0f10]">{currentConfig.type}</dd>
                 </div>
                 <div>
-                  <dt className="font-semibold text-slate-900">Paybill / Till number</dt>
-                  <dd className="mt-1">{currentConfig.number}</dd>
+                  <dt className="font-bold text-[#0f0f10]">Paybill / Till number</dt>
+                  <dd className="mt-0.5 font-bold text-[#f33959]">{currentConfig.number}</dd>
                 </div>
                 <div>
-                  <dt className="font-semibold text-slate-900">Account name</dt>
-                  <dd className="mt-1">{currentConfig.account}</dd>
+                  <dt className="font-bold text-[#0f0f10]">Account name</dt>
+                  <dd className="mt-0.5 font-bold text-[#0f0f10]">{currentConfig.account}</dd>
                 </div>
               </dl>
             </div>
 
-            <form onSubmit={handleSubmit} className="rounded-3xl border border-slate-200 bg-white p-5">
-              <div className="grid gap-5">
+            <form onSubmit={handleSubmit} className="rounded-[16px] border border-[#ececec] bg-white p-5">
+              <div className="grid gap-4">
                 <label className="block">
-                  <span className="text-sm font-semibold text-slate-900">MPESA type</span>
+                  <span className="text-sm font-bold text-[#0f0f10]">M-Pesa type</span>
                   <select
                     value={mpesaMethod}
                     onChange={(event) => setMpesaMethod(event.target.value)}
-                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                    className="mt-1.5 h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white transition"
                   >
                     <option>Paybill</option>
                     <option>Till</option>
@@ -107,30 +107,30 @@ export default function OrganizerSettingsPage() {
                 </label>
 
                 <label className="block">
-                  <span className="text-sm font-semibold text-slate-900">Paybill / Till number</span>
+                  <span className="text-sm font-bold text-[#0f0f10]">Paybill / Till number</span>
                   <input
                     value={mpesaNumber}
                     onChange={(event) => setMpesaNumber(event.target.value)}
                     placeholder="Enter paybill or till number"
-                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                    className="mt-1.5 h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
                   />
                 </label>
 
                 <label className="block">
-                  <span className="text-sm font-semibold text-slate-900">Account name</span>
+                  <span className="text-sm font-bold text-[#0f0f10]">Account name</span>
                   <input
                     value={accountName}
                     onChange={(event) => setAccountName(event.target.value)}
                     placeholder="Enter account name"
-                    className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+                    className="mt-1.5 h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
                   />
                 </label>
 
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  className="mt-2 inline-flex items-center justify-center rounded-full bg-[#f33959] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#d92847]"
                 >
-                  Save MPESA settings
+                  Save M-Pesa settings
                 </button>
               </div>
             </form>
