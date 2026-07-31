@@ -40,9 +40,9 @@ export default function LoginForm() {
 
   return (
     <div className="bg-white">
-      <form className="space-y-3" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-slate-700">
+          <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">
             Email or phone number
           </span>
           <input
@@ -50,13 +50,13 @@ export default function LoginForm() {
             onChange={(event) => setIdentifier(event.target.value)}
             type="text"
             autoComplete="username"
-            className="h-12 w-full rounded-lg bg-slate-100 px-4 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-400"
+            className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
             placeholder="you@example.com or 0711000000"
           />
         </label>
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-slate-700">
+          <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">
             Password
           </span>
           <input
@@ -64,13 +64,13 @@ export default function LoginForm() {
             onChange={(event) => setPassword(event.target.value)}
             type="password"
             autoComplete="current-password"
-            className="h-12 w-full rounded-lg bg-slate-100 px-4 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-400"
+            className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
             placeholder="Password"
           />
         </label>
 
         {error ? (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-[14px] bg-[#f33959]/10 px-4 py-2.5 text-sm font-bold text-[#f33959]">
             {error}
           </p>
         ) : null}
@@ -78,7 +78,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="h-12 w-full rounded-full bg-rose-500 px-5 text-sm font-semibold text-white transition hover:bg-rose-600 disabled:cursor-not-allowed disabled:bg-rose-300"
+          className="h-12 w-full rounded-full bg-[#f33959] px-5 text-sm font-bold text-white transition hover:bg-[#d92847] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? "Signing in..." : "Log in"}
         </button>
