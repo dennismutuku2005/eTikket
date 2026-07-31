@@ -61,72 +61,72 @@ export default function GateStaffLoginPage() {
   }
 
   return (
-    <main className="min-h-dvh overflow-y-auto bg-white text-slate-900">
+    <main className="min-h-dvh overflow-y-auto bg-[#fafafa] text-[#0f0f10]">
       <div className="grid min-h-dvh w-full overflow-hidden lg:grid-cols-[6fr_4fr]">
-        <section className="relative min-h-64 overflow-hidden bg-slate-950 lg:min-h-dvh">
+        <section className="relative min-h-64 overflow-hidden bg-[#111113] lg:min-h-dvh">
           <Image src="/sideimage.png" alt="Gate staff entry" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-linear-to-b from-slate-950/10 via-slate-950/20 to-slate-950/40" />
-          <div className="absolute inset-0 flex items-end p-5 sm:p-7 lg:p-10">
+          <div className="absolute inset-0 bg-linear-to-b from-black/20 via-black/30 to-black/60" />
+          <div className="absolute inset-0 flex items-end p-6 sm:p-8 lg:p-12">
             <div className="max-w-md text-white">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">Gate staff access</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-white/70">Gate staff access</span>
               <h1 className="mt-3 text-3xl font-bold leading-[1.05] sm:text-4xl lg:text-5xl">
                 Sign in to begin check-in.
               </h1>
-              <p className="mt-3 max-w-sm text-sm leading-6 text-white/75 sm:text-base">
+              <p className="mt-3 max-w-sm text-sm leading-6 text-white/80 sm:text-base">
                 Only approved gate staff can scan tickets and verify attendees at the entrance.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-slate-50 px-6 py-10 sm:px-10 lg:px-12">
+        <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-[#fafafa] px-6 py-10 sm:px-10 lg:px-12">
           <div className="w-full max-w-sm">
-            <Image src="/eTikketwhite.png" alt="eTikket logo" width={140} height={42} priority className="h-auto w-32" />
+            <Image src="/eTikketwhite.png" alt="eTikket logo" width={140} height={42} priority className="h-auto w-32 filter invert" />
 
-            <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mt-8 rounded-[24px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
               <div>
-                <h2 className="text-2xl font-semibold text-slate-950">Gate staff login</h2>
-                <p className="mt-2 text-sm text-slate-500">Enter your staff credentials to continue.</p>
+                <h2 className="text-2xl font-bold text-[#0f0f10]">Gate staff login</h2>
+                <p className="mt-1 text-sm text-[#6b6b70]">Enter your staff credentials to continue.</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-6 space-y-3">
+              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Email or phone</span>
+                  <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Email or phone</span>
                   <input
                     value={identifier}
                     onChange={(event) => setIdentifier(event.target.value)}
                     type="text"
                     autoComplete="username"
                     placeholder="gate@etikket.co.ke"
-                    className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-rose-400 focus:bg-white"
+                    className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
                   />
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Password</span>
+                  <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Password</span>
                   <input
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     type="password"
                     autoComplete="current-password"
                     placeholder="Password"
-                    className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none focus:border-rose-400 focus:bg-white"
+                    className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
                   />
                 </label>
 
-                {error ? <p className="rounded-2xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p> : null}
+                {error ? <p className="rounded-[14px] bg-[#f33959]/10 px-4 py-2.5 text-xs font-bold text-[#f33959]">{error}</p> : null}
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="h-12 w-full rounded-full bg-rose-500 px-5 text-sm font-semibold text-white transition hover:bg-rose-600 disabled:cursor-not-allowed disabled:bg-rose-300"
+                  className="h-12 w-full rounded-full bg-[#f33959] px-5 text-sm font-bold text-white transition hover:bg-[#d92847] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isLoading ? "Signing in..." : "Log in"}
                 </button>
               </form>
 
-              <div className="mt-4 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-3 py-3 text-xs leading-5 text-slate-500">
-                Demo gate staff access: <span className="font-semibold text-slate-700">gate@etikket.co.ke</span> / <span className="font-semibold text-slate-700">gate123</span>
+              <div className="mt-4 rounded-[14px] border border-dashed border-[#ececec] bg-[#fafafa] px-3.5 py-3 text-xs leading-5 text-[#6b6b70]">
+                Demo gate staff access: <span className="font-bold text-[#0f0f10]">gate@etikket.co.ke</span> / <span className="font-bold text-[#0f0f10]">gate123</span>
               </div>
             </div>
           </div>
