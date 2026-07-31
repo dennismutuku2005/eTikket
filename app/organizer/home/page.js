@@ -76,9 +76,9 @@ export default function OrganizerHomePage() {
   const CustomTooltip = ({ active, payload, label, suffix }) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs">
-        <p className="font-semibold text-slate-900">{label}</p>
-        <p className="mt-0.5 text-[#f33959]">{payload[0].value}{suffix}</p>
+      <div className="rounded-[14px] border border-[#ececec] bg-white px-3 py-2 text-xs shadow-md">
+        <p className="font-bold text-[#0f0f10]">{label}</p>
+        <p className="mt-0.5 font-bold text-[#f33959]">{payload[0].value}{suffix}</p>
       </div>
     );
   };
@@ -91,86 +91,86 @@ export default function OrganizerHomePage() {
     >
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {statCards.map((card) => (
-          <div key={card.label} className="rounded-3xl border border-slate-200 bg-white p-5">
-            <p className="text-sm text-slate-500">{card.label}</p>
-            <p className="mt-3 text-3xl font-semibold text-slate-950">{card.value}</p>
-            <p className="mt-1 text-sm text-slate-500">{card.note}</p>
+          <div key={card.label} className="rounded-[20px] border border-[#ececec] bg-white p-5 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+            <p className="text-sm font-bold text-[#6b6b70]">{card.label}</p>
+            <p className="mt-3 text-3xl font-bold text-[#0f0f10]">{card.value}</p>
+            <p className="mt-1 text-xs text-[#6b6b70]">{card.note}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-6 grid gap-4 xl:grid-cols-[1.4fr_0.95fr]">
         <div className="space-y-4">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-semibold text-slate-950">Revenue trend</h2>
-                <p className="mt-1 text-sm text-slate-500">Income movement over the last 7 days.</p>
+                <h2 className="text-xl font-bold text-[#0f0f10]">Revenue trend</h2>
+                <p className="mt-1 text-sm text-[#6b6b70]">Income movement over the last 7 days.</p>
               </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">KES</span>
+              <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold text-[#0f0f10]">KES</span>
             </div>
 
             <div className="mt-6 h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={revenuePoints} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="#eef2ff" vertical={false} />
-                  <XAxis dataKey="label" stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} tickFormatter={(value) => `${value}K`} />
-                  <Tooltip content={<CustomTooltip suffix="K" />} cursor={{ stroke: "#f1f5f9" }} />
+                  <CartesianGrid stroke="#ececec" vertical={false} />
+                  <XAxis dataKey="label" stroke="#6b6b70" tickLine={false} axisLine={false} fontSize={12} />
+                  <YAxis stroke="#6b6b70" tickLine={false} axisLine={false} fontSize={12} tickFormatter={(value) => `${value}K`} />
+                  <Tooltip content={<CustomTooltip suffix="K" />} cursor={{ stroke: "#ececec" }} />
                   <Line type="monotone" dataKey="value" stroke="#f33959" strokeWidth={3} dot={{ r: 4, fill: "#f33959", strokeWidth: 0 }} activeDot={{ r: 6 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="mt-5 grid grid-cols-3 gap-3 border-t border-slate-200 pt-4 text-sm text-slate-600">
+            <div className="mt-5 grid grid-cols-3 gap-3 border-t border-[#ececec] pt-4 text-sm text-[#6b6b70]">
               <div>
-                <p className="font-semibold text-slate-900">KES 82K</p>
-                <p>Today</p>
+                <p className="font-bold text-[#0f0f10]">KES 82K</p>
+                <p className="text-xs">Today</p>
               </div>
               <div>
-                <p className="font-semibold text-slate-900">KES 248K</p>
-                <p>This week</p>
+                <p className="font-bold text-[#0f0f10]">KES 248K</p>
+                <p className="text-xs">This week</p>
               </div>
               <div>
-                <p className="font-semibold text-slate-900">KES 1.2M</p>
-                <p>This month</p>
+                <p className="font-bold text-[#0f0f10]">KES 1.2M</p>
+                <p className="text-xs">This month</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-semibold text-slate-950">Daily bookings</h2>
-                <p className="mt-1 text-sm text-slate-500">Bookings recorded this week.</p>
+                <h2 className="text-xl font-bold text-[#0f0f10]">Daily bookings</h2>
+                <p className="mt-1 text-sm text-[#6b6b70]">Bookings recorded this week.</p>
               </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Bar</span>
+              <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold text-[#0f0f10]">Bar</span>
             </div>
 
             <div className="mt-6 h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barData} margin={{ top: 10, right: 5, left: -20, bottom: 0 }} barCategoryGap="35%">
-                  <CartesianGrid stroke="#eef2ff" vertical={false} />
-                  <XAxis dataKey="label" stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
-                  <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} tickFormatter={(value) => `${value}K`} />
-                  <Tooltip content={<CustomTooltip suffix="K" />} cursor={{ fill: "#f8fafc" }} />
-                  <Bar dataKey="value" fill="#f33959" radius={[10, 10, 10, 10]} />
+                  <CartesianGrid stroke="#ececec" vertical={false} />
+                  <XAxis dataKey="label" stroke="#6b6b70" tickLine={false} axisLine={false} fontSize={12} />
+                  <YAxis stroke="#6b6b70" tickLine={false} axisLine={false} fontSize={12} tickFormatter={(value) => `${value}K`} />
+                  <Tooltip content={<CustomTooltip suffix="K" />} cursor={{ fill: "#f4f4f5" }} />
+                  <Bar dataKey="value" fill="#f33959" radius={[8, 8, 8, 8]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+        <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Recent payments</h2>
-              <p className="mt-1 text-sm text-slate-500">Latest ticket payments from live events.</p>
+              <h2 className="text-xl font-bold text-[#0f0f10]">Recent payments</h2>
+              <p className="mt-1 text-sm text-[#6b6b70]">Latest ticket payments from live events.</p>
             </div>
             <button
               type="button"
               onClick={() => router.push("/organizer/payments")}
-              className="inline-flex items-center justify-center rounded-full bg-[#f33959] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#d92847]"
+              className="inline-flex items-center justify-center rounded-full bg-[#f33959] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#d92847]"
             >
               View payments
             </button>
@@ -178,20 +178,20 @@ export default function OrganizerHomePage() {
 
           <ul className="mt-6 space-y-3">
             {recentPayments.map((payment) => (
-              <li key={payment.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+              <li key={payment.id} className="rounded-[16px] border border-[#ececec] bg-[#fafafa] p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-slate-950">{payment.event}</p>
-                    <p className="mt-1 text-sm text-slate-500">{payment.ticket} ticket</p>
+                    <p className="text-sm font-bold text-[#0f0f10]">{payment.event}</p>
+                    <p className="mt-0.5 text-xs text-[#6b6b70]">{payment.ticket} ticket</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-slate-950">{payment.amount}</p>
-                    <p className="mt-1 text-xs text-slate-500">{payment.time}</p>
+                    <p className="text-sm font-bold text-[#0f0f10]">{payment.amount}</p>
+                    <p className="mt-0.5 text-xs text-[#6b6b70]">{payment.time}</p>
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-between gap-3 text-sm text-slate-600">
-                  <span className="text-slate-500">{payment.id}</span>
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${payment.status === "Paid" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                <div className="mt-3 flex items-center justify-between gap-3 text-xs text-[#6b6b70]">
+                  <span className="font-mono">{payment.id}</span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-bold ${payment.status === "Paid" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                     {payment.status}
                   </span>
                 </div>
@@ -201,13 +201,13 @@ export default function OrganizerHomePage() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-white p-6">
+      <div className="mt-6 rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold text-slate-950">Bookings flow</h2>
-            <p className="mt-1 text-sm text-slate-500">Tickets booked over the last 7 days.</p>
+            <h2 className="text-xl font-bold text-[#0f0f10]">Bookings flow</h2>
+            <p className="mt-1 text-sm text-[#6b6b70]">Tickets booked over the last 7 days.</p>
           </div>
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">Area</span>
+          <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold text-[#0f0f10]">Area</span>
         </div>
 
         <div className="mt-6 h-60">
@@ -219,10 +219,10 @@ export default function OrganizerHomePage() {
                   <stop offset="95%" stopColor="#f33959" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid stroke="#eef2ff" vertical={false} />
-              <XAxis dataKey="label" stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
-              <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} fontSize={12} />
-              <Tooltip content={<CustomTooltip suffix=" tickets" />} cursor={{ stroke: "#f1f5f9" }} />
+              <CartesianGrid stroke="#ececec" vertical={false} />
+              <XAxis dataKey="label" stroke="#6b6b70" tickLine={false} axisLine={false} fontSize={12} />
+              <YAxis stroke="#6b6b70" tickLine={false} axisLine={false} fontSize={12} />
+              <Tooltip content={<CustomTooltip suffix=" tickets" />} cursor={{ stroke: "#ececec" }} />
               <Area type="monotone" dataKey="value" stroke="#f33959" fill="url(#areaColor)" strokeWidth={3} />
             </AreaChart>
           </ResponsiveContainer>
