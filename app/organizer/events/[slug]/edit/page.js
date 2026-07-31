@@ -15,7 +15,7 @@ export default function OrganizerEventEditPage({ params }) {
       title={`Edit ${event.title}`}
       subtitle="Update event details, ticket pricing, and venue information."
     >
-      <div className="rounded-3xl border border-slate-200 bg-white p-6">
+      <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
         <EventBuilderForm eventToEdit={event} />
       </div>
     </AppShell>
