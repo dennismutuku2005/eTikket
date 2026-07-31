@@ -43,36 +43,36 @@ export default function StaffListPage() {
       subtitle="Review gate admins, scanner access, and which events each staff member can open."
     >
       <div className="space-y-8">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6">
+        <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Staff and access</h2>
-              <p className="mt-2 text-sm text-slate-500">View active staff assignments, roles, and the events they can manage.</p>
+              <h2 className="text-xl font-bold text-[#0f0f10]">Staff and access</h2>
+              <p className="mt-1 text-sm text-[#6b6b70]">View active staff assignments, roles, and the events they can manage.</p>
             </div>
             <button
               type="button"
               onClick={() => router.push("/organizer/staff/createnew")}
-              className="inline-flex items-center justify-center rounded-full bg-rose-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-700"
+              className="inline-flex items-center justify-center rounded-full bg-[#f33959] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#d92847]"
             >
               Add staff member
             </button>
           </div>
 
           <div className="mt-6 overflow-x-auto">
-            <table className="w-full min-w-[640px] text-left text-sm text-slate-700">
-              <thead className="border-b border-slate-200 text-slate-500">
+            <table className="w-full min-w-[640px] text-left text-sm text-[#0f0f10]">
+              <thead className="bg-[#fafafa] text-[#6b6b70]">
                 <tr>
-                  <th className="px-5 py-4 font-semibold">Name</th>
-                  <th className="px-5 py-4 font-semibold">Role</th>
-                  <th className="px-5 py-4 font-semibold">Assigned events</th>
+                  <th className="px-5 py-3.5 font-bold">Name</th>
+                  <th className="px-5 py-3.5 font-bold">Role</th>
+                  <th className="px-5 py-3.5 font-bold">Assigned events</th>
                 </tr>
               </thead>
               <tbody>
                 {staffMembers.map((member) => (
-                  <tr key={member.name} className="border-b border-slate-100 hover:bg-slate-50">
-                    <td className="px-5 py-4 font-semibold text-slate-900">{member.name}</td>
-                    <td className="px-5 py-4">{member.role}</td>
-                    <td className="px-5 py-4">{member.events}</td>
+                  <tr key={member.name} className="border-t border-[#ececec] transition hover:bg-[#f4f4f5]">
+                    <td className="px-5 py-4 font-bold text-[#0f0f10]">{member.name}</td>
+                    <td className="px-5 py-4 text-[#6b6b70]">{member.role}</td>
+                    <td className="px-5 py-4 text-[#6b6b70]">{member.events}</td>
                   </tr>
                 ))}
               </tbody>
