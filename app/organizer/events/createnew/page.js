@@ -37,7 +37,7 @@ export default function CreateNewEventPage() {
       title="Create new event"
       subtitle="Start a new event, set ticket limits, and publish it once it is ready."
     >
-      <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+      <div className="card-lg">
         <EventBuilderForm />
       </div>
     </AppShell>
