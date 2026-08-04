@@ -17,3 +17,140 @@ body {
   color: var(--foreground);
   font-family: var(--font-lato), Arial, Helvetica, sans-serif;
 }
+
+.card {
+  border-radius: 20px;
+  border: 1px solid #ececec;
+  background: #ffffff;
+  padding: 1.25rem;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.card-lg {
+  border-radius: 20px;
+  border: 1px solid #ececec;
+  background: #ffffff;
+  padding: 1.5rem;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.surface-card {
+  border-radius: 16px;
+  border: 1px solid #ececec;
+  background: #fafafa;
+  padding: 1rem;
+}
+
+.clean-table {
+  width: 100%;
+  min-width: 0;
+  border-collapse: collapse;
+  color: #0f0f10;
+}
+
+.clean-table th,
+.clean-table td {
+  padding: 1rem;
+}
+
+.clean-table thead {
+  background: #fafafa;
+  color: #6b6b70;
+}
+
+.clean-table tbody tr {
+  border-top: 1px solid #ececec;
+}
+
+.clean-table tbody tr:hover {
+  background: #f4f4f5;
+}
+
+.btn-clean {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+}
+
+.btn-primary {
+  background: #f33959;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  border: 1px solid #ececec;
+  background: #ffffff;
+  color: #0f0f10;
+}
+
+.pill-muted {
+  border-radius: 9999px;
+  background: #f4f4f5;
+  color: #6b6b70;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pill-accent {
+  border-radius: 9999px;
+  background: rgba(243,57,89,0.1);
+  color: #f33959;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@layer utilities {
+  .card {
+    @apply rounded-[20px] border border-[#ececec] bg-white p-5 shadow-sm;
+  }
+
+  .card-lg {
+    @apply rounded-[20px] border border-[#ececec] bg-white p-6 shadow-sm;
+  }
+
+  .surface-card {
+    @apply rounded-[16px] border border-[#ececec] bg-[#fafafa] p-4;
+  }
+
+  .clean-table {
+    @apply min-w-full text-left text-sm text-[#0f0f10];
+  }
+
+  .clean-table th,
+  .clean-table td {
+    @apply px-4 py-3;
+  }
+
+  .clean-table thead {
+    @apply bg-[#fafafa] text-[#6b6b70];
+  }
+
+  .clean-table tbody tr {
+    @apply border-t border-[#ececec] transition hover:bg-[#f4f4f5];
+  }
+
+  .btn-clean {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold;
+  }
+
+  .btn-primary {
+    @apply bg-[#f33959] text-white hover:bg-[#d92847];
+  }
+
+  .btn-secondary {
+    @apply border border-[#ececec] bg-white text-[#0f0f10] hover:bg-[#f4f4f5];
+  }
+
+  .pill-muted {
+    @apply rounded-full px-3 py-1 text-xs font-bold bg-[#f4f4f5] text-[#6b6b70];
+  }
+
+  .pill-accent {
+    @apply rounded-full px-3 py-1 text-xs font-bold bg-[#f33959]/10 text-[#f33959];
+  }
+}
