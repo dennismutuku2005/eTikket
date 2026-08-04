@@ -2,38 +2,52 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getDemoUser, getRoleHomePath } from "@/lib/auth";
+import { toast } from "sonner";
+import { getRoleHomePath } from "@/lib/auth";
+import { apiRequest } from "@/lib/api";
 
-export default function LoginForm() {
+export default function LoginForm({ requiredRole }) {
   const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError("");
+
+    if (!identifier.trim() || !password) {
+      toast.error("Please enter both your email/phone and password.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const user = getDemoUser(identifier, password);
+      const response = await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ identifier, password }),
+      });
 
-      if (!user) {
-        setError("Invalid email or phone number.");
+      const user = response?.user || response;
+      const role = user?.role || 'buyer';
+
+      if (requiredRole && role !== requiredRole) {
+        toast.error(`Access denied. Only ${requiredRole.replace('_', ' ')} accounts can sign in here.`);
         setIsLoading(false);
         return;
       }
 
       const session = encodeURIComponent(
-        JSON.stringify({ email: user.email, role: user.role, name: user.name }),
+        JSON.stringify({ id: user.id, email: user.email, role, name: user.name, token: response?.token || '' }),
       );
 
       document.cookie = `etikket-session=${session}; path=/; max-age=604800; samesite=lax`;
-      router.replace(getRoleHomePath(user.role));
+      toast.success("Successfully logged in!");
+      router.replace(getRoleHomePath(role));
       router.refresh();
-    } catch {
-      setError("Something went wrong. Try again.");
+    } catch (err) {
+      const errMsg = err.message || "Failed to fetch. Please try again.";
+      toast.error(errMsg);
       setIsLoading(false);
     }
   }
@@ -68,12 +82,6 @@ export default function LoginForm() {
             placeholder="Password"
           />
         </label>
-
-        {error ? (
-          <p className="rounded-[14px] bg-[#f33959]/10 px-4 py-2.5 text-sm font-bold text-[#f33959]">
-            {error}
-          </p>
-        ) : null}
 
         <button
           type="submit"
