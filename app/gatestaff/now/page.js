@@ -66,7 +66,6 @@ export default function GateStaffNowPage() {
       if (storedSession) {
         const parsed = JSON.parse(storedSession);
         if (parsed?.role === "gate_staff") {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setSessionState({ status: "ready", isAuthenticated: true, sessionUser: parsed });
           return;
         }
@@ -76,7 +75,6 @@ export default function GateStaffNowPage() {
     }
 
     router.replace("/gatestaff/login");
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSessionState({ status: "ready", isAuthenticated: false, sessionUser: null });
   }, [router]);
 
@@ -220,9 +218,14 @@ export default function GateStaffNowPage() {
   function handleLogout() {
     stopCamera();
 
+    // Clear localStorage session
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("etikket-gate-session");
     }
+
+    // Also expire the shared etikket-session cookie so the login page
+    // does not read it and redirect back in a loop
+    document.cookie = "etikket-session=; path=/; max-age=0; samesite=lax";
 
     setSessionState({ status: "ready", isAuthenticated: false, sessionUser: null });
     setTicketCode("");
@@ -233,7 +236,8 @@ export default function GateStaffNowPage() {
 
   if (status === "loading") {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-[#fafafa] px-6 text-center text-sm font-bold text-[#6b6b70]">
+      <main className="flex min-h-dvh flex-col items-center justify-center bg-[#fafafa] px-6 text-center text-sm font-bold text-[#6b6b70]">
+        <Image src="/eTikket.png" alt="eTikket logo" width={140} height={42} priority className="mb-4 h-auto w-32 object-contain" />
         Checking gate-staff access...
       </main>
     );
@@ -321,9 +325,19 @@ export default function GateStaffNowPage() {
       <div className="grid min-h-dvh w-full overflow-hidden lg:grid-cols-[1fr]">
         <section className="flex min-h-dvh items-center justify-center overflow-y-auto bg-[#fafafa] px-6 py-10 sm:px-10 lg:px-12">
           <div className="w-full max-w-xl">
-            <Image src="/eTikketwhite.png" alt="eTikket logo" width={140} height={42} priority className="h-auto w-32 filter invert" />
+            {/* Centered eTikket Logo */}
+            <div className="flex justify-center">
+              <Image
+                src="/eTikket.png"
+                alt="eTikket logo"
+                width={140}
+                height={42}
+                priority
+                className="h-auto w-36 object-contain"
+              />
+            </div>
 
-            <div className="mt-8 rounded-[24px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+            <div className="mt-6 rounded-[24px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-2xl font-bold text-[#0f0f10]">Gate staff check-in</h2>
