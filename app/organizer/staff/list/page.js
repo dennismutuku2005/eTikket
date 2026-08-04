@@ -43,7 +43,7 @@ export default function StaffListPage() {
       subtitle="Review gate admins, scanner access, and which events each staff member can open."
     >
       <div className="space-y-8">
-        <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+        <div className="card-lg">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-bold text-[#0f0f10]">Staff and access</h2>
@@ -59,7 +59,7 @@ export default function StaffListPage() {
           </div>
 
           <div className="mt-6 overflow-x-auto">
-            <table className="w-full min-w-[640px] text-left text-sm text-[#0f0f10]">
+            <table className="clean-table min-w-[640px]">
               <thead className="bg-[#fafafa] text-[#6b6b70]">
                 <tr>
                   <th className="px-5 py-3.5 font-bold">Name</th>
