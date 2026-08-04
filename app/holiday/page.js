@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { publicEvents } from "@/lib/public-events";
+import { getPublicEvents } from "@/lib/public-events";
 import { PublicHeader } from "@/components/PublicHeader";
 
 export default function HolidayPage() {
-  const holidayEvents = publicEvents.filter((event) => ["Holiday", "Family", "Music"].includes(event.category));
+  const holidayEvents = getPublicEvents().filter((event) => ["Holiday", "Family", "Music"].includes(event.category));
 
   return (
     <>
