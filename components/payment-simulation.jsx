@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { apiRequest } from "@/lib/api";
 
 export default function PaymentSimulation({ slug, event }) {
   const searchParams = useSearchParams();
@@ -17,6 +18,8 @@ export default function PaymentSimulation({ slug, event }) {
   const [formError, setFormError] = useState("");
   const [isPaying, setIsPaying] = useState(false);
   const [status, setStatus] = useState("pending");
+  const [qrCode, setQrCode] = useState("");
+  const [providerReference, setProviderReference] = useState("");
 
   const paymentId = useMemo(() => {
     const sanitized = slug.toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -44,13 +47,34 @@ export default function PaymentSimulation({ slug, event }) {
     setDetailsConfirmed(true);
   }
 
-  function handlePay() {
+  async function handlePay() {
     if (!detailsConfirmed) {
       setFormError("Please confirm your details before paying.");
       return;
     }
 
     setIsPaying(true);
+
+    try {
+      const payload = await apiRequest('/payments/initiate', {
+        method: 'POST',
+        body: JSON.stringify({
+          order_id: paymentId,
+          amount: event?.tickets?.[0]?.price || 0,
+          phone,
+          buyer_name: fullName,
+          buyer_email: email,
+          event_id: event?.id || 1,
+        }),
+      });
+
+      setQrCode(payload.qr_code || '');
+      setProviderReference(payload.provider_reference || paymentId);
+      setStatus('paid');
+    } catch (error) {
+      setFormError(error.message || 'Payment could not be completed.');
+      setIsPaying(false);
+    }
   }
 
   return (
@@ -176,7 +200,13 @@ export default function PaymentSimulation({ slug, event }) {
               Your ticket QR code will be sent to the confirmed email and phone number.
             </p>
             <div className="mt-6 rounded-[20px] bg-[#f8fafc] p-4 text-sm leading-6 text-[#0f5132]">
-              Thank you for your purchase. Keep your phone nearby for the confirmation message.
+              <p className="font-semibold">Ticket ready</p>
+              <p className="mt-2">Your ticket reference is {providerReference || paymentId}.</p>
+              {qrCode ? (
+                <div className="mt-4 flex justify-center">
+                  <img src={qrCode} alt="Ticket QR code" className="h-40 w-40 rounded-2xl border border-[#ececec] bg-white p-2" />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
