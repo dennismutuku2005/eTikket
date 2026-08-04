@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import LoadingScreen from "@/components/loading-screen";
+import { apiRequest } from "@/lib/api";
 
 export default function RegisterForm({ role = "user", redirectPath = "/user/home" }) {
   const router = useRouter();
@@ -14,12 +16,10 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError("");
     const missing = [];
 
     if (!name.trim()) missing.push("full name");
@@ -29,31 +29,38 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
     if (!confirmPassword) missing.push("confirm password");
 
     if (missing.length > 0) {
-      setError(`Please enter your ${missing.join(", ")}.`);
+      toast.error(`Please enter your ${missing.join(", ")}.`);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
     setShowConfirmModal(true);
   }
 
-  function confirmAccount() {
+  async function confirmAccount() {
     setIsLoading(true);
 
     try {
+      const result = await apiRequest('/users/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, phone, password, role }),
+      });
+
       const session = encodeURIComponent(
-        JSON.stringify({ email, phone, role, name }),
+        JSON.stringify({ email, phone, role, name, userId: result.id || null, token: result?.token || '' }),
       );
 
       document.cookie = `etikket-session=${session}; path=/; max-age=604800; samesite=lax`;
+      toast.success("Account created successfully!");
       router.replace(redirectPath);
       router.refresh();
-    } catch {
-      setError("Something went wrong. Try again.");
+    } catch (err) {
+      const errMsg = err.message || "Failed to fetch. Please try again.";
+      toast.error(errMsg);
       setShowConfirmModal(false);
     } finally {
       setIsLoading(false);
@@ -180,12 +187,6 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
             </div>
           </label>
 
-          {error ? (
-            <p className="rounded-[14px] bg-[#f33959]/10 px-4 py-2.5 text-sm font-bold text-[#f33959]">
-              {error}
-            </p>
-          ) : null}
-
           <button
             type="submit"
             disabled={isLoading}
@@ -197,7 +198,7 @@ export default function RegisterForm({ role = "user", redirectPath = "/user/home
 
         {showConfirmModal ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs px-4">
-            <div className="w-full max-w-md rounded-[24px] border border-[#ececec] bg-white p-6 text-[#0f0f10] shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="w-full max-w-md rounded-3xl border border-[#ececec] bg-white p-6 text-[#0f0f10] shadow-2xl animate-in fade-in zoom-in-95">
               <p className="text-xs font-bold uppercase tracking-wider text-[#f33959]">Confirm account</p>
               <h3 className="mt-2 text-2xl font-bold">Send confirmation email</h3>
               <p className="mt-2 text-sm leading-6 text-[#6b6b70]">
