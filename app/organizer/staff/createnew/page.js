@@ -37,7 +37,7 @@ export default function CreateStaffPage() {
       subtitle="Create gate admins and assign QR scanning permissions for each event."
     >
       <div className="grid gap-6 xl:grid-cols-[1.45fr_0.8fr]">
-        <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+        <div className="card-lg">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-[#0f0f10]">New staff member</h2>
@@ -98,7 +98,7 @@ export default function CreateStaffPage() {
         </div>
 
         <aside className="space-y-5">
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="card-lg">
             <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Tips</p>
             <h3 className="mt-2 text-lg font-bold text-[#0f0f10]">Invite staff with event permissions</h3>
             <p className="mt-2 text-sm leading-6 text-[#6b6b70]">
@@ -106,7 +106,7 @@ export default function CreateStaffPage() {
             </p>
           </div>
 
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="card-lg">
             <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Audit</p>
             <div className="mt-4 space-y-3 text-sm text-[#6b6b70]">
               <div className="rounded-[14px] bg-[#fafafa] border border-[#ececec] p-4">
