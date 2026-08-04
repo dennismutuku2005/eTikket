@@ -40,7 +40,7 @@ const navItems = {
       href: "/organizer/staff",
       children: [{ label: "Staff overview", href: "/organizer/staff" }],
     },
-    { label: "Attendees", href: "/organizer/atendeee" },
+    { label: "Attendees", href: "/organizer/attendees" },
     { label: "Analytics", href: "/organizer/analytics" },
   ],
   User: [
@@ -71,7 +71,7 @@ export default function AppShell({ role, title, subtitle, children }) {
   return (
     <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-[#ececec] bg-white shadow-sm transform transition duration-300 ease-out ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-[#ececec] bg-white transform transition duration-300 ease-out ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
@@ -89,10 +89,6 @@ export default function AppShell({ role, title, subtitle, children }) {
             </button>
           </div>
 
-          <div className="mt-6">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#f33959]">{role} dashboard</p>
-            <p className="mt-2 text-sm leading-6 text-[#6b6b70]">Quick access to the most important sections for your role.</p>
-          </div>
 
           <nav className="mt-6 space-y-1">
             {menu.map((item) => {
@@ -102,9 +98,9 @@ export default function AppShell({ role, title, subtitle, children }) {
                 <div key={item.href} className="space-y-1">
                   <Link
                     href={item.href}
-                    className={`block rounded-full px-4 py-2.5 text-sm font-bold transition ${
+                    className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition ${
                       isActive
-                        ? "bg-[#f33959] text-white shadow-xs"
+                        ? "bg-[#f33959] text-white"
                         : "text-[#0f0f10] hover:bg-[#f4f4f5] hover:text-[#f33959]"
                     }`}
                   >
@@ -138,13 +134,13 @@ export default function AppShell({ role, title, subtitle, children }) {
           <div className="mt-auto border-t border-[#ececec] pt-4 space-y-2">
             <Link
               href="/"
-              className="block rounded-full px-4 py-2.5 text-sm font-bold text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]"
+              className="block rounded-2xl px-4 py-3 text-sm font-semibold text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#0f0f10]"
             >
               Public home
             </Link>
             <Link
               href="/logout"
-              className="block rounded-full px-4 py-2.5 text-sm font-bold text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#f33959]"
+              className="block rounded-2xl px-4 py-3 text-sm font-semibold text-[#6b6b70] transition hover:bg-[#f4f4f5] hover:text-[#f33959]"
             >
               Log out
             </Link>
