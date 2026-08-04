@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/app-shell";
 import { getRoleHomePath } from "@/lib/auth";
 import { getClientSession } from "@/lib/client-auth";
+import { apiRequest } from "@/lib/api";
 
 const defaultConfig = {
   type: "Paybill",
@@ -19,6 +20,8 @@ export default function OrganizerMpesaPage() {
   const [mpesaNumber, setMpesaNumber] = useState(defaultConfig.number);
   const [accountName, setAccountName] = useState(defaultConfig.account);
   const [savedConfig, setSavedConfig] = useState(defaultConfig);
+  const [isSaving, setIsSaving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
     const clientSession = getClientSession();
@@ -35,38 +38,79 @@ export default function OrganizerMpesaPage() {
 
     setSession(clientSession);
 
-    const storedConfig = window.localStorage.getItem("organizerMpesaConfig");
-    if (storedConfig) {
+    async function loadSettings() {
       try {
-        const parsed = JSON.parse(storedConfig);
-        setMpesaMethod(parsed.type || defaultConfig.type);
-        setMpesaNumber(parsed.number || defaultConfig.number);
-        setAccountName(parsed.account || defaultConfig.account);
+        const response = await apiRequest('/organizer-settings/mpesa', {
+          headers: {
+            Authorization: `Bearer ${clientSession.token || ''}`,
+          },
+        });
+
+        setMpesaMethod(response.type || defaultConfig.type);
+        setMpesaNumber(response.number || defaultConfig.number);
+        setAccountName(response.account || defaultConfig.account);
         setSavedConfig({
-          type: parsed.type || defaultConfig.type,
-          number: parsed.number || defaultConfig.number,
-          account: parsed.account || defaultConfig.account,
+          type: response.type || defaultConfig.type,
+          number: response.number || defaultConfig.number,
+          account: response.account || defaultConfig.account,
         });
       } catch (error) {
-        console.error("Failed to parse saved MPESA config", error);
+        const storedConfig = window.localStorage.getItem("organizerMpesaConfig");
+        if (storedConfig) {
+          try {
+            const parsed = JSON.parse(storedConfig);
+            setMpesaMethod(parsed.type || defaultConfig.type);
+            setMpesaNumber(parsed.number || defaultConfig.number);
+            setAccountName(parsed.account || defaultConfig.account);
+            setSavedConfig({
+              type: parsed.type || defaultConfig.type,
+              number: parsed.number || defaultConfig.number,
+              account: parsed.account || defaultConfig.account,
+            });
+          } catch (parseError) {
+            console.error("Failed to parse saved MPESA config", parseError);
+          }
+        }
       }
     }
+
+    loadSettings();
   }, [router]);
 
   if (!session) {
     return null;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setIsSaving(true);
+    setStatusMessage("");
+
     const config = {
       type: mpesaMethod,
       number: mpesaNumber,
       account: accountName,
     };
-    window.localStorage.setItem("organizerMpesaConfig", JSON.stringify(config));
-    setSavedConfig(config);
-    window.alert("MPESA settings saved.");
+
+    try {
+      await apiRequest('/organizer-settings/mpesa', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session?.token || ''}`,
+        },
+        body: JSON.stringify(config),
+      });
+
+      window.localStorage.setItem("organizerMpesaConfig", JSON.stringify(config));
+      setSavedConfig(config);
+      setStatusMessage("M-Pesa settings saved successfully.");
+    } catch (error) {
+      window.localStorage.setItem("organizerMpesaConfig", JSON.stringify(config));
+      setSavedConfig(config);
+      setStatusMessage(error.message || "Saved locally for now.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -76,7 +120,7 @@ export default function OrganizerMpesaPage() {
       subtitle="Set the paybill or till number and account name for your ticket payments."
     >
       <div className="space-y-6">
-        <section className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+        <section className="card-lg">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-bold text-[#0f0f10]">M-Pesa payment routing</h2>
@@ -123,10 +167,17 @@ export default function OrganizerMpesaPage() {
 
                 <button
                   type="submit"
-                  className="inline-flex w-full items-center justify-center rounded-full bg-[#f33959] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#d92847]"
+                  disabled={isSaving}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#f33959] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#d92847] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Save M-Pesa settings
+                  {isSaving ? "Saving…" : "Save M-Pesa settings"}
                 </button>
+
+                {statusMessage ? (
+                  <p className="rounded-[14px] border border-[#ececec] bg-white px-4 py-3 text-sm text-[#0f0f10]">
+                    {statusMessage}
+                  </p>
+                ) : null}
               </form>
             </div>
 
