@@ -2,11 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import PaymentSimulation from "@/components/payment-simulation";
-import { getPublicEvent, publicEvents } from "@/lib/public-events";
+import { getPublicEvent, getPublicEvents } from "@/lib/public-events";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
-  return publicEvents.map((event) => ({ slug: event.slug }));
+  return getPublicEvents().map((event) => ({ slug: event.slug }));
 }
 
 export default async function PaymentSimulationPage({ params }) {
