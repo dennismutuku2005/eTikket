@@ -67,7 +67,7 @@ export default function OrganizerAttendeesPage() {
     >
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-6">
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="card-lg">
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
                 { label: "Total attendees", value: "8,420" },
@@ -75,14 +75,14 @@ export default function OrganizerAttendeesPage() {
                 { label: "Pending", value: "2,232" },
                 { label: "Repeat visits", value: "126" },
               ].map((item) => (
-                <div key={item.label} className="rounded-[16px] bg-[#fafafa] border border-[#ececec] p-4">
+                <div key={item.label} className="surface-card">
                   <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">{item.label}</p>
                   <p className="mt-2 text-2xl font-bold text-[#0f0f10]">{item.value}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 rounded-[16px] border border-[#ececec] bg-[#fafafa] p-5">
+            <div className="surface-card">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <h2 className="text-base font-bold text-[#0f0f10]">Check-in trend</h2>
@@ -104,14 +104,14 @@ export default function OrganizerAttendeesPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[20px] border border-[#ececec] bg-white shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="card-lg overflow-hidden">
             <div className="border-b border-[#ececec] p-6">
               <h2 className="text-lg font-bold text-[#0f0f10]">Ticket usage log</h2>
               <p className="mt-0.5 text-xs text-[#6b6b70]">Complete list of tickets scanned at venue entry points.</p>
             </div>
 
             <div className="max-h-[420px] overflow-y-auto">
-              <table className="w-full text-left text-sm text-[#0f0f10]">
+              <table className="clean-table">
                 <thead className="sticky top-0 z-10 bg-[#fafafa] text-[#6b6b70]">
                   <tr>
                     <th className="px-5 py-3 font-bold">Name</th>
@@ -142,7 +142,7 @@ export default function OrganizerAttendeesPage() {
         </div>
 
         <aside className="space-y-5">
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="card-lg">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Attendance</p>
@@ -169,7 +169,7 @@ export default function OrganizerAttendeesPage() {
             </div>
           </div>
 
-          <div className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+          <div className="card-lg">
             <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Ticket mix</p>
             <div className="mt-4 flex flex-col items-center gap-4 sm:flex-row">
               <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-[conic-gradient(#f33959_0_42%,#111113_42%_73%,#6b6b70_73%_100%)] p-3">
