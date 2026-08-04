@@ -2,24 +2,48 @@ import Image from "next/image";
 import Link from "next/link";
 import TicketSelector from "../../../components/ticket-selector";
 import ShareEvent from "../../../components/share-event";
-import { getPublicEvent, publicEvents } from "@/lib/public-events";
 import { PublicHeader } from "../../../components/PublicHeader";
 import { notFound } from "next/navigation";
 import { IoLocationOutline } from "react-icons/io5";
+import { getPublicEvents } from "@/lib/public-events";
+import { getPublicEvent } from "@/lib/public-events";
 
-export function generateStaticParams() {
-  return publicEvents.map((event) => ({ slug: event.slug }));
+async function getEventBySlug(slug) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4010";
+    const response = await fetch(`${baseUrl}/api/events/${slug}`, { cache: "no-store" });
+    if (!response.ok) {
+      return getPublicEvent(slug);
+    }
+    return await response.json();
+  } catch {
+    return getPublicEvent(slug);
+  }
 }
 
 export default async function EventDetailPage({ params }) {
   const { slug } = await params;
-  const event = getPublicEvent(slug);
+  const event = await getEventBySlug(slug);
   
   if (!event) {
     notFound();
   }
   
   const isSoldOut = event.status === "Sold out";
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4010";
+  const imageSrc = event.cover_image_url
+    ? `${backendUrl}${event.cover_image_url}`
+    : event.cover_image_base64
+    ? `data:image/png;base64,${event.cover_image_base64}`
+    : event.image || null;
+  const location = event.venue || event.location || "Venue pending";
+  const date = event.event_date || event.date || "TBA";
+  const time = event.event_time || event.time || "TBA";
+  const price = event.price_label || event.price || "Check availability";
+  const description = event.description || event.longDescription || "";
+  const host = event.host_name || event.host || "Organizer";
+  const mapLat = event.latitude ?? event.mapLat ?? -1.2921;
+  const mapLng = event.longitude ?? event.mapLng ?? 36.8219;
 
   return (
     <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
@@ -29,7 +53,7 @@ export default async function EventDetailPage({ params }) {
         <div className="space-y-5">
           <div className="relative aspect-video overflow-hidden rounded-[20px] bg-[#111113]">
             <Image
-              src={event.image}
+              src={imageSrc}
               alt=""
               fill
               priority
@@ -57,12 +81,12 @@ export default async function EventDetailPage({ params }) {
           </div>
 
           <div className="rounded-[20px] border border-[#ececec] bg-white p-5">
-            <p className="text-lg leading-8 text-[#6b6b70]">{event.longDescription}</p>
+            <p className="text-lg leading-8 text-[#6b6b70]">{description}</p>
             <div className="mt-5 grid gap-3 text-base sm:grid-cols-3">
               {[
-                ["Date", event.date],
-                ["Time", event.time],
-                ["Location", event.location],
+                ["Date", date],
+                ["Time", time],
+                ["Location", location],
               ].map(([label, value]) => (
                 <div key={label} className="rounded-[14px] bg-[#f4f4f5] p-4">
                   <p className="font-bold">{label}</p>
@@ -71,7 +95,7 @@ export default async function EventDetailPage({ params }) {
               ))}
             </div>
             <p className="mt-5 text-base text-[#6b6b70]">
-              Hosted by <span className="font-bold text-[#0f0f10]">{event.host}</span>
+              Hosted by <span className="font-bold text-[#0f0f10]">{host}</span>
             </p>
 
             {/* Map */}
@@ -79,7 +103,7 @@ export default async function EventDetailPage({ params }) {
               <div className="relative h-56 w-full">
                 <iframe
                   title={`Map showing ${event.location}`}
-                  src={`https://maps.google.com/maps?q=${event.mapLat},${event.mapLng}&z=15&output=embed`}
+                  src={`https://maps.google.com/maps?q=${mapLat},${mapLng}&z=15&output=embed`}
                   className="h-full w-full border-0"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -87,7 +111,7 @@ export default async function EventDetailPage({ params }) {
               </div>
               
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${event.mapLat},${event.mapLng}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${mapLat},${mapLng}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-[#f4f4f5] p-4 transition hover:bg-[#ececec]"
@@ -96,7 +120,7 @@ export default async function EventDetailPage({ params }) {
                   <IoLocationOutline className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="font-bold">{event.location}</p>
+                  <p className="font-bold">{location}</p>
                   <p className="text-sm text-[#6b6b70]">Open in Google Maps</p>
                 </div>
               </a>
@@ -117,12 +141,12 @@ export default async function EventDetailPage({ params }) {
                 </p>
                 <h2 className="mt-1 text-xl font-bold leading-snug">{event.title}</h2>
                 <p className="mt-1 text-sm text-[#6b6b70]">
-                  {event.date} · {event.time}
+                  {date} · {time}
                 </p>
               </div>
               <div className="shrink-0 text-right">
                 <p className="text-xs font-bold text-[#a3a3a8]">Venue</p>
-                <p className="mt-1 max-w-36 text-sm font-bold leading-snug">{event.location}</p>
+                <p className="mt-1 max-w-36 text-sm font-bold leading-snug">{location}</p>
               </div>
             </div>
 
@@ -157,7 +181,7 @@ export default async function EventDetailPage({ params }) {
             {!isSoldOut && (
               <div className="flex items-center justify-between gap-4 border-t border-[#ececec] bg-[#fafafa] px-6 py-4">
                 <p className="text-xs font-bold text-[#a3a3a8]">
-                  {event.remainingTickets} left
+                  {event.remaining_tickets ?? event.remainingTickets ?? 0} left
                 </p>
                 <div
                   className="h-8 flex-1 max-w-45 opacity-70"
@@ -174,4 +198,9 @@ export default async function EventDetailPage({ params }) {
       </section>
     </main>
   );
+}
+
+export async function generateStaticParams() {
+  const events = getPublicEvents();
+  return events.map((e) => ({ slug: e.slug }));
 }
