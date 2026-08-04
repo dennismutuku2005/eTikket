@@ -1,16 +1,16 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
 import CheckoutForm from "@/components/checkout-form";
-import { getPublicEvent, publicEvents } from "@/lib/public-events";
+import { getPublicEvent, getPublicEvents } from "@/lib/public-events";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
-  return publicEvents.map((event) => ({ slug: event.slug }));
+  return getPublicEvents().map((event) => ({ slug: event.slug }));
 }
 
 export default async function CheckoutPage({ params }) {
   const { slug } = await params;
-  const event = publicEvents.find((item) => item.slug === slug);
+  const event = getPublicEvent(slug);
 
   if (!event) {
     notFound();
