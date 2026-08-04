@@ -9,7 +9,6 @@ export default function LogoutPage() {
   useEffect(() => {
     document.cookie = "etikket-session=; path=/; max-age=0; samesite=lax";
     router.replace("/organizer/login");
-    router.refresh();
   }, [router]);
 
   return (
