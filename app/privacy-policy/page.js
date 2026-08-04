@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { publicEvents } from "@/lib/public-events";
+import { getPublicEvents } from "@/lib/public-events";
 import { PublicHeader } from "@/components/PublicHeader";
 
 // A thin rule that reads as a ticket's tear-perforation — the one
@@ -44,7 +44,7 @@ function EventCard({ event }) {
 }
 
 export default function HomePage() {
-  const events = publicEvents;
+  const events = getPublicEvents();
 
   return (
     <main className="min-h-screen bg-[#fafafa] text-[#0f0f10]">
