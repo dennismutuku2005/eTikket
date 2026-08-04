@@ -1,11 +1,16 @@
-import Image from "next/image";
 import Link from "next/link";
 import EventsSearch from "@/components/events-search";
-import { publicEvents } from "@/lib/public-events";
 import { PublicHeader } from "@/components/PublicHeader";
+import { fetchPublicEvents } from "@/lib/events-client";
 
-export default function EventsPage() {
-  const categories = Array.from(new Set(publicEvents.map((event) => event.category)));
+async function getInitialEvents() {
+  const payload = await fetchPublicEvents({ page: 1, limit: 6 });
+  return Array.isArray(payload?.data) ? payload.data : payload.data || [];
+}
+
+export default async function EventsPage() {
+  const events = await getInitialEvents();
+  const categories = Array.from(new Set(events.map((event) => event.category).filter(Boolean)));
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fafafa] text-[#0f0f10]">
@@ -38,7 +43,7 @@ export default function EventsPage() {
         </div>
 
         <div className="mt-6">
-          <EventsSearch events={publicEvents} />
+          <EventsSearch events={events} />
         </div>
       </section>
     </main>
