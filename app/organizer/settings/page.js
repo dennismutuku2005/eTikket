@@ -65,7 +65,7 @@ export default function OrganizerSettingsPage() {
       subtitle="Update your MPESA paybill or till details and see the current saved configuration."
     >
       <div className="space-y-6">
-        <section className="rounded-[20px] border border-[#ececec] bg-white p-6 shadow-[0_2px_8px_rgba(15,15,16,0.06)]">
+        <section className="card-lg">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-bold text-[#0f0f10]">M-Pesa payment info</h2>
@@ -74,7 +74,7 @@ export default function OrganizerSettingsPage() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_0.95fr]">
-            <div className="rounded-[16px] border border-[#ececec] bg-[#fafafa] p-5">
+            <div className="surface-card">
               <p className="text-sm font-bold text-[#0f0f10]">Current M-Pesa configuration</p>
               <dl className="mt-4 grid gap-4 text-sm text-[#6b6b70]">
                 <div>
@@ -92,7 +92,7 @@ export default function OrganizerSettingsPage() {
               </dl>
             </div>
 
-            <form onSubmit={handleSubmit} className="rounded-[16px] border border-[#ececec] bg-white p-5">
+            <form onSubmit={handleSubmit} className="card">
               <div className="grid gap-4">
                 <label className="block">
                   <span className="text-sm font-bold text-[#0f0f10]">M-Pesa type</span>
