@@ -14,7 +14,7 @@ export default function OrganizerLoginPage() {
   useEffect(() => {
     const session = getClientSession();
 
-    if (session?.role) {
+    if (session?.role === "organizer") {
       router.replace(getRoleHomePath(session.role));
     }
   }, [router]);
@@ -68,7 +68,7 @@ export default function OrganizerLoginPage() {
 
             {/* Login Form */}
             <div className="mt-6">
-              <LoginForm />
+              <LoginForm requiredRole="organizer" />
             </div>
 
             {/* Register link */}
@@ -82,11 +82,7 @@ export default function OrganizerLoginPage() {
               </Link>
             </div>
 
-            {/* Demo credentials hint */}
-            <div className="mt-4 rounded-[14px] border border-dashed border-[#ececec] bg-[#fafafa] p-3 text-xs leading-5 text-[#6b6b70]">
-              <span className="font-bold text-[#0f0f10]">Demo credentials:</span>{" "}
-              <span className="font-mono text-[#0f0f10]">organizer@etikket.co.ke / organizer123</span>
-            </div>
+            {/* Demo credentials removed — use real accounts */}
 
             {/* Terms */}
             <p className="mt-6 text-xs leading-5 text-[#6b6b70]">
