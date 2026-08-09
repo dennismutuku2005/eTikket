@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FiCamera, FiCheckCircle, FiCode, FiLogOut, FiUsers } from "react-icons/fi";
+import { apiRequestAuth } from "@/lib/api";
+import { toast } from "sonner";
 
 const demoTickets = [
   {
@@ -87,25 +89,48 @@ export default function GateStaffNowPage() {
   }, []);
 
   async function handleLookup(code) {
-    const normalizedCode = code.trim().toUpperCase();
+    let cleanCode = code.trim();
+    if (cleanCode.startsWith("{")) {
+      try {
+        const parsed = JSON.parse(cleanCode);
+        if (parsed.codes && parsed.codes.length > 0) {
+          cleanCode = parsed.codes[0];
+        }
+      } catch {
+        // Fallback to raw string
+      }
+    }
 
+    const normalizedCode = cleanCode.toUpperCase();
     if (!normalizedCode) {
       setStatusMessage("Enter or scan a ticket code first.");
       return null;
     }
 
-    const ticket = demoTickets.find((item) => item.code.toUpperCase() === normalizedCode);
+    try {
+      setStatusMessage("Searching ticket on server...");
+      const ticket = await apiRequestAuth(`/tickets/${cleanCode}`, sessionUser?.token);
 
-    if (!ticket) {
+      const parsedTicket = {
+        id: ticket.id,
+        code: ticket.ticket_code,
+        attendeeName: ticket.attendee_name || "Guest",
+        eventName: ticket.event_title || "Event",
+        ticketType: ticket.ticket_type || "General",
+        status: ticket.status === "checked_in" ? "Verified" : "Pending",
+        scannedBy: ticket.scanned_by || "",
+        scannedAt: ticket.scanned_at ? new Date(ticket.scanned_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "",
+      };
+
+      setSelectedTicket(parsedTicket);
+      setStatusMessage(ticket.status === "checked_in" ? "Ticket already USED/Verified!" : `Ticket found for ${parsedTicket.attendeeName}.`);
+      setShowVerifyModal(true);
+      return parsedTicket;
+    } catch (err) {
       setSelectedTicket(null);
-      setStatusMessage("Ticket not found. Try another code.");
+      setStatusMessage(err.message || "Ticket not found or database unavailable. Try another code.");
       return null;
     }
-
-    setSelectedTicket(ticket);
-    setStatusMessage(`Ticket found for ${ticket.attendeeName}.`);
-    setShowVerifyModal(true);
-    return ticket;
   }
 
   async function handleScanSubmit(event) {
@@ -196,16 +221,32 @@ export default function GateStaffNowPage() {
       return;
     }
 
-    const updatedTicket = {
-      ...selectedTicket,
-      status: "Verified",
-      scannedBy: `${staffDetails.name} • ${staffDetails.phone}`,
-      scannedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    };
+    try {
+      setStatusMessage("Verifying ticket on server...");
+      const staffId = sessionUser?.sub || sessionUser?.id || 1;
+      await apiRequestAuth("/tickets/verify", sessionUser?.token, {
+        method: "POST",
+        body: JSON.stringify({
+          code: selectedTicket.code,
+          staff_id: staffId,
+        }),
+      });
 
-    setSelectedTicket(updatedTicket);
-    setStatusMessage(`Verified and marked used for ${updatedTicket.attendeeName}.`);
-    setShowVerifyModal(false);
+      const updatedTicket = {
+        ...selectedTicket,
+        status: "Verified",
+        scannedBy: `${sessionUser?.name || "Gate staff"}`,
+        scannedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      setSelectedTicket(updatedTicket);
+      setStatusMessage(`Verified and marked used for ${updatedTicket.attendeeName}.`);
+      setShowVerifyModal(false);
+      toast.success("Ticket successfully verified and checked in!");
+    } catch (err) {
+      setStatusMessage(err.message || "Failed to verify ticket.");
+      toast.error(err.message || "Failed to verify ticket.");
+    }
   }
 
   async function handleUseDemoCode() {

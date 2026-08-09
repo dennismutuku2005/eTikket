@@ -15,7 +15,7 @@ export default function CreateNewEventPage() {
     const clientSession = getClientSession();
 
     if (!clientSession) {
-      router.replace("/login");
+      router.replace("/organizer/login");
       return;
     }
 

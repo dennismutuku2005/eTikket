@@ -79,8 +79,8 @@ export default function OrganizerAnalyticsPage() {
   // Build distribution data from events (use remaining_tickets as a proxy since we have no per-event sold data without extra API)
   const ticketDistData = selectedEvent
     ? [
-        { name: "Sold", value: selectedEvent.remaining_tickets ? (200 - selectedEvent.remaining_tickets) : 0 },
-        { name: "Remaining", value: selectedEvent.remaining_tickets || 0 },
+        { name: "Sold", value: Math.max(0, Number(selectedEvent.total_tickets || 0) - Number(selectedEvent.remaining_tickets || 0)) },
+        { name: "Remaining", value: Number(selectedEvent.remaining_tickets || 0) },
       ]
     : [];
 
@@ -191,7 +191,7 @@ export default function OrganizerAnalyticsPage() {
                     <p className="mt-1 text-xs text-[#6b6b70]">{event.venue} · {event.event_date ? new Date(event.event_date).toLocaleDateString() : "—"}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#f4f4f5]">
-                        <div className="h-full rounded-full bg-[#f33959]" style={{ width: `${pct(200 - (event.remaining_tickets || 0), 200)}%` }} />
+                        <div className="h-full rounded-full bg-[#f33959]" style={{ width: `${pct(Number(event.total_tickets || 0) - Number(event.remaining_tickets || 0), Number(event.total_tickets || 1))}%` }} />
                       </div>
                       <span className="text-xs text-[#6b6b70]">{event.remaining_tickets} left</span>
                     </div>

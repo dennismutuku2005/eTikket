@@ -9,7 +9,7 @@ import { getClientSession } from "@/lib/client-auth";
 import EventMap from "@/components/event-map";
 
 const CATEGORIES = ["Music", "Holiday", "Nightlife", "Family", "Business", "Concert", "Sports", "Arts", "Food"];
-const STATUSES = ["Draft", "Live", "Selling fast", "New", "VIP available", "Sold out"];
+const STATUSES = ["Draft", "Live", "Selling fast", "New", "Sold out"];
 
 export default function EventBuilderForm({ eventToEdit, onSaved }) {
   const router = useRouter();
@@ -100,6 +100,10 @@ export default function EventBuilderForm({ eventToEdit, onSaved }) {
     e.preventDefault();
     if (!title.trim() || !location.trim()) {
       toast.error("Event title and venue are required.");
+      return;
+    }
+    if (!date) {
+      toast.error("Event date is required.");
       return;
     }
 
@@ -247,12 +251,13 @@ export default function EventBuilderForm({ eventToEdit, onSaved }) {
         {/* Date + Time */}
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Date</span>
+            <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Date *</span>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white transition"
+              required
             />
           </label>
           <label className="block">

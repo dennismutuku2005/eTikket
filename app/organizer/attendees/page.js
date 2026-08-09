@@ -289,8 +289,8 @@ export default function OrganizerAttendeesPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredLogs.map((log) => (
-                    <tr key={log.id} className="border-t border-[#ececec] transition hover:bg-[#f4f4f5]">
+                  filteredLogs.map((log, idx) => (
+                    <tr key={`${log.id}-${idx}`} className="border-t border-[#ececec] transition hover:bg-[#f4f4f5]">
                       <td className="px-5 py-4">
                         <p className="font-bold text-[#0f0f10]">{log.name}</p>
                         {log.email && <p className="text-xs text-[#6b6b70]">{log.email}</p>}

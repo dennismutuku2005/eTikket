@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { apiRequest } from "@/lib/api";
 import { FiLoader } from "react-icons/fi";
 
 export default function TicketSelector({ event }) {
+  const router = useRouter();
   const [tickets, setTickets] = useState(event.tickets || []);
   const [loading, setLoading] = useState(!event.tickets || event.tickets.length === 0);
   const [quantities, setQuantities] = useState({});
@@ -68,6 +69,25 @@ export default function TicketSelector({ event }) {
       ...current,
       [name]: Math.max(0, Math.min(10, (current[name] || 0) + change)),
     }));
+  }
+
+  function handleCheckout() {
+    if (selectedCount === 0) return;
+    // Build a compact list of selected lines: [{id, name, price, qty}]
+    const lines = tickets
+      .filter((t) => (quantities[t.name] || 0) > 0)
+      .map((t) => ({
+        id: t.id ?? null,
+        name: t.name,
+        price: t.price,
+        available: t.available,
+        description: t.description || "",
+        qty: quantities[t.name] || 0,
+      }));
+    const params = new URLSearchParams({
+      tickets: JSON.stringify(lines),
+    });
+    router.push(`/checkout/${event.slug}?${params.toString()}`);
   }
 
   return (
@@ -139,14 +159,16 @@ export default function TicketSelector({ event }) {
           <span className="text-base text-white/70">Total</span>
           <span className="text-2xl font-bold">{isFreeSelection ? "Free" : `KSh ${total.toLocaleString()}`}</span>
         </div>
-        <Link
-          href={`/checkout/${event.slug}`}
-          className={`mt-4 flex h-[52px] w-full items-center justify-center rounded-full px-5 text-base font-bold text-white transition ${
-            selectedCount === 0 ? "pointer-events-none bg-[#f9c2cb]" : "bg-[#f33959] hover:bg-[#d92847]"
+        <button
+          type="button"
+          onClick={handleCheckout}
+          disabled={selectedCount === 0}
+          className={`mt-4 flex h-[52px] w-full items-center justify-center rounded-full px-5 text-base font-bold text-white transition disabled:cursor-not-allowed ${
+            selectedCount === 0 ? "bg-[#f9c2cb]" : "bg-[#f33959] hover:bg-[#d92847]"
           }`}
         >
           {isFreeSelection ? "Get free ticket" : "Pay now"}
-        </Link>
+        </button>
         <p className="mt-3 text-center text-xs leading-5 text-white/60">
           By buying a ticket you agree to our terms and services.
         </p>
