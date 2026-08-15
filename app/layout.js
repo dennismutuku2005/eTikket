@@ -1,5 +1,6 @@
 import { Lato } from "next/font/google";
 import { Toaster } from "sonner";
+import { EtikketAgent } from "@/components/etikket-agent";
 import "./globals.css";
 
 const lato = Lato({
@@ -19,9 +20,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${lato.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {children}
+        <EtikketAgent />
         <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
   );
 }
+
 

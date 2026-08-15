@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getClientSession } from "@/lib/client-auth";
+import { OrganizerAgent } from "@/components/organizer-agent";
+
 
 const navItems = {
   Admin: [
@@ -198,6 +200,7 @@ export default function AppShell({ role, title, subtitle, children }) {
           </div>
         </div>
       </div>
+      {role === "Organizer" && <OrganizerAgent />}
     </main>
   );
 }
