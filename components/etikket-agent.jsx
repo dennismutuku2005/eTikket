@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { BACKEND_URL } from "@/lib/api";
 import { toast } from "sonner";
 import {
@@ -189,6 +190,13 @@ function EventCardsList({ events, isExpanded, onSelectEvent }) {
 }
 
 export function EtikketAgent() {
+  const pathname = usePathname();
+
+  // Hide buyer AI Concierge agent on Organizer, Admin, and Gate Staff dashboard routes
+  if (pathname?.startsWith("/organizer") || pathname?.startsWith("/admin") || pathname?.startsWith("/gatestaff")) {
+    return null;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState("");
@@ -203,16 +211,60 @@ export function EtikketAgent() {
   ]);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [ticketTiers, setTicketTiers] = useState([]);
+  const [loadingTiers, setLoadingTiers] = useState(false);
   const [bookingDetails, setBookingDetails] = useState({
     name: "",
     email: "",
     phone: "",
     qty: 1,
+    ticketTierId: "",
+    ticketTypeName: "General",
+    unitPrice: 0,
   });
 
   const [activeOrder, setActiveOrder] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState(null);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (!selectedEvent?.id) return;
+    setLoadingTiers(true);
+    fetch(`${BACKEND_URL}/api/event-ticket-types/${selectedEvent.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTicketTiers(data);
+          const firstTier = data[0];
+          setBookingDetails((prev) => ({
+            ...prev,
+            ticketTierId: firstTier.id,
+            ticketTypeName: firstTier.name || "General",
+            unitPrice: Number(firstTier.price) || 0,
+          }));
+        } else {
+          const defaultPrice = Number(selectedEvent.price) || 0;
+          setTicketTiers([{ id: "default", name: "General", price: defaultPrice }]);
+          setBookingDetails((prev) => ({
+            ...prev,
+            ticketTierId: "default",
+            ticketTypeName: "General",
+            unitPrice: defaultPrice,
+          }));
+        }
+      })
+      .catch(() => {
+        const defaultPrice = Number(selectedEvent.price) || 0;
+        setTicketTiers([{ id: "default", name: "General", price: defaultPrice }]);
+        setBookingDetails((prev) => ({
+          ...prev,
+          ticketTierId: "default",
+          ticketTypeName: "General",
+          unitPrice: defaultPrice,
+        }));
+      })
+      .finally(() => setLoadingTiers(false));
+  }, [selectedEvent?.id]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -256,6 +308,13 @@ export function EtikketAgent() {
         content: "I am having a brief issue connecting to my service, but I can still assist you with events.",
       };
 
+      if (assistantReply.cardData?.type === "order_summary" && assistantReply.cardData.order) {
+        setActiveOrder(assistantReply.cardData.order);
+      }
+      if ((assistantReply.cardData?.type === "booking_form" || assistantReply.cardData?.type === "single_event") && assistantReply.cardData.event) {
+        setSelectedEvent(assistantReply.cardData.event);
+      }
+
       setMessages((prev) => [...prev, assistantReply]);
     } catch (err) {
       toast.error("Agent connection error. Please try again.");
@@ -277,14 +336,14 @@ export function EtikketAgent() {
 
   const handleSelectEvent = (evt) => {
     setSelectedEvent(evt);
-    const selectMsg = `I would like to book tickets for "${evt.title}". Price: ${evt.price_label || "KES " + evt.price}`;
+    const selectMsg = `I would like to book tickets for "${evt.title}". Price: ${evt.price_label || "KES " + (evt.price || 0)}`;
 
     setMessages((prev) => [
       ...prev,
       { role: "user", content: selectMsg },
       {
         role: "assistant",
-        content: `You selected **${evt.title}** (${evt.price_label || "KES " + evt.price}).\n\nPlease enter your Full Name, Email, and M-Pesa Phone Number below to proceed with booking:`,
+        content: `You selected **${evt.title}** (${evt.price_label || "KES " + (evt.price || 0)}).\n\nPlease enter your Full Name, Email, M-Pesa Phone Number, and select your Ticket Class below to proceed:`,
         cardData: { type: "booking_form", event: evt },
       },
     ]);
@@ -328,6 +387,8 @@ export function EtikketAgent() {
           buyer_name: bookingDetails.name,
           buyer_email: bookingDetails.email,
           buyer_phone: valData.formatted,
+          ticket_tier_id: bookingDetails.ticketTierId,
+          ticket_type_name: bookingDetails.ticketTypeName,
           ticket_qty: Number(bookingDetails.qty) || 1,
         }),
       });
@@ -442,6 +503,12 @@ export function EtikketAgent() {
       {/* Quick Action Chips */}
       <div className="flex items-center gap-2 overflow-x-auto bg-[#fafafa] p-3 border-b border-[#ececec] scrollbar-none text-xs">
         <button
+          onClick={() => handleChipClick("Show me affordable events with lowest prices")}
+          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-semibold text-[#0f0f10] shadow-2xs hover:bg-[#f33959] hover:text-white hover:border-[#f33959] transition"
+        >
+          Affordable Events
+        </button>
+        <button
           onClick={() => handleChipClick("Show me top upcoming events in Kenya")}
           className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-semibold text-[#0f0f10] shadow-2xs hover:bg-[#f33959] hover:text-white hover:border-[#f33959] transition"
         >
@@ -494,15 +561,109 @@ export function EtikketAgent() {
                   />
                 )}
 
+                {/* 1b. Single Selected Event Card */}
+                {msg.cardData.type === "single_event" && msg.cardData.event && (
+                  <div className="rounded-[18px] border border-[#ececec] bg-white p-3.5 shadow-md space-y-2">
+                    <div className="flex gap-3">
+                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#f4f4f5] border border-[#ececec]">
+                        {msg.cardData.event.cover_image_url ? (
+                          <img
+                            src={`${BACKEND_URL}${msg.cardData.event.cover_image_url}`}
+                            alt={msg.cardData.event.title}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-xs font-bold text-[#6b6b70]">
+                            Event
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="rounded-full bg-[#f33959]/10 px-2 py-0.5 text-[10px] font-bold text-[#f33959]">
+                          {msg.cardData.event.category || "Selected Event"}
+                        </span>
+                        <h4 className="font-bold text-sm text-[#0f0f10] truncate mt-0.5">
+                          {msg.cardData.event.title}
+                        </h4>
+                        <p className="text-xs text-[#6b6b70] flex items-center gap-1 mt-1">
+                          <FiCalendar className="shrink-0" />
+                          {msg.cardData.event.event_date ? new Date(msg.cardData.event.event_date).toLocaleDateString() : "Upcoming"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-[#f4f4f5] pt-2 mt-2">
+                      <span className="font-bold text-sm text-[#0f0f10]">
+                        {msg.cardData.event.price_label || `KES ${msg.cardData.event.price || 0}`}
+                      </span>
+                      <button
+                        onClick={() => handleSelectEvent(msg.cardData.event)}
+                        className="rounded-full bg-[#f33959] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#d92847] transition"
+                      >
+                        Book This Event
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* 2. Interactive Booking Form Card */}
                 {msg.cardData.type === "booking_form" && (
                   <form
                     onSubmit={handleFormSubmit}
                     className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-md space-y-3"
                   >
-                    <h4 className="font-bold text-xs uppercase tracking-wider text-[#f33959] flex items-center gap-1.5">
-                      <FiUser /> Guest Ticket Details
-                    </h4>
+                    <div className="flex items-center justify-between border-b border-[#f4f4f5] pb-2">
+                      <h4 className="font-bold text-xs uppercase tracking-wider text-[#f33959] flex items-center gap-1.5">
+                        <FiUser /> Guest Ticket Details
+                      </h4>
+                      {bookingDetails.unitPrice * (Number(bookingDetails.qty) || 1) > 0 ? (
+                        <span className="rounded-full bg-[#f33959]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#f33959]">
+                          KES {(bookingDetails.unitPrice * (Number(bookingDetails.qty) || 1)).toLocaleString()}
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">
+                          Free
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Ticket Class / Tier Selector */}
+                    <div>
+                      <label className="text-[11px] font-bold text-[#6b6b70]">Ticket Class / Tier *</label>
+                      {loadingTiers ? (
+                        <div className="mt-1 flex items-center gap-2 text-xs text-[#6b6b70]">
+                          <FiRefreshCw className="animate-spin text-[#f33959]" /> Loading ticket classes...
+                        </div>
+                      ) : ticketTiers.length > 0 ? (
+                        <select
+                          value={bookingDetails.ticketTierId}
+                          onChange={(e) => {
+                            const selectedId = e.target.value;
+                            const selectedTier = ticketTiers.find((t) => String(t.id) === String(selectedId)) || ticketTiers[0];
+                            setBookingDetails({
+                              ...bookingDetails,
+                              ticketTierId: selectedTier.id,
+                              ticketTypeName: selectedTier.name,
+                              unitPrice: Number(selectedTier.price) || 0,
+                            });
+                          }}
+                          className="mt-1 w-full rounded-xl border border-[#ececec] bg-white px-3 py-2 text-xs font-semibold text-[#0f0f10] focus:border-[#f33959] focus:outline-none"
+                        >
+                          {ticketTiers.map((tier) => (
+                            <option key={tier.id} value={tier.id}>
+                              {tier.name} — {Number(tier.price) === 0 ? "Free" : `KES ${Number(tier.price).toLocaleString()}`}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type="text"
+                          disabled
+                          value="General Ticket"
+                          className="mt-1 w-full rounded-xl border border-[#ececec] bg-[#f4f4f5] px-3 py-2 text-xs font-medium text-[#6b6b70]"
+                        />
+                      )}
+                    </div>
+
                     <div>
                       <label className="text-[11px] font-bold text-[#6b6b70]">Full Name</label>
                       <input
@@ -549,6 +710,17 @@ export function EtikketAgent() {
                         />
                       </div>
                     </div>
+
+                    {/* Total Amount Summary Box */}
+                    <div className="flex items-center justify-between rounded-xl bg-[#fafafa] p-2.5 border border-[#ececec]">
+                      <span className="text-xs font-bold text-[#6b6b70]">Total Amount:</span>
+                      <span className="text-sm font-extrabold text-[#f33959]">
+                        {bookingDetails.unitPrice * (Number(bookingDetails.qty) || 1) === 0
+                          ? "Free"
+                          : `KES ${(bookingDetails.unitPrice * (Number(bookingDetails.qty) || 1)).toLocaleString()}`}
+                      </span>
+                    </div>
+
                     <button
                       type="submit"
                       disabled={loading}
@@ -570,8 +742,9 @@ export function EtikketAgent() {
                     </div>
                     <div className="space-y-1.5 text-xs text-[#0f0f10]">
                       <p><strong>Event:</strong> {msg.cardData.order.event_title}</p>
+                      <p><strong>Ticket Class:</strong> {msg.cardData.order.ticket_type || "General"} ({msg.cardData.order.ticket_qty} ticket(s))</p>
                       <p><strong>Buyer:</strong> {msg.cardData.order.buyer_name} ({msg.cardData.order.buyer_phone})</p>
-                      <p><strong>Total Amount:</strong> <span className="font-bold text-sm text-[#f33959]">KES {Number(msg.cardData.order.total_amount).toLocaleString()}</span></p>
+                      <p><strong>Total Amount:</strong> <span className="font-bold text-sm text-[#f33959]">{Number(msg.cardData.order.total_amount) === 0 ? "Free" : `KES ${Number(msg.cardData.order.total_amount).toLocaleString()}`}</span></p>
                     </div>
                     {paymentStatus === "initiating" ? (
                       <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-amber-50/90 p-4 border border-amber-200/90 text-xs text-amber-900 shadow-sm">
