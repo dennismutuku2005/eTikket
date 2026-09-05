@@ -10,7 +10,7 @@ import { getPublicEvent } from "@/lib/public-events";
 
 async function getEventBySlug(slug) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4010";
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://etikketapi.quickzingo.co.ke";
     const response = await fetch(`${baseUrl}/api/events/${slug}`, { cache: "no-store" });
     if (!response.ok) {
       return getPublicEvent(slug);
@@ -30,7 +30,7 @@ export default async function EventDetailPage({ params }) {
   }
   
   const isSoldOut = event.status === "Sold out";
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4010";
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://etikketapi.quickzingo.co.ke";
   const imageSrc = event.cover_image_url
     ? `${backendUrl}${event.cover_image_url}`
     : event.cover_image_base64
