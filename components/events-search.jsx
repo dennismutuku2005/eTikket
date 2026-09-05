@@ -1,9 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { apiRequest } from "@/lib/api";
+import { apiRequest, BACKEND_URL } from "@/lib/api";
+
+function getImageSrc(event) {
+  if (event.cover_image_url) return `${BACKEND_URL}${event.cover_image_url}`;
+  if (event.cover_image_base64) {
+    return event.cover_image_base64.startsWith("data:")
+      ? event.cover_image_base64
+      : `data:image/png;base64,${event.cover_image_base64}`;
+  }
+  return event.image || "/sideimage.png";
+}
 
 export default function EventsSearch({ events: initialEvents = [] }) {
   const [events, setEvents] = useState(initialEvents);
@@ -95,14 +104,19 @@ export default function EventsSearch({ events: initialEvents = [] }) {
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {filteredEvents.map((event) => {
-          const imageSrc = event.cover_image_base64 ? `data:image/png;base64,${event.cover_image_base64}` : event.image || "/sideimage.png";
+          const imageSrc = getImageSrc(event);
           const location = event.venue || event.location || "Venue pending";
           const date = event.event_date || event.date || "TBA";
           const price = event.price_label || event.price || "Check availability";
           return (
             <Link key={event.slug || event.id} href={`/events/${event.slug || event.id}`} className="rounded-[20px] border border-[#ececec] bg-white p-3 shadow-[0_2px_8px_rgba(15,15,16,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,15,16,0.12)]">
               <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#111113]">
-                <Image src={imageSrc} alt="" fill sizes="(max-width: 768px) 100vw, 360px" className={`object-cover ${event.status === "Sold out" ? "grayscale" : ""}`} />
+                <img
+                  src={imageSrc}
+                  alt={event.title || "Event"}
+                  className={`h-full w-full object-cover ${event.status === "Sold out" ? "grayscale" : ""}`}
+                  onError={(error) => { error.currentTarget.src = "/sideimage.png"; }}
+                />
                 <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/10 to-black/45" />
                 <span className={`absolute left-3 top-3 rounded-full px-4 py-2 text-sm font-bold ${event.status === "Sold out" ? "bg-[#a3a3a8] text-white" : "bg-white text-[#f33959]"}`}>{event.status}</span>
                 <span className="absolute right-3 top-3 rounded-full bg-[#111113] px-4 py-2 text-sm font-bold text-white">{price}</span>
