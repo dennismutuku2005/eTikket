@@ -100,6 +100,25 @@ function renderInlineMarkdown(text) {
   return parts;
 }
 
+function preprocessMarkdown(content) {
+  if (!content || typeof content !== "string") return "";
+  let text = stripEmojis(content);
+
+  // 1. Ensure empty line before headings (### Header)
+  text = text.replace(/([^\n])\n(#{1,6}\s)/g, "$1\n\n$2");
+
+  // 2. Ensure empty line before tables (| col |)
+  text = text.replace(/([^\n|])\n(\|.+?\|)/g, "$1\n\n$2");
+
+  // 3. Ensure empty line after tables
+  text = text.replace(/(\|[^\n]+\|)\n([^\n|])/g, "$1\n\n$2");
+
+  // 4. Ensure empty line before lists (- bullet or 1. item)
+  text = text.replace(/([^\n\-*0-9.])\n([-*]\s|\d+\.\s)/g, "$1\n\n$2");
+
+  return text;
+}
+
 /**
  * Clean & Accurate Block Markdown Renderer
  * Properly isolates headings, bullet lists, numbered steps, and tables.
@@ -108,21 +127,66 @@ function FormattedMarkdown({ content }) {
   if (!content) return null;
 
   return (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      components={{
-        ul: ({ node, ...props }) => <ul {...props} className="my-2 list-disc space-y-1 pl-5" />,
-        ol: ({ node, ...props }) => <ol {...props} className="my-2 list-decimal space-y-1 pl-5" />,
-        p: ({ node, ...props }) => <p {...props} className="leading-relaxed" />,
-        a: ({ node, ...props }) => (
-          <a {...props} target="_blank" rel="noreferrer" className="font-bold text-[#f33959] underline hover:text-[#d92847]" />
-        ),
-      }}
-    >
-      {stripEmojis(content)}
-    </ReactMarkdown>
+    <div className="text-xs leading-relaxed space-y-2 text-[#0f0f10]">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          h1: ({ node, ...props }) => (
+            <h1 {...props} className="text-base font-extrabold text-[#0f0f10] mt-3 mb-1.5 border-b border-[#ececec] pb-1" />
+          ),
+          h2: ({ node, ...props }) => (
+            <h2 {...props} className="text-sm font-bold text-[#0f0f10] mt-2.5 mb-1" />
+          ),
+          h3: ({ node, ...props }) => (
+            <h3 {...props} className="text-xs font-bold uppercase tracking-wider text-[#0f0f10] mt-2.5 mb-1 text-[#f33959]" />
+          ),
+          h4: ({ node, ...props }) => (
+            <h4 {...props} className="text-xs font-bold text-[#343438] mt-2 mb-0.5" />
+          ),
+          p: ({ node, ...props }) => <p {...props} className="mb-2 leading-relaxed text-[#0f0f10]" />,
+          ul: ({ node, ...props }) => (
+            <ul {...props} className="my-2 list-disc space-y-1 pl-5 text-[#0f0f10]" />
+          ),
+          ol: ({ node, ...props }) => (
+            <ol {...props} className="my-2 list-decimal space-y-1 pl-5 text-[#0f0f10]" />
+          ),
+          li: ({ node, ...props }) => <li {...props} className="leading-relaxed pl-0.5" />,
+          table: ({ node, ...props }) => (
+            <div className="my-3 w-full overflow-x-auto rounded-xl border border-[#ececec] bg-white shadow-2xs">
+              <table {...props} className="w-full text-left border-collapse text-xs" />
+            </div>
+          ),
+          thead: ({ node, ...props }) => (
+            <thead {...props} className="bg-[#f4f4f5] border-b border-[#ececec] text-[#0f0f10] font-bold" />
+          ),
+          tbody: ({ node, ...props }) => (
+            <tbody {...props} className="divide-y divide-[#ececec] bg-white" />
+          ),
+          tr: ({ node, ...props }) => (
+            <tr {...props} className="hover:bg-[#fafafa] transition-colors" />
+          ),
+          th: ({ node, ...props }) => (
+            <th {...props} className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#0f0f10]" />
+          ),
+          td: ({ node, ...props }) => (
+            <td {...props} className="px-3 py-2 text-xs text-[#0f0f10] whitespace-nowrap" />
+          ),
+          blockquote: ({ node, ...props }) => (
+            <blockquote {...props} className="border-l-3 border-[#f33959] pl-3 py-1 my-2 bg-[#fdf2f4] rounded-r-lg text-xs italic text-[#343438]" />
+          ),
+          code: ({ node, inline, ...props }) => (
+            <code {...props} className="rounded-md bg-[#f4f4f5] px-1.5 py-0.5 font-mono text-[11px] font-semibold text-[#0f0f10] border border-[#ececec]" />
+          ),
+          a: ({ node, ...props }) => (
+            <a {...props} target="_blank" rel="noreferrer" className="font-bold text-[#f33959] underline hover:text-[#d92847]" />
+          ),
+          hr: ({ node, ...props }) => <hr {...props} className="my-3 border-[#ececec]" />,
+        }}
+      >
+        {preprocessMarkdown(content)}
+      </ReactMarkdown>
+    </div>
   );
-
 }
 
 export function OrganizerAgent() {
