@@ -258,7 +258,7 @@ function EventCardsList({ events, isExpanded, onSelectEvent }) {
         {visibleEvents.map((evt) => (
           <div
             key={evt.id}
-            className="flex flex-col rounded-[16px] border border-[#ececec] bg-white p-3 shadow-2xs hover:border-[#f33959] transition"
+            className="flex flex-col rounded-2xl border border-[#ececec] bg-white p-3 shadow-2xs hover:border-[#f33959] transition"
           >
             <div className="flex gap-3">
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#f4f4f5] border border-[#ececec]">
@@ -590,9 +590,9 @@ export function EtikketAgent() {
     <div
       className={`${
         isExpanded
-          ? "w-full max-w-3xl h-[85vh] max-h-[760px]"
-          : "w-[calc(100vw-2rem)] max-w-[440px] h-[650px] max-h-[85vh]"
-      } flex flex-col rounded-[24px] border border-[#ececec] bg-white shadow-2xl overflow-hidden transition-all duration-300`}
+          ? "w-full max-w-3xl h-[85vh] max-h-190"
+          : "w-[calc(100vw-2rem)] max-w-110 h-162.5 max-h-[85vh]"
+      } flex flex-col rounded-3xl border border-[#ececec] bg-white shadow-2xl overflow-hidden transition-all duration-300`}
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[#ececec] bg-[#111113] p-4 text-white">

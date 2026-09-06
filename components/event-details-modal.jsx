@@ -43,7 +43,7 @@ export default function EventDetailsModal({ event, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 backdrop-blur-xs p-4">
-      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[24px] border border-[#ececec] bg-white shadow-2xl animate-in fade-in zoom-in-95">
+      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-[#ececec] bg-white shadow-2xl animate-in fade-in zoom-in-95">
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#ececec] bg-white/95 backdrop-blur px-6 py-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-[#f33959]">Event details</p>
@@ -98,7 +98,7 @@ export default function EventDetailsModal({ event, onClose }) {
                   </div>
                 ) : tickets && tickets.length > 0 ? (
                   tickets.map((ticket, index) => (
-                    <div key={ticket.id || index} className="rounded-[16px] border border-[#ececec] bg-white p-4">
+                    <div key={ticket.id || index} className="rounded-2xl border border-[#ececec] bg-white p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <p className="text-sm font-bold text-[#0f0f10]">{ticket.name}</p>

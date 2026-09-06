@@ -252,7 +252,7 @@ export default function CheckoutPage() {
               Your ticket QR code will be sent to <span className="font-bold text-[#0f0f10]">{email}</span> and <span className="font-bold text-[#0f0f10]">{phone}</span>.
             </p>
 
-            <div className="mt-6 space-y-2 rounded-[16px] border border-[#ececec] bg-[#fafafa] p-4 text-sm">
+            <div className="mt-6 space-y-2 rounded-2xl border border-[#ececec] bg-[#fafafa] p-4 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-[#6b6b70]">Order number</span>
                 <span className="font-mono font-bold text-[#0f0f10]">{orderNumber || "—"}</span>
@@ -275,7 +275,7 @@ export default function CheckoutPage() {
                     <div key={idx} className="rounded-[20px] border border-[#ececec] bg-white p-4 shadow-xs flex flex-col items-center">
                       <p className="text-sm font-bold text-[#0f0f10]">{t.ticket_type} ticket</p>
                       <p className="text-xs text-[#6b6b70] mt-0.5">Code: {t.ticket_code}</p>
-                      <div className="mt-3 rounded-[16px] border border-[#ececec] bg-white p-2.5">
+                      <div className="mt-3 rounded-2xl border border-[#ececec] bg-white p-2.5">
                         <img src={t.qr_code} alt={`Ticket ${idx + 1} QR Code`} className="h-36 w-36 object-contain" />
                       </div>
                     </div>
@@ -372,7 +372,7 @@ export default function CheckoutPage() {
                 type="checkbox"
                 checked={acceptedTerms}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
-                className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[#f33959]"
+                className="mt-0.5 h-4 w-4 shrink-0 accent-[#f33959]"
               />
               <span className="text-sm leading-6 text-[#6b6b70]">
                 I agree to the{" "}
@@ -384,7 +384,7 @@ export default function CheckoutPage() {
 
             {/* Security note */}
             <div className="flex items-center gap-2 text-xs text-[#6b6b70]">
-              <FiShield size={13} className="text-emerald-600 flex-shrink-0" />
+              <FiShield size={13} className="text-emerald-600 shrink-0" />
               Confirmed email and phone details are required to receive your ticket QR code.
             </div>
 
@@ -411,14 +411,14 @@ export default function CheckoutPage() {
         <aside className="space-y-4">
           {/* Event card */}
           <div className="card-lg space-y-4">
-            <div className="relative aspect-video overflow-hidden rounded-[16px] bg-[#f4f4f5]">
+            <div className="relative aspect-video overflow-hidden rounded-2xl bg-[#f4f4f5]">
               <img
                 src={imgSrc}
                 alt={event.title}
                 className="h-full w-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/sideimage.png"; }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
+              <div className="absolute inset-0 bg-linear-to-b from-transparent to-black/40" />
             </div>
 
             <div>
@@ -462,7 +462,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Help note */}
-          <div className="rounded-[16px] border border-[#ececec] bg-white px-4 py-3 text-xs leading-5 text-[#6b6b70]">
+          <div className="rounded-2xl border border-[#ececec] bg-white px-4 py-3 text-xs leading-5 text-[#6b6b70]">
             <span className="font-bold text-[#0f0f10]">Need help? </span>
             Contact support at{" "}
             <a href="mailto:support@etikket.co.ke" className="font-bold text-[#f33959] hover:underline">

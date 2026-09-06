@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { IoLocationOutline } from "react-icons/io5";
 import { getPublicEvents } from "@/lib/public-events";
 import { getPublicEvent } from "@/lib/public-events";
+import { formatEventDate } from "@/lib/formatters";
 
 async function getEventBySlug(slug) {
   try {
@@ -37,7 +38,7 @@ export default async function EventDetailPage({ params }) {
     ? `data:image/png;base64,${event.cover_image_base64}`
     : event.image || null;
   const location = event.venue || event.location || "Venue pending";
-  const date = event.event_date || event.date || "TBA";
+  const date = formatEventDate(event.event_date || event.date, "TBA");
   const time = event.event_time || event.time || "TBA";
   const price = event.price_label || event.price || "Check availability";
   const description = event.description || event.longDescription || "";

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { apiRequest, BACKEND_URL } from "@/lib/api";
+import { formatEventDate } from "@/lib/formatters";
 
 function getImageSrc(event) {
   if (event.cover_image_url) return `${BACKEND_URL}${event.cover_image_url}`;
@@ -106,7 +107,7 @@ export default function EventsSearch({ events: initialEvents = [] }) {
         {filteredEvents.map((event) => {
           const imageSrc = getImageSrc(event);
           const location = event.venue || event.location || "Venue pending";
-          const date = event.event_date || event.date || "TBA";
+          const date = formatEventDate(event.event_date || event.date, "TBA");
           const price = event.price_label || event.price || "Check availability";
           return (
             <Link key={event.slug || event.id} href={`/events/${event.slug || event.id}`} className="rounded-[20px] border border-[#ececec] bg-white p-3 shadow-[0_2px_8px_rgba(15,15,16,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,15,16,0.12)]">
