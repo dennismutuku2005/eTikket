@@ -109,19 +109,22 @@ export default function GateStaffNowPage() {
       setStatusMessage("Searching ticket on server...");
       const ticket = await apiRequestAuth(`/tickets/${cleanCode}`, sessionUser?.token);
 
+      const isAlreadyUsed = ticket.status === "checked_in" || ticket.status === "used" || ticket.status === "verified";
+      const formattedDate = ticket.scanned_at ? new Date(ticket.scanned_at).toLocaleString([], { dateStyle: "short", timeStyle: "short" }) : "";
+
       const parsedTicket = {
         id: ticket.id,
         code: ticket.ticket_code,
         attendeeName: ticket.attendee_name || "Guest",
         eventName: ticket.event_title || "Event",
         ticketType: ticket.ticket_type || "General",
-        status: ticket.status === "checked_in" ? "Verified" : "Pending",
+        status: isAlreadyUsed ? "Already Used" : "Pending",
         scannedBy: ticket.scanned_by || "",
-        scannedAt: ticket.scanned_at ? new Date(ticket.scanned_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "",
+        scannedAt: formattedDate,
       };
 
       setSelectedTicket(parsedTicket);
-      setStatusMessage(ticket.status === "checked_in" ? "Ticket already USED/Verified!" : `Ticket found for ${parsedTicket.attendeeName}.`);
+      setStatusMessage(isAlreadyUsed ? `⚠️ Ticket ALREADY USED at ${formattedDate}` : `Ticket found for ${parsedTicket.attendeeName}.`);
       setShowVerifyModal(true);
       return parsedTicket;
     } catch (err) {
@@ -312,10 +315,17 @@ export default function GateStaffNowPage() {
                   <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Attendee</p>
                   <p className="mt-0.5 text-base font-bold text-[#0f0f10]">{selectedTicket.attendeeName}</p>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-xs font-bold ${selectedTicket.status === "Verified" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                <span className={`rounded-full px-3 py-1 text-xs font-bold ${selectedTicket.status === "Already Used" ? "bg-red-50 text-red-700 border border-red-200" : selectedTicket.status === "Verified" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                   {selectedTicket.status}
                 </span>
               </div>
+
+              {selectedTicket.status === "Already Used" && (
+                <div className="rounded-[14px] border border-red-200 bg-red-50 p-3.5 text-xs font-bold text-red-700 flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>This ticket has ALREADY BEEN SCANNED & USED. Do not admit attendee.</span>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
@@ -333,6 +343,13 @@ export default function GateStaffNowPage() {
                 <p className="mt-0.5 font-mono text-sm font-bold text-[#0f0f10]">{selectedTicket.code}</p>
               </div>
 
+              {selectedTicket.scannedAt && (
+                <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">First Scanned</p>
+                  <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{selectedTicket.scannedAt}</p>
+                </div>
+              )}
+
               <div className="rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 py-3">
                 <p className="text-xs font-bold uppercase tracking-wider text-[#6b6b70]">Verified by</p>
                 <p className="mt-0.5 text-sm font-bold text-[#0f0f10]">{staffDetails.name} · {staffDetails.phone}</p>
@@ -345,9 +362,9 @@ export default function GateStaffNowPage() {
                 onClick={() => setShowVerifyModal(false)}
                 className="flex-1 rounded-full border border-[#ececec] bg-white py-3 text-sm font-bold text-[#0f0f10] transition hover:bg-[#f4f4f5]"
               >
-                Cancel
+                Close
               </button>
-              {selectedTicket.status !== "Verified" && (
+              {selectedTicket.status !== "Verified" && selectedTicket.status !== "Already Used" && (
                 <button
                   type="button"
                   onClick={handleVerifyTicket}
