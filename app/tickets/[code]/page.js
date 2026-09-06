@@ -16,7 +16,14 @@ export default function PublicTicketPage() {
     if (!code) return;
     (async () => {
       try {
-        const data = await apiRequest(`/tickets/${code}`);
+        let cleanCode = decodeURIComponent(code).trim();
+        if (cleanCode.startsWith("{") && cleanCode.endsWith("}")) {
+          try {
+            const parsed = JSON.parse(cleanCode);
+            cleanCode = parsed.ticket_code || parsed.code || cleanCode;
+          } catch (_) {}
+        }
+        const data = await apiRequest(`/tickets/${encodeURIComponent(cleanCode)}`);
         setTicket(data);
       } catch (err) {
         toast.error("Ticket not found or invalid.");
@@ -160,16 +167,18 @@ export default function PublicTicketPage() {
                       alt="Ticket QR Code"
                       className="h-44 w-44 object-contain"
                     />
-                    {isUsed && (
-                      <div className="absolute inset-0 bg-white/80 rounded-[24px] flex flex-col items-center justify-center text-center p-4">
-                        <span className="text-3xl">🚫</span>
-                        <p className="text-xs font-bold text-slate-800 mt-2">USED TICKET</p>
-                      </div>
-                    )}
                   </div>
+                  
+                  {isUsed && (
+                    <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-1.5 text-xs font-bold text-white shadow-sm">
+                      <FiCheckCircle size={14} className="text-emerald-400" />
+                      <span>CHECKED IN / USED</span>
+                    </div>
+                  )}
+
                   <button
                     onClick={handleDownload}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#ececec] bg-white px-5 py-2.5 text-xs font-bold text-[#0f0f10] shadow-sm transition hover:bg-[#f4f4f5] hover:border-[#cfcfcf]"
+                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#ececec] bg-white px-5 py-2.5 text-xs font-bold text-[#0f0f10] shadow-sm transition hover:bg-[#f4f4f5] hover:border-[#cfcfcf]"
                   >
                     <FiDownload size={13} />
                     Download QR Code
