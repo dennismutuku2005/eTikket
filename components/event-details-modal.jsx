@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { apiRequest, BACKEND_URL } from "@/lib/api";
+import { formatEventDate } from "@/lib/formatters";
 import EventMap from "@/components/event-map";
 import { FiLoader } from "react-icons/fi";
 
@@ -14,7 +15,7 @@ export default function EventDetailsModal({ event, onClose }) {
   const status = event.status || "Live";
   const priceLabel = event.price_label || event.price || "Free";
   const description = event.description || event.longDescription || "No description provided.";
-  const dateStr = event.event_date ? new Date(event.event_date).toLocaleDateString() : (event.date || "—");
+  const dateStr = event.event_date ? formatEventDate(event.event_date, "—") : (event.date || "—");
   const timeStr = event.event_time || event.time || "—";
   const hostName = event.host_name || event.host || "Organizer";
   const lat = Number(event.latitude || event.mapCoordinates?.lat || -1.2921);

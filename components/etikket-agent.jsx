@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { BACKEND_URL } from "@/lib/api";
+import { formatEventDate } from "@/lib/formatters";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   FiMessageSquare,
   FiX,
@@ -29,86 +32,209 @@ function stripEmojis(str) {
   return str.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2300}-\u{23FF}\u{2B50}\u{2B06}\u{2934}\u{2935}\u{25AA}\u{25AB}\u{25FE}\u{25FD}\u{25FC}\u{25FB}\u{25FA}\u{25F9}\u{25F8}]/gu, '').trim();
 }
 
+function renderInlineMarkdown(text, isUser = false) {
+  if (!text) return null;
+  const parts = [];
+  const regex = /(\*\*(.+?)\*\*|\*([^*]+?)\*|`([^`]+?)`|\[([^\]]+?)\]\(([^)]+?)\))/g;
+  let match;
+  let lastIndex = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    if (match[2]) {
+      parts.push(
+        <strong key={`${match.index}-bold`} className={isUser ? "font-bold text-white" : "font-bold text-[#0f0f10]"}>
+          {match[2]}
+        </strong>
+      );
+    } else if (match[3]) {
+      parts.push(
+        <em key={`${match.index}-italic`} className={isUser ? "italic text-white/90" : "italic text-[#343438]"}>
+          {match[3]}
+        </em>
+      );
+    } else if (match[4]) {
+      parts.push(
+        <code
+          key={`${match.index}-code`}
+          className={`rounded-md px-1.5 py-0.5 font-mono text-[11px] font-semibold ${
+            isUser ? "bg-white/20 text-white" : "bg-[#f4f4f5] text-[#0f0f10] border border-[#ececec]"
+          }`}
+        >
+          {match[4]}
+        </code>
+      );
+    } else if (match[5] && match[6]) {
+      parts.push(
+        <a
+          key={`${match.index}-link`}
+          href={match[6]}
+          target="_blank"
+          rel="noreferrer"
+          className={`font-bold underline ${isUser ? "text-white" : "text-[#f33959] hover:text-[#d92847]"}`}
+        >
+          {match[5]}
+        </a>
+      );
+    }
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts;
+}
+
 /**
- * Lightweight Markdown Renderer for Chat Messages
+ * Clean & Accurate Block Markdown Renderer for Buyer Concierge
  */
-function FormattedMarkdown({ content }) {
+function FormattedMarkdown({ content, isUser = false }) {
   if (!content) return null;
 
-  const cleanContent = stripEmojis(content);
-  const paragraphs = cleanContent.split(/\n\n+/);
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        ul: ({ node, ...props }) => <ul {...props} className="my-2 list-disc space-y-1 pl-5" />,
+        ol: ({ node, ...props }) => <ol {...props} className="my-2 list-decimal space-y-1 pl-5" />,
+        p: ({ node, ...props }) => <p {...props} className="leading-relaxed" />,
+        a: ({ node, ...props }) => (
+          <a {...props} target="_blank" rel="noreferrer" className={isUser ? "font-bold underline" : "font-bold text-[#f33959] underline hover:text-[#d92847]"} />
+        ),
+      }}
+    >
+      {stripEmojis(content)}
+    </ReactMarkdown>
+  );
 
+  const rawLines = stripEmojis(content).split("\n");
+  const blocks = [];
+  let index = 0;
+
+  while (index < rawLines.length) {
+    const line = rawLines[index];
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      index += 1;
+      continue;
+    }
+
+    // 1. Headings (#, ##, ###)
+    const headingMatch = trimmed.match(/^(#{1,3})\s+(.+)/);
+    if (headingMatch) {
+      blocks.push({
+        type: "heading",
+        level: headingMatch[1].length,
+        text: headingMatch[2],
+      });
+      index += 1;
+      continue;
+    }
+
+    // 2. Unordered List Items (- or * or •)
+    if (/^([-*•])\s+(.+)/.test(trimmed)) {
+      const items = [];
+      while (index < rawLines.length) {
+        const itemLine = rawLines[index].trim();
+        const match = itemLine.match(/^([-*•])\s+(.+)/);
+        if (!match) break;
+        items.push(match[2]);
+        index += 1;
+      }
+      blocks.push({ type: "list", items });
+      continue;
+    }
+
+    // 3. Ordered List Items (1. 2. 3.)
+    if (/^\d+\.\s+(.+)/.test(trimmed)) {
+      const items = [];
+      while (index < rawLines.length) {
+        const itemLine = rawLines[index].trim();
+        const match = itemLine.match(/^\d+\.\s+(.+)/);
+        if (!match) break;
+        items.push(match[1]);
+        index += 1;
+      }
+      blocks.push({ type: "ordered-list", items });
+      continue;
+    }
+
+    // 4. Standard Paragraph
+    const paragraphLines = [trimmed];
+    index += 1;
+    while (
+      index < rawLines.length &&
+      rawLines[index].trim() &&
+      !/^(#{1,3})\s|^([-*•]|\d+\.)\s+/.test(rawLines[index].trim())
+    ) {
+      paragraphLines.push(rawLines[index].trim());
+      index += 1;
+    }
+
+    blocks.push({
+      type: "paragraph",
+      text: paragraphLines.join(" "),
+    });
+  }
 
   return (
-    <div className="space-y-2">
-      {paragraphs.map((para, pIdx) => {
-        const lines = para.split("\n");
+    <div className={`space-y-2 leading-relaxed text-[13px] ${isUser ? "text-white" : "text-[#343438]"}`}>
+      {blocks.map((block, blockIndex) => {
+        if (block.type === "heading") {
+          return (
+            <h4
+              key={blockIndex}
+              className={`mt-1 font-bold ${
+                isUser ? "text-white text-sm" : "text-[#0f0f10] text-sm flex items-center gap-1.5"
+              }`}
+            >
+              {!isUser && <span className="h-1.5 w-1.5 rounded-full bg-[#f33959]" />}
+              {renderInlineMarkdown(block.text, isUser)}
+            </h4>
+          );
+        }
+
+        if (block.type === "list") {
+          return (
+            <ul key={blockIndex} className="my-1.5 space-y-1 pl-1">
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="flex items-start gap-2 text-[13px]">
+                  <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${isUser ? "bg-white" : "bg-[#f33959]"}`} />
+                  <div className="flex-1 leading-normal">{renderInlineMarkdown(item, isUser)}</div>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+
+        if (block.type === "ordered-list") {
+          return (
+            <ol key={blockIndex} className="my-1.5 space-y-1 pl-1">
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="flex items-start gap-2 text-[13px]">
+                  <span
+                    className={`flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                      isUser ? "bg-white/20 text-white" : "bg-[#f33959]/10 text-[#f33959]"
+                    }`}
+                  >
+                    {itemIndex + 1}
+                  </span>
+                  <div className="flex-1 leading-normal pt-0.5">{renderInlineMarkdown(item, isUser)}</div>
+                </li>
+              ))}
+            </ol>
+          );
+        }
+
         return (
-          <div key={pIdx} className="leading-relaxed">
-            {lines.map((line, lIdx) => {
-              const isListItem = line.trim().startsWith("- ") || line.trim().startsWith("* ") || /^\d+\.\s/.test(line.trim());
-              const cleanLine = isListItem ? line.trim().replace(/^[-*]\s+|^\d+\.\s+/, "") : line;
-
-              const parts = [];
-              const regex = /(\*\*(.*?)\*\*|\*(.*?)\*|`(.*?)`|\[(.*?)\]\((.*?)\))/g;
-              let match;
-              let lastIndex = 0;
-
-              while ((match = regex.exec(cleanLine)) !== null) {
-                if (match.index > lastIndex) {
-                  parts.push(cleanLine.substring(lastIndex, match.index));
-                }
-
-                if (match[2]) {
-                  parts.push(
-                    <strong key={match.index} className="font-bold">
-                      {match[2]}
-                    </strong>
-                  );
-                } else if (match[3]) {
-                  parts.push(
-                    <em key={match.index} className="italic">
-                      {match[3]}
-                    </em>
-                  );
-                } else if (match[4]) {
-                  parts.push(
-                    <code key={match.index} className="rounded bg-black/10 px-1 py-0.5 font-mono text-[11px]">
-                      {match[4]}
-                    </code>
-                  );
-                } else if (match[5] && match[6]) {
-                  parts.push(
-                    <a
-                      key={match.index}
-                      href={match[6]}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-bold underline hover:text-white"
-                    >
-                      {match[5]}
-                    </a>
-                  );
-                }
-                lastIndex = regex.lastIndex;
-              }
-
-              if (lastIndex < cleanLine.length) {
-                parts.push(cleanLine.substring(lastIndex));
-              }
-
-              return (
-                <span
-                  key={lIdx}
-                  className={isListItem ? "flex items-start gap-1.5 my-1 pl-2 border-l-2 border-[#f33959]" : ""}
-                >
-                  {isListItem && <span className="font-bold text-[#f33959]">•</span>}
-                  <span>{parts}</span>
-                  {lIdx < lines.length - 1 && <br />}
-                </span>
-              );
-            })}
-          </div>
+          <p key={blockIndex} className="leading-relaxed">
+            {renderInlineMarkdown(block.text, isUser)}
+          </p>
         );
       })}
     </div>
@@ -157,7 +283,7 @@ function EventCardsList({ events, isExpanded, onSelectEvent }) {
                 </h4>
                 <p className="text-xs text-[#6b6b70] flex items-center gap-1 mt-1">
                   <FiCalendar className="shrink-0" />
-                  {evt.event_date ? new Date(evt.event_date).toLocaleDateString() : "Upcoming"}
+                  {formatEventDate(evt.event_date)}
                 </p>
               </div>
             </div>
@@ -546,7 +672,7 @@ export function EtikketAgent() {
                   : "bg-white text-[#0f0f10] border border-[#ececec] shadow-2xs rounded-bl-xs"
               }`}
             >
-              <FormattedMarkdown content={msg.content} />
+              <FormattedMarkdown content={msg.content} isUser={msg.role === "user"} />
             </div>
 
             {/* Render Embedded Rich Cards */}
@@ -587,7 +713,7 @@ export function EtikketAgent() {
                         </h4>
                         <p className="text-xs text-[#6b6b70] flex items-center gap-1 mt-1">
                           <FiCalendar className="shrink-0" />
-                          {msg.cardData.event.event_date ? new Date(msg.cardData.event.event_date).toLocaleDateString() : "Upcoming"}
+                          {formatEventDate(msg.cardData.event.event_date)}
                         </p>
                       </div>
                     </div>
@@ -793,7 +919,7 @@ export function EtikketAgent() {
                             <p className="font-mono text-[10px] text-[#6b6b70]">{t.ticket_code}</p>
                           </div>
                           <a
-                            href={t.url || `http://localhost:3000/tickets/${t.ticket_code}`}
+                            href={t.url || `https://e-tikket.vercel.app/tickets/${t.ticket_code}`}
                             target="_blank"
                             rel="noreferrer"
                             className="flex items-center gap-1 rounded-lg bg-[#f33959] px-2.5 py-1.5 font-bold text-white text-[11px] hover:bg-[#d92847] transition"
