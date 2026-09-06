@@ -93,9 +93,7 @@ export default function GateStaffNowPage() {
     if (cleanCode.startsWith("{")) {
       try {
         const parsed = JSON.parse(cleanCode);
-        if (parsed.codes && parsed.codes.length > 0) {
-          cleanCode = parsed.codes[0];
-        }
+        cleanCode = parsed.ticket_code || parsed.ticketCode || parsed.code || parsed.codes?.[0] || cleanCode;
       } catch {
         // Fallback to raw string
       }

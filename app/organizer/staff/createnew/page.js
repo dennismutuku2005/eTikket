@@ -5,10 +5,14 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/app-shell";
 import { getRoleHomePath } from "@/lib/auth";
 import { getClientSession } from "@/lib/client-auth";
+import { apiRequestAuth, AuthError, handleAuthError } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function CreateStaffPage() {
   const router = useRouter();
   const [session, setSession] = useState(null);
+  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "" });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const clientSession = getClientSession();
@@ -30,11 +34,47 @@ export default function CreateStaffPage() {
     return null;
   }
 
+  function updateField(event) {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    if (!form.full_name.trim() || !form.email.trim() || !form.phone.trim() || !form.password) {
+      toast.error("Please complete the name, email, phone, and password fields.");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await apiRequestAuth("/staff", session.token, {
+        method: "POST",
+        body: JSON.stringify({
+          full_name: form.full_name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          password_hash: form.password,
+        }),
+      });
+      toast.success("Ticket scanner account created.");
+      router.push("/organizer/staff");
+    } catch (error) {
+      if (error instanceof AuthError) {
+        handleAuthError("organizer");
+        return;
+      }
+      toast.error(error.message || "Failed to create staff account.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   return (
     <AppShell
       role="Organizer"
       title="Create staff"
-      subtitle="Create gate admins and assign QR scanning permissions for each event."
+      subtitle="Create a ticket scanner account for your event entrance."
     >
       <div className="grid gap-6 xl:grid-cols-[1.45fr_0.8fr]">
         <div className="card-lg">
@@ -42,7 +82,7 @@ export default function CreateStaffPage() {
             <div>
               <h2 className="text-xl font-bold text-[#0f0f10]">New staff member</h2>
               <p className="mt-1 text-sm text-[#6b6b70]">
-                Add a gate admin who can scan tickets and manage check-ins for your live events.
+                Add a staff member who can sign in and scan tickets at the gate.
               </p>
             </div>
             <span className="rounded-full bg-[#f33959]/10 px-3 py-1 text-xs font-bold text-[#f33959]">
@@ -50,10 +90,13 @@ export default function CreateStaffPage() {
             </span>
           </div>
 
-          <form className="mt-6 space-y-4">
+          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             <label className="block">
               <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Full name</span>
               <input
+                name="full_name"
+                value={form.full_name}
+                onChange={updateField}
                 type="text"
                 placeholder="e.g. Jane Mwangi"
                 className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
@@ -63,6 +106,9 @@ export default function CreateStaffPage() {
             <label className="block">
               <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Phone number</span>
               <input
+                name="phone"
+                value={form.phone}
+                onChange={updateField}
                 type="tel"
                 placeholder="0722 123 456"
                 className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
@@ -70,29 +116,39 @@ export default function CreateStaffPage() {
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Role</span>
-              <select className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white transition">
-                <option>Ticket scanner</option>
-                <option>Gate admin</option>
-                <option>Event host</option>
-                <option>Support staff</option>
-              </select>
+              <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Email address</span>
+              <input
+                name="email"
+                value={form.email}
+                onChange={updateField}
+                type="email"
+                autoComplete="username"
+                placeholder="scanner@example.com"
+                className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
+                required
+              />
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Event access</span>
+              <span className="mb-1.5 block text-sm font-bold text-[#0f0f10]">Login password</span>
               <input
-                type="text"
-                placeholder="Nairobi Glow Festival, Campus Night Live"
+                name="password"
+                value={form.password}
+                onChange={updateField}
+                type="password"
+                autoComplete="new-password"
+                placeholder="Create a password"
                 className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none placeholder:text-[#6b6b70] focus:border-[#f33959] focus:bg-white transition"
+                required
               />
             </label>
 
             <button
               type="submit"
+              disabled={isSaving}
               className="mt-2 inline-flex items-center justify-center rounded-full bg-[#f33959] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#d92847]"
             >
-              Save staff member
+              {isSaving ? "Creating account..." : "Create ticket scanner"}
             </button>
           </form>
         </div>

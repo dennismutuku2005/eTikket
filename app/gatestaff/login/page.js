@@ -55,7 +55,7 @@ export default function GateStaffLoginPage() {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
           "etikket-gate-session",
-          JSON.stringify({ email: user.email, role: user.role, name: user.name })
+          JSON.stringify({ email: user.email, role: user.role, name: user.name, token: response?.token || '' })
         );
       }
 
