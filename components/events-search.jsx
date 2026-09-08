@@ -109,17 +109,28 @@ export default function EventsSearch({ events: initialEvents = [] }) {
           const location = event.venue || event.location || "Venue pending";
           const date = formatEventDate(event.event_date || event.date, "TBA");
           const price = event.price_label || event.price || "Check availability";
+          const statusKey = String(event.status || "").toLowerCase().replace(/[\s-]+/g, "_");
+          const isSoldOut = statusKey === "sold_out";
+          const statusLabel =
+            {
+              draft: "Draft",
+              live: "Live",
+              selling_fast: "Selling fast",
+              new: "New",
+              sold_out: "Sold out",
+              vip_available: "VIP Available",
+            }[statusKey] || (event.status || "Live");
           return (
             <Link key={event.slug || event.id} href={`/events/${event.slug || event.id}`} className="rounded-[20px] border border-[#ececec] bg-white p-3 shadow-[0_2px_8px_rgba(15,15,16,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,15,16,0.12)]">
               <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#111113]">
                 <img
                   src={imageSrc}
                   alt={event.title || "Event"}
-                  className={`h-full w-full object-cover ${event.status === "Sold out" ? "grayscale" : ""}`}
+                  className={`h-full w-full object-cover ${isSoldOut ? "grayscale" : ""}`}
                   onError={(error) => { error.currentTarget.src = "/sideimage.png"; }}
                 />
                 <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/10 to-black/45" />
-                <span className={`absolute left-3 top-3 rounded-full px-4 py-2 text-sm font-bold ${event.status === "Sold out" ? "bg-[#a3a3a8] text-white" : "bg-white text-[#f33959]"}`}>{event.status}</span>
+                <span className={`absolute left-3 top-3 rounded-full px-4 py-2 text-sm font-bold ${isSoldOut ? "bg-[#a3a3a8] text-white" : "bg-white text-[#f33959]"}`}>{statusLabel}</span>
                 <span className="absolute right-3 top-3 rounded-full bg-[#111113] px-4 py-2 text-sm font-bold text-white">{price}</span>
               </div>
               <div className="p-2">

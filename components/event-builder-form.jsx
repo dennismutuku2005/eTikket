@@ -9,7 +9,13 @@ import { getClientSession } from "@/lib/client-auth";
 import EventMap from "@/components/event-map";
 
 const CATEGORIES = ["Music", "Holiday", "Nightlife", "Family", "Business", "Concert", "Sports", "Arts", "Food"];
-const STATUSES = ["Draft", "Live", "Selling fast", "New", "Sold out"];
+const STATUS_OPTIONS = [
+  { value: "draft", label: "Draft" },
+  { value: "live", label: "Live" },
+  { value: "selling_fast", label: "Selling fast" },
+  { value: "new", label: "New" },
+  { value: "sold_out", label: "Sold out" },
+];
 
 export default function EventBuilderForm({ eventToEdit, onSaved }) {
   const router = useRouter();
@@ -21,7 +27,9 @@ export default function EventBuilderForm({ eventToEdit, onSaved }) {
   const [location, setLocation] = useState(eventToEdit?.venue || "");
   const [host, setHost] = useState(eventToEdit?.host_name || "");
   const [price, setPrice] = useState(eventToEdit?.price_label || "From KSh 1,000");
-  const [status, setStatus] = useState(eventToEdit?.status || "Draft");
+  const [status, setStatus] = useState(() =>
+    eventToEdit?.status ? eventToEdit.status.toLowerCase().replace(/[\s-]+/g, "_") : "draft"
+  );
   const [lat, setLat] = useState(eventToEdit?.latitude || -1.2921);
   const [lng, setLng] = useState(eventToEdit?.longitude || 36.8219);
   const [tickets, setTickets] = useState(
@@ -312,7 +320,11 @@ export default function EventBuilderForm({ eventToEdit, onSaved }) {
               onChange={(e) => setStatus(e.target.value)}
               className="h-12 w-full rounded-[14px] border border-[#ececec] bg-[#fafafa] px-4 text-sm text-[#0f0f10] outline-none focus:border-[#f33959] focus:bg-white transition"
             >
-              {STATUSES.map((s) => <option key={s}>{s}</option>)}
+              {STATUS_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
             </select>
           </label>
         </div>

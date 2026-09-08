@@ -39,7 +39,10 @@ export default function SoldOutEventsPage() {
 
   if (!session) return null;
 
-  const soldOutEvents = events.filter((e) => e.status === "Sold out" || e.remaining_tickets === 0);
+  const soldOutEvents = events.filter((e) => {
+    const s = String(e.status || "").toLowerCase().replace(/[\s-]+/g, "_");
+    return s === "sold_out" || Number(e.remaining_tickets) === 0;
+  });
 
   return (
     <AppShell

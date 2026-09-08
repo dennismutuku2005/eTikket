@@ -39,9 +39,15 @@ export default function ActiveEventsPage() {
 
   if (!session) return null;
 
-  const activeEvents = events.filter((e) => e.status !== "Draft" && e.status !== "Sold out");
+  const activeEvents = events.filter((e) => {
+    const s = String(e.status || "").toLowerCase().replace(/[\s-]+/g, "_");
+    return s !== "draft" && s !== "sold_out";
+  });
   const totalRemaining = activeEvents.reduce((sum, e) => sum + Number(e.remaining_tickets || 0), 0);
-  const sellingFastCount = activeEvents.filter((e) => e.status === "Selling fast").length;
+  const sellingFastCount = activeEvents.filter((e) => {
+    const s = String(e.status || "").toLowerCase().replace(/[\s-]+/g, "_");
+    return s === "selling_fast";
+  }).length;
 
   return (
     <AppShell

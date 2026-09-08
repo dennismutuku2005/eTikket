@@ -30,7 +30,17 @@ export default async function EventDetailPage({ params }) {
     notFound();
   }
   
-  const isSoldOut = event.status === "Sold out";
+  const statusKey = String(event.status || "").toLowerCase().replace(/[\s-]+/g, "_");
+  const isSoldOut = statusKey === "sold_out";
+  const statusLabel =
+    {
+      draft: "Draft",
+      live: "Live",
+      selling_fast: "Selling fast",
+      new: "New",
+      sold_out: "Sold out",
+      vip_available: "VIP Available",
+    }[statusKey] || (event.status || "Live");
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://etikketapi.quickzingo.co.ke";
   const imageSrc = event.cover_image_url
     ? `${backendUrl}${event.cover_image_url}`
@@ -63,7 +73,7 @@ export default async function EventDetailPage({ params }) {
             />
             <div className="absolute inset-0 bg-linear-to-b from-black/5 via-black/10 to-black/60" />
             <div className={`absolute left-4 top-4 rounded-full px-5 py-2 text-base font-bold ${isSoldOut ? "bg-[#a3a3a8] text-white" : "bg-white text-[#f33959]"}`}>
-              {event.status}
+              {statusLabel}
             </div>
             <div className="absolute right-4 top-4 rounded-full bg-[#111113] px-5 py-2 text-base font-bold text-white">
               {event.remainingTickets} remaining

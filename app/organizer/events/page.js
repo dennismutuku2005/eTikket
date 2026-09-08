@@ -15,7 +15,27 @@ const STATUS_COLORS = {
   "Sold out": "bg-[#f4f4f5] text-[#6b6b70]",
   "Selling fast": "bg-amber-50 text-amber-700",
   New: "bg-blue-50 text-blue-700",
+  live: "bg-emerald-50 text-emerald-700",
+  draft: "bg-[#f4f4f5] text-[#6b6b70]",
+  sold_out: "bg-[#f4f4f5] text-[#6b6b70]",
+  selling_fast: "bg-amber-50 text-amber-700",
+  new: "bg-blue-50 text-blue-700",
+  vip_available: "bg-purple-50 text-purple-700",
 };
+
+function formatEventStatus(status) {
+  if (!status) return "Draft";
+  const s = String(status).toLowerCase().replace(/[\s-]+/g, "_");
+  const map = {
+    draft: "Draft",
+    live: "Live",
+    selling_fast: "Selling fast",
+    new: "New",
+    sold_out: "Sold out",
+    vip_available: "VIP Available",
+  };
+  return map[s] || status;
+}
 
 function getImageSrc(event) {
   if (!event) return null;
@@ -182,7 +202,7 @@ export default function OrganizerEventsPage() {
                       </td>
                       <td className="px-5 py-4">
                         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${STATUS_COLORS[event.status] || "bg-[#f4f4f5] text-[#6b6b70]"}`}>
-                          {event.status || "Draft"}
+                          {formatEventStatus(event.status)}
                         </span>
                       </td>
                       <td className="px-5 py-4">
