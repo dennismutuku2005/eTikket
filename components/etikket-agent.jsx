@@ -529,11 +529,14 @@ export function EtikketAgent() {
         ]);
       } else {
         setActiveOrder(orderData);
+        const isFree = Number(orderData.total_amount) === 0;
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            content: `Order created successfully. Order #${orderData.order_number}\nTotal Amount: **KES ${Number(orderData.total_amount).toLocaleString()}** for **${orderData.ticket_qty} ticket(s)**.\n\nReady to pay via M-Pesa STK Push?`,
+            content: isFree
+              ? `Order created successfully. Order #${orderData.order_number}\nTotal Amount: **Free** for **${orderData.ticket_qty} ticket(s)**.\n\nThis is a free event ticket. Confirm below to reserve your ticket and receive your QR link via WhatsApp.`
+              : `Order created successfully. Order #${orderData.order_number}\nTotal Amount: **KES ${Number(orderData.total_amount).toLocaleString()}** for **${orderData.ticket_qty} ticket(s)**.\n\nReady to pay via M-Pesa STK Push?`,
             cardData: { type: "order_summary", order: orderData },
           },
         ]);
