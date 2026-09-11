@@ -41,6 +41,9 @@ function preprocessMarkdown(content) {
   if (!content || typeof content !== "string") return "";
   let text = stripEmojis(content);
 
+  // Normalize bullet points
+  text = text.replace(/^[•●▪]\s+/gm, "- ");
+
   // Ensure double newlines before headers, tables, and lists
   text = text.replace(/([^\n])\n(#{1,6}\s)/g, "$1\n\n$2");
   text = text.replace(/([^\n|])\n(\|.+?\|)/g, "$1\n\n$2");
@@ -94,16 +97,16 @@ function FormattedMarkdown({ content, isUser = false }) {
             />
           ),
           p: ({ node, ...props }) => (
-            <p {...props} className="leading-relaxed mb-2" />
+            <p {...props} className={`leading-relaxed mb-2 ${isUser ? "text-white" : "text-[#0f0f10]"}`} />
           ),
           ul: ({ node, ...props }) => (
-            <ul {...props} className="my-2 space-y-1.5 pl-1" />
+            <ul {...props} className={`my-2 space-y-1.5 pl-1 ${isUser ? "text-white" : "text-[#0f0f10]"}`} />
           ),
           ol: ({ node, ...props }) => (
-            <ol {...props} className="my-2 space-y-1.5 pl-1" />
+            <ol {...props} className={`my-2 space-y-1.5 pl-1 ${isUser ? "text-white" : "text-[#0f0f10]"}`} />
           ),
           li: ({ node, ...props }) => (
-            <li className="flex items-start gap-2 text-[13px] leading-relaxed">
+            <li className={`flex items-start gap-2 text-[13px] leading-relaxed ${isUser ? "text-white" : "text-[#0f0f10]"}`}>
               <span
                 className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
                   isUser ? "bg-white" : "bg-[#f33959]"
