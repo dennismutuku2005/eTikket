@@ -110,135 +110,6 @@ function FormattedMarkdown({ content, isUser = false }) {
       {stripEmojis(content)}
     </ReactMarkdown>
   );
-
-  const rawLines = stripEmojis(content).split("\n");
-  const blocks = [];
-  let index = 0;
-
-  while (index < rawLines.length) {
-    const line = rawLines[index];
-    const trimmed = line.trim();
-
-    if (!trimmed) {
-      index += 1;
-      continue;
-    }
-
-    // 1. Headings (#, ##, ###)
-    const headingMatch = trimmed.match(/^(#{1,3})\s+(.+)/);
-    if (headingMatch) {
-      blocks.push({
-        type: "heading",
-        level: headingMatch[1].length,
-        text: headingMatch[2],
-      });
-      index += 1;
-      continue;
-    }
-
-    // 2. Unordered List Items (- or * or •)
-    if (/^([-*•])\s+(.+)/.test(trimmed)) {
-      const items = [];
-      while (index < rawLines.length) {
-        const itemLine = rawLines[index].trim();
-        const match = itemLine.match(/^([-*•])\s+(.+)/);
-        if (!match) break;
-        items.push(match[2]);
-        index += 1;
-      }
-      blocks.push({ type: "list", items });
-      continue;
-    }
-
-    // 3. Ordered List Items (1. 2. 3.)
-    if (/^\d+\.\s+(.+)/.test(trimmed)) {
-      const items = [];
-      while (index < rawLines.length) {
-        const itemLine = rawLines[index].trim();
-        const match = itemLine.match(/^\d+\.\s+(.+)/);
-        if (!match) break;
-        items.push(match[1]);
-        index += 1;
-      }
-      blocks.push({ type: "ordered-list", items });
-      continue;
-    }
-
-    // 4. Standard Paragraph
-    const paragraphLines = [trimmed];
-    index += 1;
-    while (
-      index < rawLines.length &&
-      rawLines[index].trim() &&
-      !/^(#{1,3})\s|^([-*•]|\d+\.)\s+/.test(rawLines[index].trim())
-    ) {
-      paragraphLines.push(rawLines[index].trim());
-      index += 1;
-    }
-
-    blocks.push({
-      type: "paragraph",
-      text: paragraphLines.join(" "),
-    });
-  }
-
-  return (
-    <div className={`space-y-2 leading-relaxed text-[13px] ${isUser ? "text-white" : "text-[#343438]"}`}>
-      {blocks.map((block, blockIndex) => {
-        if (block.type === "heading") {
-          return (
-            <h4
-              key={blockIndex}
-              className={`mt-1 font-bold ${
-                isUser ? "text-white text-sm" : "text-[#0f0f10] text-sm flex items-center gap-1.5"
-              }`}
-            >
-              {!isUser && <span className="h-1.5 w-1.5 rounded-full bg-[#f33959]" />}
-              {renderInlineMarkdown(block.text, isUser)}
-            </h4>
-          );
-        }
-
-        if (block.type === "list") {
-          return (
-            <ul key={blockIndex} className="my-1.5 space-y-1 pl-1">
-              {block.items.map((item, itemIndex) => (
-                <li key={itemIndex} className="flex items-start gap-2 text-[13px]">
-                  <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${isUser ? "bg-white" : "bg-[#f33959]"}`} />
-                  <div className="flex-1 leading-normal">{renderInlineMarkdown(item, isUser)}</div>
-                </li>
-              ))}
-            </ul>
-          );
-        }
-
-        if (block.type === "ordered-list") {
-          return (
-            <ol key={blockIndex} className="my-1.5 space-y-1 pl-1">
-              {block.items.map((item, itemIndex) => (
-                <li key={itemIndex} className="flex items-start gap-2 text-[13px]">
-                  <span
-                    className={`flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                      isUser ? "bg-white/20 text-white" : "bg-[#f33959]/10 text-[#f33959]"
-                    }`}
-                  >
-                    {itemIndex + 1}
-                  </span>
-                  <div className="flex-1 leading-normal pt-0.5">{renderInlineMarkdown(item, isUser)}</div>
-                </li>
-              ))}
-            </ol>
-          );
-        }
-
-        return (
-          <p key={blockIndex} className="leading-relaxed">
-            {renderInlineMarkdown(block.text, isUser)}
-          </p>
-        );
-      })}
-    </div>
-  );
 }
 
 /**
@@ -587,7 +458,6 @@ export function EtikketAgent() {
     } catch (err) {
       setPaymentStatus("failed");
       toast.error(isFree ? "Reservation processing error." : "M-Pesa processing error.");
-    }
     }
   };
 
@@ -1001,7 +871,7 @@ export function EtikketAgent() {
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="flex h-9 w-9 shrink-[#0] items-center justify-center rounded-full bg-[#f33959] text-white hover:bg-[#d92847] disabled:opacity-40 transition"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f33959] text-white hover:bg-[#d92847] disabled:opacity-40 transition"
           >
             <FiSend className="h-4 w-4" />
           </button>
@@ -1046,3 +916,4 @@ export function EtikketAgent() {
       )}
     </>
   );
+}
