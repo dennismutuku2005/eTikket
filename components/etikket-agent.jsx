@@ -546,8 +546,9 @@ export function EtikketAgent() {
   };
 
   const handlePayStk = async (orderToPay) => {
+    const isFree = Number(orderToPay.total_amount) === 0;
     setPaymentStatus("initiating");
-    toast.info("Sending M-Pesa STK Push prompt to your phone...");
+    toast.info(isFree ? "Reserving your free ticket..." : "Sending M-Pesa STK Push prompt to your phone...");
 
     try {
       const res = await fetch(`${BACKEND_URL}/api/agent/pay-stk`, {
@@ -566,23 +567,24 @@ export function EtikketAgent() {
         toast.error(data.error);
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: `M-Pesa Payment Failed: ${data.error}` },
+          { role: "assistant", content: `${isFree ? "Ticket Reservation" : "M-Pesa Payment"} Failed: ${data.error}` },
         ]);
       } else if (data.success) {
         setPaymentStatus("paid");
-        toast.success("Payment Confirmed. Tickets dispatched.");
+        toast.success(isFree ? "Free Ticket Reserved. Tickets dispatched." : "Payment Confirmed. Tickets dispatched.");
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            content: `**Payment Received Successfully.**\n\nYour e-tickets have been generated and dispatched via WhatsApp to **${data.phone || bookingDetails.phone}**. You can also click the links below to view your QR codes directly:`,
+            content: `**${isFree ? "Reservation Confirmed." : "Payment Received Successfully."}**\n\nYour e-tickets have been generated and dispatched via WhatsApp to **${data.phone || bookingDetails.phone || orderToPay.buyer_phone}**. You can also click the links below to view your QR codes directly:`,
             cardData: { type: "tickets_ready", result: data },
           },
         ]);
       }
     } catch (err) {
       setPaymentStatus("failed");
-      toast.error("M-Pesa processing error.");
+      toast.error(isFree ? "Reservation processing error." : "M-Pesa processing error.");
+    }
     }
   };
 
@@ -862,9 +864,15 @@ export function EtikketAgent() {
                   <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-md space-y-3">
                     <div className="flex items-center justify-between border-b border-[#f4f4f5] pb-2">
                       <span className="font-bold text-xs text-[#6b6b70]">Order #{msg.cardData.order.order_number}</span>
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                        Payment Pending
-                      </span>
+                      {Number(msg.cardData.order.total_amount) === 0 ? (
+                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                          Free Reservation
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                          Payment Pending
+                        </span>
+                      )}
                     </div>
                     <div className="space-y-1.5 text-xs text-[#0f0f10]">
                       <p><strong>Event:</strong> {msg.cardData.order.event_title}</p>
@@ -873,20 +881,39 @@ export function EtikketAgent() {
                       <p><strong>Total Amount:</strong> <span className="font-bold text-sm text-[#f33959]">{Number(msg.cardData.order.total_amount) === 0 ? "Free" : `KES ${Number(msg.cardData.order.total_amount).toLocaleString()}`}</span></p>
                     </div>
                     {paymentStatus === "initiating" ? (
-                      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-amber-50/90 p-4 border border-amber-200/90 text-xs text-amber-900 shadow-sm">
-                        <div className="flex items-center gap-2 font-bold text-amber-900">
-                          <FiPhone className="h-4 w-4 animate-bounce text-amber-700" />
-                          Awaiting M-Pesa PIN on {msg.cardData.order.buyer_phone}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[11px] text-amber-700">
-                          <span>STK Push sent • Enter your PIN</span>
-                          <div className="flex items-center gap-1">
-                            <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-bounce [animation-delay:-0.3s]"></span>
-                            <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-bounce [animation-delay:-0.15s]"></span>
-                            <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-bounce"></span>
+                      Number(msg.cardData.order.total_amount) === 0 ? (
+                        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-emerald-50/90 p-4 border border-emerald-200/90 text-xs text-emerald-900 shadow-sm">
+                          <div className="flex items-center gap-2 font-bold text-emerald-900">
+                            <FiRefreshCw className="h-4 w-4 animate-spin text-emerald-700" />
+                            Reserving Free Ticket for {msg.cardData.order.buyer_phone}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[11px] text-emerald-700">
+                            <span>Generating QR code and issuing ticket…</span>
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-amber-50/90 p-4 border border-amber-200/90 text-xs text-amber-900 shadow-sm">
+                          <div className="flex items-center gap-2 font-bold text-amber-900">
+                            <FiPhone className="h-4 w-4 animate-bounce text-amber-700" />
+                            Awaiting M-Pesa PIN on {msg.cardData.order.buyer_phone}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[11px] text-amber-700">
+                            <span>STK Push sent • Enter your PIN</span>
+                            <div className="flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-bounce [animation-delay:-0.3s]"></span>
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-bounce [animation-delay:-0.15s]"></span>
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-bounce"></span>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    ) : Number(msg.cardData.order.total_amount) === 0 ? (
+                      <button
+                        onClick={() => handlePayStk(msg.cardData.order)}
+                        className="w-full rounded-xl bg-linear-to-r from-emerald-600 to-emerald-700 py-3 text-xs font-bold text-white hover:from-emerald-700 hover:to-emerald-800 transition shadow-md flex items-center justify-center gap-2"
+                      >
+                        <FiCheckCircle className="h-4 w-4" /> Reserve Free Ticket (No Payment Required)
+                      </button>
                     ) : (
                       <button
                         onClick={() => handlePayStk(msg.cardData.order)}
@@ -1016,4 +1043,3 @@ export function EtikketAgent() {
       )}
     </>
   );
-}

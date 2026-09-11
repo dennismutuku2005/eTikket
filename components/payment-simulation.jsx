@@ -85,12 +85,16 @@ export default function PaymentSimulation({ slug, event }) {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#f33959]/10 text-[#f33959]">
               <span className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-r-transparent" />
             </div>
-            <p className="mt-4 text-lg font-semibold text-[#0f0f10]">Enter your M-Pesa PIN</p>
+            <p className="mt-4 text-lg font-semibold text-[#0f0f10]">
+              {isFreeEvent ? "Reserving your free ticket" : "Enter your M-Pesa PIN"}
+            </p>
             <p className="mt-2 text-sm leading-6 text-[#6b6b70]">
-              A payment request has been sent to your phone. Enter your M-Pesa PIN to complete the transaction.
+              {isFreeEvent
+                ? "Generating your ticket QR code and confirming your reservation…"
+                : "A payment request has been sent to your phone. Enter your M-Pesa PIN to complete the transaction."}
             </p>
             <p className="mt-4 rounded-2xl bg-[#f8fafc] p-4 text-sm text-[#0f5132]">
-              Waiting for confirmation from your phone…
+              {isFreeEvent ? "Processing reservation…" : "Waiting for confirmation from your phone…"}
             </p>
           </div>
         </div>

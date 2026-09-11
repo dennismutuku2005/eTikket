@@ -158,10 +158,10 @@ export default function CheckoutPage() {
       setOrderId(order.id);
       setOrderNumber(order.order_number);
 
-      // Set state to "paying" to show M-Pesa PIN overlay before starting blocking request
-      setStep("paying");
+      // Set state according to whether payment is needed
+      setStep(isFree ? "reserving" : "paying");
 
-      // 2. Initiate M-Pesa STK Push and block on backend polling verification
+      // 2. Initiate fulfillment / M-Pesa STK Push
       const paymentInit = await apiRequest("/payments/initiate", {
         method: "POST",
         body: JSON.stringify({
@@ -171,12 +171,12 @@ export default function CheckoutPage() {
       });
 
       if (!paymentInit.ok || paymentInit.status !== "success") {
-        throw new Error(paymentInit.message || "Failed to complete payment");
+        throw new Error(paymentInit.message || (isFree ? "Failed to reserve ticket" : "Failed to complete payment"));
       }
 
       setTicketsList(paymentInit.tickets || []);
       setStep("success");
-      toast.success("Payment completed successfully!");
+      toast.success(isFree ? "Free ticket reserved successfully!" : "Payment completed successfully!");
     } catch (err) {
       toast.error(err.message || "Could not complete transaction. Please try again.");
       setStep("details");
@@ -219,6 +219,21 @@ export default function CheckoutPage() {
           </Link>
         </div>
       </header>
+
+      {/* ── Free Reservation overlay ────────────────────────────────── */}
+      {step === "reserving" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm rounded-[28px] bg-white p-8 text-center shadow-2xl">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#f33959]/10">
+              <span className="inline-block h-9 w-9 animate-spin rounded-full border-4 border-[#f33959] border-r-transparent" />
+            </div>
+            <p className="mt-5 text-xl font-bold text-[#0f0f10]">Reserving your ticket</p>
+            <p className="mt-2 text-sm leading-6 text-[#6b6b70]">
+              Generating your QR code ticket and sending confirmation to <span className="font-bold text-[#0f0f10]">{phone}</span>…
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── M-Pesa STK overlay ──────────────────────────────────────── */}
       {step === "paying" && (
