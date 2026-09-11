@@ -37,127 +37,91 @@ function stripEmojis(str) {
     .trim();
 }
 
-/**
- * Robust Inline Markdown Parser (handles **bold**, *italic*, `code`, [link](url))
- * Prevents stray asterisks and improperly unescaped tokens.
- */
-function renderInlineMarkdown(text) {
-  if (!text) return null;
-  const parts = [];
-  const regex = /(\*\*(.+?)\*\*|\*([^*]+?)\*|`([^`]+?)`|\[([^\]]+?)\]\(([^)]+?)\))/g;
-  let match;
-  let lastIndex = 0;
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
-    }
-    if (match[2]) {
-      // Bold
-      parts.push(
-        <strong key={`${match.index}-bold`} className="font-bold text-[#0f0f10]">
-          {match[2]}
-        </strong>
-      );
-    } else if (match[3]) {
-      // Italic
-      parts.push(
-        <em key={`${match.index}-italic`} className="italic text-[#343438]">
-          {match[3]}
-        </em>
-      );
-    } else if (match[4]) {
-      // Inline Code
-      parts.push(
-        <code
-          key={`${match.index}-code`}
-          className="rounded-md bg-[#f4f4f5] px-1.5 py-0.5 font-mono text-[11px] font-semibold text-[#0f0f10] border border-[#ececec]"
-        >
-          {match[4]}
-        </code>
-      );
-    } else if (match[5] && match[6]) {
-      // Link
-      parts.push(
-        <a
-          key={`${match.index}-link`}
-          href={match[6]}
-          target="_blank"
-          rel="noreferrer"
-          className="font-bold text-[#f33959] underline hover:text-[#d92847]"
-        >
-          {match[5]}
-        </a>
-      );
-    }
-    lastIndex = regex.lastIndex;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
-  }
-
-  return parts;
-}
-
 function preprocessMarkdown(content) {
   if (!content || typeof content !== "string") return "";
   let text = stripEmojis(content);
 
-  // 1. Ensure empty line before headings (### Header)
+  // Ensure double newlines before headers, tables, and lists
   text = text.replace(/([^\n])\n(#{1,6}\s)/g, "$1\n\n$2");
-
-  // 2. Ensure empty line before tables (| col |)
   text = text.replace(/([^\n|])\n(\|.+?\|)/g, "$1\n\n$2");
-
-  // 3. Ensure empty line after tables
   text = text.replace(/(\|[^\n]+\|)\n([^\n|])/g, "$1\n\n$2");
-
-  // 4. Ensure empty line before lists (- bullet or 1. item)
   text = text.replace(/([^\n\-*0-9.])\n([-*]\s|\d+\.\s)/g, "$1\n\n$2");
 
   return text;
 }
 
 /**
- * Clean & Accurate Block Markdown Renderer
- * Properly isolates headings, bullet lists, numbered steps, and tables.
+ * Clean & Beautiful Block Markdown Renderer for Organizer Copilot
  */
-function FormattedMarkdown({ content }) {
+function FormattedMarkdown({ content, isUser = false }) {
   if (!content) return null;
 
   return (
-    <div className="text-xs leading-relaxed space-y-2 text-[#0f0f10]">
+    <div className={`space-y-2 leading-relaxed text-[13px] ${isUser ? "text-white" : "text-[#0f0f10]"}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ node, ...props }) => (
-            <h1 {...props} className="text-base font-extrabold text-[#0f0f10] mt-3 mb-1.5 border-b border-[#ececec] pb-1" />
+            <h1
+              {...props}
+              className={`text-sm font-extrabold pb-1.5 mb-2 border-b ${
+                isUser ? "text-white border-white/20" : "text-[#0f0f10] border-[#ececec]"
+              }`}
+            />
           ),
           h2: ({ node, ...props }) => (
-            <h2 {...props} className="text-sm font-bold text-[#0f0f10] mt-2.5 mb-1" />
+            <h2
+              {...props}
+              className={`text-xs font-bold uppercase tracking-wider mt-3 mb-1.5 ${
+                isUser ? "text-white" : "text-[#f33959]"
+              }`}
+            />
           ),
           h3: ({ node, ...props }) => (
-            <h3 {...props} className="text-xs font-bold uppercase tracking-wider text-[#0f0f10] mt-2.5 mb-1 text-[#f33959]" />
+            <h3
+              {...props}
+              className={`text-xs font-bold mt-2.5 mb-1 ${
+                isUser ? "text-white" : "text-[#0f0f10]"
+              }`}
+            />
           ),
           h4: ({ node, ...props }) => (
-            <h4 {...props} className="text-xs font-bold text-[#343438] mt-2 mb-0.5" />
+            <h4
+              {...props}
+              className={`text-xs font-semibold mt-2 mb-1 ${
+                isUser ? "text-white/90" : "text-[#343438]"
+              }`}
+            />
           ),
-          p: ({ node, ...props }) => <p {...props} className="mb-2 leading-relaxed text-[#0f0f10]" />,
+          p: ({ node, ...props }) => (
+            <p {...props} className="leading-relaxed mb-2" />
+          ),
           ul: ({ node, ...props }) => (
-            <ul {...props} className="my-2 list-disc space-y-1 pl-5 text-[#0f0f10]" />
+            <ul {...props} className="my-2 space-y-1.5 pl-1" />
           ),
           ol: ({ node, ...props }) => (
-            <ol {...props} className="my-2 list-decimal space-y-1 pl-5 text-[#0f0f10]" />
+            <ol {...props} className="my-2 space-y-1.5 pl-1" />
           ),
-          li: ({ node, ...props }) => <li {...props} className="leading-relaxed pl-0.5" />,
+          li: ({ node, ...props }) => (
+            <li className="flex items-start gap-2 text-[13px] leading-relaxed">
+              <span
+                className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
+                  isUser ? "bg-white" : "bg-[#f33959]"
+                }`}
+              />
+              <div className="flex-1 min-w-0">{props.children}</div>
+            </li>
+          ),
           table: ({ node, ...props }) => (
-            <div className="my-3 w-full overflow-x-auto rounded-xl border border-[#ececec] bg-white shadow-2xs">
+            <div className="my-3 w-full overflow-x-auto rounded-2xl border border-[#ececec] bg-white shadow-2xs">
               <table {...props} className="w-full text-left border-collapse text-xs" />
             </div>
           ),
           thead: ({ node, ...props }) => (
-            <thead {...props} className="bg-[#f4f4f5] border-b border-[#ececec] text-[#0f0f10] font-bold" />
+            <thead
+              {...props}
+              className="bg-[#f4f4f5] border-b border-[#ececec] text-[#0f0f10] font-bold"
+            />
           ),
           tbody: ({ node, ...props }) => (
             <tbody {...props} className="divide-y divide-[#ececec] bg-white" />
@@ -166,21 +130,59 @@ function FormattedMarkdown({ content }) {
             <tr {...props} className="hover:bg-[#fafafa] transition-colors" />
           ),
           th: ({ node, ...props }) => (
-            <th {...props} className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#0f0f10]" />
+            <th
+              {...props}
+              className="px-3.5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f0f10]"
+            />
           ),
           td: ({ node, ...props }) => (
-            <td {...props} className="px-3 py-2 text-xs text-[#0f0f10] whitespace-nowrap" />
+            <td
+              {...props}
+              className="px-3.5 py-2.5 text-xs text-[#0f0f10] whitespace-nowrap"
+            />
           ),
           blockquote: ({ node, ...props }) => (
-            <blockquote {...props} className="border-l-3 border-[#f33959] pl-3 py-1 my-2 bg-[#fdf2f4] rounded-r-lg text-xs italic text-[#343438]" />
+            <blockquote
+              {...props}
+              className={`border-l-3 pl-3 py-1 my-2 rounded-r-lg text-xs italic ${
+                isUser
+                  ? "border-white/40 bg-white/10 text-white"
+                  : "border-[#f33959] bg-[#fdf2f4] text-[#343438]"
+              }`}
+            />
           ),
           code: ({ node, inline, ...props }) => (
-            <code {...props} className="rounded-md bg-[#f4f4f5] px-1.5 py-0.5 font-mono text-[11px] font-semibold text-[#0f0f10] border border-[#ececec]" />
+            <code
+              {...props}
+              className={`rounded-md px-1.5 py-0.5 font-mono text-[11px] font-semibold ${
+                isUser
+                  ? "bg-white/20 text-white"
+                  : "bg-[#f4f4f5] text-[#0f0f10] border border-[#ececec]"
+              }`}
+            />
           ),
           a: ({ node, ...props }) => (
-            <a {...props} target="_blank" rel="noreferrer" className="font-bold text-[#f33959] underline hover:text-[#d92847]" />
+            <a
+              {...props}
+              target="_blank"
+              rel="noreferrer"
+              className={`font-bold underline ${
+                isUser ? "text-white" : "text-[#f33959] hover:text-[#d92847]"
+              }`}
+            />
           ),
-          hr: ({ node, ...props }) => <hr {...props} className="my-3 border-[#ececec]" />,
+          hr: ({ node, ...props }) => (
+            <hr
+              {...props}
+              className={`my-3 ${isUser ? "border-white/20" : "border-[#ececec]"}`}
+            />
+          ),
+          strong: ({ node, ...props }) => (
+            <strong
+              {...props}
+              className={`font-bold ${isUser ? "text-white" : "text-[#0f0f10]"}`}
+            />
+          ),
         }}
       >
         {preprocessMarkdown(content)}
@@ -200,7 +202,7 @@ export function OrganizerAgent() {
     {
       role: "assistant",
       content:
-        "### Organizer Operations Intelligence\n\nI am connected to your live organizer dashboard. How can I assist your events today?\n\n- **Live Metrics:** Check revenue collected today and recent orders.\n- **Event Deep Dive:** Analyze ticket tier sales, pacing, and door scan rates.\n- **Executive Reports:** Generate financial summaries and sales projections.",
+        "Hello. I am your **Organizer AI Copilot**.\n\nI am connected to your live dashboard to analyze your revenue, ticket tier sales, real-time gate attendance, and financial pacing.\n\nHow can I assist your events today?",
       cardData: null,
     },
   ]);
@@ -289,7 +291,7 @@ export function OrganizerAgent() {
       {
         role: "assistant",
         content:
-          "### Organizer Operations Intelligence\n\nChat history reset. Select an action below or ask any question regarding your events, ticket tiers, or gate attendance.",
+          "Hello. I am your **Organizer AI Copilot**.\n\nConversation reset. How can I assist your events today?",
         cardData: null,
       },
     ]);
@@ -300,11 +302,11 @@ export function OrganizerAgent() {
     <div
       className={`${
         isExpanded
-          ? "w-full max-w-4xl h-[85vh] max-h-195"
-          : "w-[calc(100vw-2rem)] max-w-115 h-165 max-h-[85vh]"
+          ? "w-full max-w-3xl h-[85vh] max-h-190"
+          : "w-[calc(100vw-2rem)] max-w-110 h-162.5 max-h-[85vh]"
       } flex flex-col rounded-3xl border border-[#ececec] bg-white shadow-2xl overflow-hidden transition-all duration-300 font-sans`}
     >
-      {/* Header - Styled to match eTikket brand */}
+      {/* Header */}
       <div className="flex items-center justify-between border-b border-[#ececec] bg-[#111113] p-4 text-white">
         <div className="flex items-center gap-3">
           <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#f33959] font-bold text-white shadow-inner">
@@ -315,7 +317,7 @@ export function OrganizerAgent() {
               Organizer AI Copilot
             </h3>
             <p className="text-xs text-white/70">
-              {session?.name ? `${session.name} • Live Operations` : "Authenticated Organizer"}
+              {session?.name ? `${session.name} • Live Operations` : "Online • Operations Intelligence"}
             </p>
           </div>
         </div>
@@ -346,31 +348,31 @@ export function OrganizerAgent() {
         </div>
       </div>
 
-      {/* Quick Action Chips in eTikket Brand Style */}
+      {/* Quick Action Chips */}
       <div className="flex items-center gap-2 overflow-x-auto bg-[#fafafa] p-3 border-b border-[#ececec] scrollbar-none text-xs">
         <button
           onClick={() => handleChipClick("Show me today's sales and revenue collected today")}
-          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-bold text-[#0f0f10] shadow-2xs hover:border-[#f33959] hover:bg-[#f33959] hover:text-white transition flex items-center gap-1.5"
+          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-semibold text-[#0f0f10] shadow-2xs hover:bg-[#f33959] hover:text-white hover:border-[#f33959] transition"
         >
-          <FiClock className="text-[#f33959] group-hover:text-white" /> Today's Sales
+          Today's Sales
         </button>
         <button
           onClick={() => handleChipClick("Generate executive sales report for my events")}
-          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-bold text-[#0f0f10] shadow-2xs hover:border-[#f33959] hover:bg-[#f33959] hover:text-white transition flex items-center gap-1.5"
+          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-semibold text-[#0f0f10] shadow-2xs hover:bg-[#f33959] hover:text-white hover:border-[#f33959] transition"
         >
-          <FiFileText className="text-[#f33959]" /> Executive Report
+          Executive Report
         </button>
         <button
           onClick={() => handleChipClick("Show live gate check-in and gate attendance stats")}
-          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-bold text-[#0f0f10] shadow-2xs hover:border-[#f33959] hover:bg-[#f33959] hover:text-white transition flex items-center gap-1.5"
+          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-semibold text-[#0f0f10] shadow-2xs hover:bg-[#f33959] hover:text-white hover:border-[#f33959] transition"
         >
-          <FiUsers className="text-[#f33959]" /> Gate Attendance
+          Gate Attendance
         </button>
         <button
           onClick={() => handleChipClick("Show sales breakdown for all my events")}
-          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-bold text-[#0f0f10] shadow-2xs hover:border-[#f33959] hover:bg-[#f33959] hover:text-white transition flex items-center gap-1.5"
+          className="whitespace-nowrap rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 font-semibold text-[#0f0f10] shadow-2xs hover:bg-[#f33959] hover:text-white hover:border-[#f33959] transition"
         >
-          <FiBarChart2 className="text-[#f33959]" /> Events Breakdown
+          Events Breakdown
         </button>
       </div>
 
@@ -385,14 +387,14 @@ export function OrganizerAgent() {
           >
             <div
               className={`${
-                isExpanded ? "max-w-[80%]" : "max-w-[92%]"
-              } rounded-[20px] px-4.5 py-3.5 text-sm leading-relaxed ${
+                isExpanded ? "max-w-[75%]" : "max-w-[88%]"
+              } rounded-[20px] px-4 py-3 text-sm leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-[#111113] text-white rounded-br-xs font-medium shadow-sm"
+                  ? "bg-[#f33959] text-white rounded-br-xs font-medium"
                   : "bg-white text-[#0f0f10] border border-[#ececec] shadow-2xs rounded-bl-xs"
               }`}
             >
-              <FormattedMarkdown content={msg.content} />
+              <FormattedMarkdown content={msg.content} isUser={msg.role === "user"} />
             </div>
 
             {/* Embedded Rich Metric Cards */}
@@ -400,10 +402,10 @@ export function OrganizerAgent() {
               <div className={`mt-3 w-full ${isExpanded ? "max-w-[85%]" : "max-w-[95%]"}`}>
                 {/* 1. Today's Revenue & Sales Card */}
                 {msg.cardData.type === "today_sales" && msg.cardData.today && (
-                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-sm space-y-3">
+                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-md space-y-3">
                     <div className="flex items-center justify-between border-b border-[#f4f4f5] pb-2">
-                      <span className="font-bold text-xs uppercase tracking-wider text-[#0f0f10] flex items-center gap-1.5">
-                        <FiClock className="text-[#f33959]" /> Today's Live Sales ({msg.cardData.today.date})
+                      <span className="font-bold text-xs uppercase tracking-wider text-[#f33959] flex items-center gap-1.5">
+                        <FiClock /> Today's Live Sales ({msg.cardData.today.date})
                       </span>
                       <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 uppercase flex items-center gap-1">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -458,7 +460,7 @@ export function OrganizerAgent() {
 
                 {/* 2. Specific Event Analytics Card */}
                 {msg.cardData.type === "specific_event" && msg.cardData.detail && (
-                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-sm space-y-3">
+                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-md space-y-3">
                     <div className="flex items-center justify-between border-b border-[#f4f4f5] pb-2">
                       <div>
                         <h4 className="font-bold text-sm text-[#0f0f10]">
@@ -513,10 +515,10 @@ export function OrganizerAgent() {
 
                 {/* 3. Overview Dashboard Card */}
                 {msg.cardData.type === "organizer_overview" && msg.cardData.overview && (
-                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-sm space-y-3">
+                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-md space-y-3">
                     <div className="flex items-center justify-between border-b border-[#f4f4f5] pb-2">
-                      <span className="font-bold text-xs uppercase tracking-wider text-[#0f0f10] flex items-center gap-1.5">
-                        <FiDollarSign className="text-[#f33959]" /> Performance Overview
+                      <span className="font-bold text-xs uppercase tracking-wider text-[#f33959] flex items-center gap-1.5">
+                        <FiDollarSign /> Performance Overview
                       </span>
                       <span className="rounded-full bg-[#111113] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase">
                         Active Account
@@ -554,9 +556,9 @@ export function OrganizerAgent() {
 
                 {/* 4. Events Performance List Card */}
                 {msg.cardData.type === "organizer_events" && msg.cardData.events && (
-                  <div className="rounded-[18px] border border-[#ececec] bg-white p-3 shadow-sm space-y-2">
-                    <h4 className="font-bold text-xs uppercase tracking-wider text-[#0f0f10] p-1 flex items-center gap-1.5">
-                      <FiPieChart className="text-[#f33959]" /> Your Events Breakdown
+                  <div className="rounded-[18px] border border-[#ececec] bg-white p-3 shadow-md space-y-2">
+                    <h4 className="font-bold text-xs uppercase tracking-wider text-[#f33959] p-1 flex items-center gap-1.5">
+                      <FiPieChart /> Your Events Breakdown
                     </h4>
                     <div className="space-y-2 max-h-60 overflow-y-auto">
                       {msg.cardData.events.map((evt) => (
@@ -584,10 +586,10 @@ export function OrganizerAgent() {
 
                 {/* 5. Gate Attendance Card */}
                 {msg.cardData.type === "organizer_gate" && msg.cardData.summary && (
-                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-sm space-y-3">
+                  <div className="rounded-[18px] border border-[#ececec] bg-white p-4 shadow-md space-y-3">
                     <div className="flex items-center justify-between border-b border-[#f4f4f5] pb-2">
-                      <span className="font-bold text-xs uppercase tracking-wider text-[#0f0f10] flex items-center gap-1.5">
-                        <FiUsers className="text-[#f33959]" /> Gate Entrance Status
+                      <span className="font-bold text-xs uppercase tracking-wider text-[#f33959] flex items-center gap-1.5">
+                        <FiUsers /> Gate Entrance Status
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2.5 text-xs">
@@ -612,7 +614,7 @@ export function OrganizerAgent() {
                   <div className="mt-2 flex justify-end">
                     <button
                       onClick={() => handleCopyReport(msg.content)}
-                      className="rounded-full border border-[#ececec] bg-white px-3 py-1.5 text-xs font-bold text-[#0f0f10] shadow-2xs hover:bg-[#f4f4f5] transition flex items-center gap-1.5"
+                      className="rounded-full border border-[#ececec] bg-white px-3.5 py-1.5 text-xs font-bold text-[#0f0f10] shadow-2xs hover:bg-[#f4f4f5] transition flex items-center gap-1.5"
                     >
                       <FiCopy className="text-[#f33959]" /> Copy Report Markdown
                     </button>
@@ -626,9 +628,9 @@ export function OrganizerAgent() {
         {loading && (
           <div className="flex items-center gap-3 rounded-[20px] rounded-bl-xs bg-white border border-[#ececec] px-4 py-3 text-xs text-[#0f0f10] shadow-sm w-fit">
             <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#f33959] text-white">
-              <FiActivity className="h-3.5 w-3.5 animate-spin" />
+              <FiZap className="h-3.5 w-3.5 animate-spin" />
             </div>
-            <span className="font-semibold text-[#0f0f10]">Copilot is analyzing stats</span>
+            <span className="font-semibold text-[#0f0f10]">Copilot is analyzing data</span>
             <div className="flex items-center gap-1">
               <span className="h-1.5 w-1.5 rounded-full bg-[#f33959] animate-bounce [animation-delay:-0.3s]"></span>
               <span className="h-1.5 w-1.5 rounded-full bg-[#f33959] animate-bounce [animation-delay:-0.15s]"></span>
@@ -639,7 +641,7 @@ export function OrganizerAgent() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Footer Input */}
+      {/* Input Footer */}
       <div className="border-t border-[#ececec] bg-white p-3">
         <form
           onSubmit={(e) => {
@@ -653,7 +655,7 @@ export function OrganizerAgent() {
             placeholder="Ask about today's sales, specific events, or check-ins..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 rounded-full border border-[#ececec] bg-[#fafafa] px-4 py-2.5 text-xs text-[#0f0f10] focus:border-[#f33959] focus:bg-white focus:outline-none transition"
+            className="flex-1 rounded-full border border-[#ececec] bg-[#fafafa] px-4 py-2.5 text-xs text-[#0f0f10] focus:border-[#f33959] focus:bg-white focus:outline-none"
           />
           <button
             type="submit"
@@ -678,10 +680,10 @@ export function OrganizerAgent() {
             aria-label="Open Organizer Copilot"
           >
             <div className="relative">
-              <FiZap className="h-6 w-6 text-white" />
+              <FiTrendingUp className="h-6 w-6" />
               <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
             </div>
             <span className="font-bold text-sm tracking-wide hidden sm:inline">Organizer Copilot</span>
