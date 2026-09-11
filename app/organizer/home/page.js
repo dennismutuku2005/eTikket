@@ -92,8 +92,8 @@ export default function OrganizerHomePage() {
     ? analytics.bookingsByDay
     : [{ label: "—", value: 0 }];
 
-  const barData = analytics?.bookingsByDay?.slice(0, 5)?.length
-    ? analytics.bookingsByDay.slice(0, 5)
+  const barData = analytics?.bookingsByDay?.length
+    ? analytics.bookingsByDay
     : [{ label: "—", value: 0 }];
 
   return (
